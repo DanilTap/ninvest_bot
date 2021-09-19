@@ -904,7 +904,7 @@ async def promo(ctx, code):
 # ------------------------ Moderation ------------------------|
 # Ban
 @bot.command()
-#@commands.has_any_role()
+@commands.has_any_role(881141342959439882,  881603894449406022, 880357242346553374)
 async def ban(ctx, member: discord.Member, time: int, *, about: str):
 	getrole = discord.utils.get(ctx.guild.roles, id = 888483227080224779)
 	await member.add_roles(getrole)
@@ -915,7 +915,7 @@ async def ban(ctx, member: discord.Member, time: int, *, about: str):
 
 # Mute
 @bot.command()
-#@commands.has_any_role()
+@commands.has_any_role(880357827699433513)
 async def mute(ctx, member: discord.Member, time: int, *, about: str):
 	getrole = discord.utils.get(ctx.guild.roles, id = 888461992824799283)
 	await member.add_roles(getrole)

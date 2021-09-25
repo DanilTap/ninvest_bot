@@ -72,10 +72,14 @@ async def on_ready():
 			if depos == 1:
 				deposit = Thread(target=Deposit, args=(member, int(amount), 10, ltime))
 				deposit.start()
+				print(f'{member} HAVE DEPOSIT.')
+				print(f'{ltime} {amount} {depos} \n\n')
 
 			elif depos == 2:
 				deposit = Thread(target=Deposit, args=(member, int(amount), 20, ltime))
 				deposit.start()
+				print(f'{member} HAVE DEPOSIT.')
+				print(f'{ltime} {amount} {depos} \n\n')
 
 		else:
 			print(f'{member} NO DEPOSIT')
@@ -977,12 +981,12 @@ def Farm(member: discord.Member, life, amount: float, auto: bool):
 
 			# If farm is automatic
 			if auto == True:
-				mined[str(member.name)]['RUB'] += amount
+				mined[str(member.name)]['RUB'] += round(amount, 2)
 				with open('user_balance.json','w') as f:
 					json.dump(mined,f)
 
 			elif auto == False:
-				mined[str(member.name)]['mined'] += amount
+				mined[str(member.name)]['mined'] += round(amount, 2)
 				with open('user_balance.json','w') as f:
 					json.dump(mined,f)
 
@@ -1339,7 +1343,7 @@ def Deposit(member, amount, percent, ltime):
 	with open('user_balance.json','r', encoding='utf-8') as f:
 		user_balance = json.load(f)
 
-	user_balance[str(member)]['RUB'] += money
+	user_balance[str(member)]['RUB'] += round(money, 2)
 
 	with open('user_balance.json','w') as f:
 		json.dump(user_balance,f)
@@ -1375,17 +1379,18 @@ async def bank1(ctx, amount):
 		balance = user_balance[str(ctx.message.author.name)]['RUB']
 
 		if int(amount) >= 20 and int(amount) <= 500:
-			if balance >= 20:
-				user_balance[str(ctx.message.author.name)]['RUB'] -= int(amount)
+			if user_balance[str(ctx.message.author.name)]['RUB'] >= int(amount):
+				user_balance[str(ctx.message.author.name)]['RUB'] -= round(int(amount), 2)
 				with open('user_balance.json','w') as f:
 					json.dump(user_balance,f)
 
 				with open('user_bank.json','r', encoding='utf-8') as f:
 					bank = json.load(f)
 
-				bank[str(ctx.message.author.name)] = {}
 				bank[str(ctx.message.author.name)]['deposit'] = 1
+				bank[str(ctx.message.author.name)]['amount'] = int(amount)
 				bank[str(ctx.message.author.name)]['ltime'] = 2160000
+
 				with open('user_bank.json','w') as f:
 					json.dump(bank,f)
 
@@ -1397,7 +1402,7 @@ async def bank1(ctx, amount):
 				embed1 = discord.Embed(color=0x388E3C, title="ДЕПОЗИТ", description=f'**`{ctx.message.author}` Положил `{int(amount)}`RUB под `{10}%`**')
 				await log.send(embed=embed1)
 
-			elif balance <= 20:
+			elif user_balance[str(ctx.message.author.name)]['RUB'] < int(amount):
 				await ctx.message.author.send('У вас недостаточно средств.')
 
 		else:
@@ -1416,13 +1421,13 @@ async def bank2(ctx, amount):
 		balance = user_balance[str(ctx.message.author.name)]['RUB']
 
 		if int(amount) >= 400 and int(amount) <= 2000:
-			if balance >= 300:
-				user_balance[str(ctx.message.author.name)]['RUB'] -= int(amount)
+			if balance >= 400:
+				user_balance[str(ctx.message.author.name)]['RUB'] -= round(int(amount), 2)
 				with open('user_balance.json','w') as f:
 					json.dump(user_balance,f)
 
-				bank[str(ctx.message.author.name)] = {}
-				bank[str(ctx.message.author.name)]['deposit'] = 2
+				bank[str(ctx.message.author.name)]['deposit'] = 1
+				bank[str(ctx.message.author.name)]['amount'] = int(amount)
 				bank[str(ctx.message.author.name)]['ltime'] = 2160000
 				with open('user_bank.json','w') as f:
 					json.dump(bank,f)
@@ -1643,6 +1648,12 @@ async def mute(ctx, member: discord.Member, time: int, *, about: str):
 async def upd(ctx):
 	guild = bot.get_guild(880008097370865706)
 
+	system = bot.get_channel(880024762942889994)
+	m = await system.fetch_message(881782363191910440)
+	embed = discord.Embed(color=0x3C55FA, title="НАША СИСТЕМА", description=f'**НАША КОНЦЕПЦИЯ**\n:dash:NEXT Invest:dash: - проект основная цель которого дать людям проводить время на сервере общаясь, выполняя какие либо задания, получая за это деньги. Специально для Вас была разработана уникальная система автоматизированного получения прибыли путем так называемого майнинга, позволяющая получать внутрисерверную криптовалюту, всем без исключений, которую в дальнейшем можно обменять на реальные деньги. При входе на сервер, для Вас создаётся личный счёт с нашей валютой. С помощью данного счета, вы можете осуществлять вывод, конвертацию и пополнение средств. Все покупки внутри сервера, включая покупку ферм, не является обязательным условием для нахождения на нашем сервере и носит лишь развлекательный характер.\n\n**Насколько безопасна ваша система?**\nТехнология проекта — имеет проверенный временем высокий уровень безопасности! Система грамотно спроектирована, что не позволит дать доступ к вашей уч.Записи злоумышленникам\nНаша валюта защищена от инфляции и внешних факторов экономики.Благодаря нашей технологии, проект защищен от внешнего контроля и управлением, эмиссия этой криптовалюты происходит в процессе работы ферм, использования нашего ПО.\n\n**ВАРИАНТЫ ПОЛУЧЕНИЯ ВАЛЮТЫ:**\n[▽ ОБЩЕНИЕ В ГОЛОСОВЫХ КАНАЛАХ]()\n[▽ ПРИОБРЕТЕНИЕ МАЙНИНГ ФЕРМ]()\n▽ТОРГОВЛЯ КРИПТОВАЛЮТОЙ\n▽ВЫПОЛНЕНИЕ ЗАДАНИЙ СЕРВЕРА\n▽СЁРФИНГ\n[▽ ТОРГОВЛЯ]()\n[▽ ЕЖЕДНЕВНЫЕ ЗАДАНИЯ]()\n[▽ РЕФЕРАЛЬНАЯ СИСТЕМА]()\n[▽ ОТКРЫТИЕ КЕЙСОВ]()\n[▽ УЧАСТИЕ И ИВЕНТАХ]()\n[▽ УЧАСТИЕ В РОЗЫГРЫШАХ]()\n[▽ S.UP И BUMP СЕРВЕРА]()\n')
+	await m.edit(embed=embed)
+
+
 	'''
 	navigation = bot.get_channel(889216233604526132)
 	embed = discord.Embed(color=0x3C55FA, title=f'БАНК', description=f'**Кратко о системе:**\nВ Банке вы можете открыть депозит и ни о чем не париться. Преимущество депозита от покупки ферм в том, что вам не нужно заходить ежедневно и собирать прибыль, при этом у вас ничего не будет ломаться и вы 100% выйдете в плюс . Вы можете не заходить неделями, а чтобы получить начисления по депозиту вам нужно просто наведаться в Банк, и деньги поступят на ваш баланс . Выбирайте тариф, создавайте депозит и получайте ежедневные начисления!\n\n**Выберите инвестиционный план:**\n\n:one:\nДоходность - 110%\nСрок вклада - 25 дней\nсумма вклада - 20-500 рублей\n\n:two:\nДоходность - 120%\nСрок вклада - 45 дней\nсумма вклада - 400-2000 рублей')
@@ -1687,7 +1698,7 @@ async def upd(ctx):
 	embed4 = discord.Embed(color=0xB88947, title=f'BRONZE CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**300RUB| 220RUB | 140RUB | 100RUB | 50RUB |** 35RUB | 20RUB |  10RUB |\nУникальная роль бизнесмен\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:**\n:pound: 1шт - 49RUB\n:credit_card: 5шт - 245RUB')
 	embed4.set_thumbnail(url="https://i.imgur.com/MRvrOW2.png")
 	await m4.edit(embed = embed4)
-	'''
+	
 
 	channel1 = bot.get_channel(890982389881384991)
 	embed165 = discord.Embed(color=0x2E62FF, description=f'<:dfgf:> :dfgf: :a_::a_::b_::b_::b_::b_::b_::b_::b_: `3/10`')
@@ -1699,5 +1710,7 @@ async def upd(ctx):
 	embed168 = discord.Embed(color=0x2E62FF, description=f':l_::b_::b_::b_::b_::b_::b_::b_::b_::b_: `1/10`')
 	await channel1.send(embed = embed168)
 	await channel1.send('<:dfgf:> :dfgf: :a_::a_::b_::b_::b_::b_::b_::b_::b_: `3/10`')
+
+	'''
 
 bot.run('ODc5NjkzNDk5ODQ1NDU1ODcy.YSTcag.KiNpzAVZ_isc-HIdeeLw6FbJZgM')

@@ -18,6 +18,10 @@ bot = discord.ext.commands.Bot(command_prefix = "!", intents = intents)
 # Reactions lists
 farm_messages = []
 tickets_messages = []
+donat1s = False
+donat2s = False
+membercode = False
+gncode = 0
 # |------------------------------ /VARIABLES -----------------------------|
 
 
@@ -763,19 +767,19 @@ async def on_raw_reaction_add(payload):
 						json.dump(user_balance,f)
 
 
-	elif message_id == 890117698636365824:
+	elif message_id == 891665705655746600:
 		with open('user_balance.json','r', encoding='utf-8') as f:
 			user_balance = json.load(f)
 
 		balance = user_balance[str(member.name)]['RUB']
 
 		if payload.emoji.name == "💷":
-			if balance < 1000:
+			if balance < 25:
 				await member.send("У вас недостаточно средств для покупки кейса.")
 
-			elif balance >= 1000:
-				user_balance[str(member.name)]['RUB'] -= 1000
-				items = [6400, 3200, 1600, 800, 800, 800, 400, 200, 'role']
+			elif balance >= 25:
+				user_balance[str(member.name)]['RUB'] -= 25
+				items = [45, 35, 25, 25, 10, 5, 'role', 'farm', 'role1']
 
 				item = random.choice(items)
 				print(item)
@@ -785,6 +789,15 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@☄️`!")
 
+				elif item == 'role1':
+					getrole = discord.utils.get(guild.roles, id = 890960183155630191)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@Бизнесмен`!")
+
+				elif item == 'farm':
+					await CreateFarmChannel(member, 'FARM ПЛАТА')
+					await member.send("Вы выиграли ферму `FARM ПЛАТА`!")
+
 				else:
 					user_balance[str(member.name)]['RUB'] += item
 					await member.send(f'Вы выиграли **`{item}` RUB**!')
@@ -793,13 +806,13 @@ async def on_raw_reaction_add(payload):
 					json.dump(user_balance,f)
 
 		elif payload.emoji.name == "💳":
-			if balance < 5000:
+			if balance < 125:
 				await member.send("У вас недостаточно средств для покупки 5 кейсов.")
 
-			elif balance >= 5000:
-				user_balance[str(member.name)]['RUB'] -= 5000
+			elif balance >= 125:
+				user_balance[str(member.name)]['RUB'] -= 125
 				for i in range(5):
-					items = [6400, 3200, 1600, 800, 800, 800, 400, 200, 'role']
+					items = [45, 35, 25, 25, 10, 5, 'role', 'farm', 'role1']
 
 					item = random.choice(items)
 					print(item)
@@ -808,6 +821,15 @@ async def on_raw_reaction_add(payload):
 						getrole = discord.utils.get(guild.roles, id = 890123446682521621)
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@☄️`!")
+
+					elif item == 'role1':
+						getrole = discord.utils.get(guild.roles, id = 890960183155630191)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@Бизнесмен`!")
+
+					elif item == 'farm':
+						await CreateFarmChannel(member, 'FARM ПЛАТА')
+						await member.send("Вы выиграли ферму `FARM ПЛАТА`!")
 
 					else:
 						user_balance[str(member.name)]['RUB'] += item
@@ -1049,12 +1071,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 	await channel.set_permissions(member, read_messages=True, send_messages=True)
 
 	if farm == "FARM ЗАТЫЧКА":
-		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM ЗАТЫЧКА", description=f'Панель управления майнинг фермой "FARM ЗАТЫЧКА"\n\n**ДЛЯ ВЫВОДА NTB НАЖМИТЕ НА 📤**\n\n')
+		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM ЗАТЫЧКА", description=f'Панель управления майнинг фермой "FARM ЗАТЫЧКА"\n\n**ДЛЯ ВЫВОДА RUB НАЖМИТЕ НА 📤**\n\n')
 		embed.set_thumbnail(url="https://i.ibb.co/92f8Cw8/Z.png")
 		embed.add_field(name = '**Срок работы:**', value = f'35дней', inline = True)
 		embed.add_field(name = '**Срок окупаемости:**', value = f'25 дней', inline = True)
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
-		embed.add_field(name = '**Заработано:**', value = f'0 NTB', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
 		farm_messages.append(message.id)
@@ -1075,12 +1096,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 
 	elif farm == "FARM GTX":
-		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM GTX", description=f'Панель управления майнинг фермой "FARM GTX"\n\n**ДЛЯ ВЫВОДА NTB НАЖМИТЕ НА 📤**\n\n')
+		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM GTX", description=f'Панель управления майнинг фермой "FARM GTX"\n\n**ДЛЯ ВЫВОДА RUB НАЖМИТЕ НА 📤**\n\n')
 		embed.set_thumbnail(url="https://i.ibb.co/RCt8s0K/G.png")
 		embed.add_field(name = '**Срок работы:**', value = f'29дней', inline = True)
 		embed.add_field(name = '**Срок окупаемости:**', value = f'25 дней', inline = True)
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
-		embed.add_field(name = '**Заработано:**', value = f'0 NTB', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
 		farm_messages.append(message.id)
@@ -1101,12 +1121,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 
 	elif farm == "FARM RTX":
-		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM RTX", description=f'Панель управления майнинг фермой "FARM RTX"\n\n**ДЛЯ ВЫВОДА NTB НАЖМИТЕ НА 📤**\n\n')
+		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM RTX", description=f'Панель управления майнинг фермой "FARM RTX"\n\n**ДЛЯ ВЫВОДА RUB НАЖМИТЕ НА 📤**\n\n')
 		embed.set_thumbnail(url="https://i.ibb.co/z72pGRR/R.png")
 		embed.add_field(name = '**Срок работы:**', value = f'29дней', inline = True)
 		embed.add_field(name = '**Срок окупаемости:**', value = f'21 день', inline = True)
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
-		embed.add_field(name = '**Заработано:**', value = f'0 NTB', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
 		farm_messages.append(message.id)
@@ -1132,7 +1151,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		embed.add_field(name = '**Срок работы:**', value = f'35дней', inline = True)
 		embed.add_field(name = '**Срок окупаемости:**', value = f'21 день', inline = True)
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
-		embed.add_field(name = '**Заработано:**', value = f'0 NTB', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
 		farm_messages.append(message.id)
@@ -1158,7 +1176,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		embed.add_field(name = '**Срок работы:**', value = f'40дней', inline = True)
 		embed.add_field(name = '**Срок окупаемости:**', value = f'21 день', inline = True)
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
-		embed.add_field(name = '**Заработано:**', value = f'0 NTB', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
 		farm_messages.append(message.id)
@@ -1179,12 +1196,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 
 	elif farm == "FARM BOOST":
-		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM BOOST", description=f'Панель управления майнинг фермой "FARM BOOST"\n\n**ДЛЯ ВЫВОДА NTB НАЖМИТЕ НА 📤**\n\n')
+		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM BOOST", description=f'Панель управления майнинг фермой "FARM BOOST"\n\n**ДЛЯ ВЫВОДА RUB НАЖМИТЕ НА 📤**\n\n')
 		embed.set_thumbnail(url="https://i.ibb.co/rf67N6Y/B.png")
 		embed.add_field(name = '**Срок работы:**', value = f'20дней', inline = True)
 		embed.add_field(name = '**Срок окупаемости:**', value = f'14 дней', inline = True)
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
-		embed.add_field(name = '**Заработано:**', value = f'0 NTB', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
 		farm_messages.append(message.id)
@@ -1205,12 +1221,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 
 	elif farm == "FARM TITAN":
-		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM TITAN", description=f'Панель управления майнинг фермой "FARM TITAN"\n\n**ДЛЯ ВЫВОДА NTB НАЖМИТЕ НА 📤**\n\n')
+		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM TITAN", description=f'Панель управления майнинг фермой "FARM TITAN"\n\n**ДЛЯ ВЫВОДА RUB НАЖМИТЕ НА 📤**\n\n')
 		embed.set_thumbnail(url="https://i.ibb.co/87WYdBB/T.png")
 		embed.add_field(name = '**Срок работы:**', value = f'30дней', inline = True)
 		embed.add_field(name = '**Срок окупаемости:**', value = f'16 дней', inline = True)
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
-		embed.add_field(name = '**Заработано:**', value = f'0 NTB', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
 		farm_messages.append(message.id)
@@ -1231,12 +1246,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 
 	elif farm == "FARM SERVER":
-		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM SERVER", description=f'Панель управления майнинг фермой "FARM SERVER"\n\n**ДЛЯ ВЫВОДА NTB НАЖМИТЕ НА 📤**\n\n')
+		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM SERVER", description=f'Панель управления майнинг фермой "FARM SERVER"\n\n**ДЛЯ ВЫВОДА RUB НАЖМИТЕ НА 📤**\n\n')
 		embed.set_thumbnail(url="https://i.ibb.co/0KDHq9W/S.png")
 		embed.add_field(name = '**Срок работы:**', value = f'38дней', inline = True)
 		embed.add_field(name = '**Срок окупаемости:**', value = f'13 дней', inline = True)
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
-		embed.add_field(name = '**Заработано:**', value = f'0 NTB', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
 		farm_messages.append(message.id)
@@ -1262,7 +1276,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		embed.add_field(name = '**Срок работы:**', value = f'37дней', inline = True)
 		embed.add_field(name = '**Срок окупаемости:**', value = f'13 дней', inline = True)
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
-		embed.add_field(name = '**Заработано:**', value = f'0 NTB', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
 		farm_messages.append(message.id)
@@ -1288,7 +1301,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		embed.add_field(name = '**Срок работы:**', value = f'42дня', inline = True)
 		embed.add_field(name = '**Срок окупаемости:**', value = f'10 дней', inline = True)
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
-		embed.add_field(name = '**Заработано:**', value = f'0 NTB', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
 		farm_messages.append(message.id)
@@ -1309,12 +1321,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 
 	elif farm == "FARM ПЛАТА":
-		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM ПЛАТА", description=f'Панель управления майнинг фермой "FARM ПЛАТА"\n\n**ДЛЯ ВЫВОДА NTB НАЖМИТЕ НА 📤**\n\n')
+		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM ПЛАТА", description=f'Панель управления майнинг фермой "FARM ПЛАТА"\n\n**ДЛЯ ВЫВОДА RUB НАЖМИТЕ НА 📤**\n\n')
 		embed.set_thumbnail(url="https://i.ibb.co/pd6w8dt/plata.png")
-		embed.add_field(name = '**Срок работы:**', value = f'14дней', inline = True)
+		embed.add_field(name = '**Срок работы:**', value = f'11дней', inline = True)
 		embed.add_field(name = '**Срок окупаемости:**', value = f'10 дней', inline = True)
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
-		embed.add_field(name = '**Заработано:**', value = f'0 NTB', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
 		farm_messages.append(message.id)
@@ -1323,14 +1334,14 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 			farms = json.load(f)	
 
 		farms[str(member.name)]['farms'] = f'{farm}'
-		farms[str(member.name)]['life_time'] = 1209600
+		farms[str(member.name)]['life_time'] = 950400
 		farms[str(member.name)]['out'] = 0.3
 		farms[str(member.name)]['auto'] = False
 		farms[str(member.name)]['channel_id'] = channel.id
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, 1209600, 0.3, False))
+		farmth = Thread(target=Farm, args=(member, 950400, 0.3, False))
 		farmth.start()
 
 
@@ -1583,6 +1594,10 @@ async def get(ctx):
 
 @bot.command()
 async def promo(ctx, code):
+	global donat1s
+	global donat2s
+	global membercode
+	global gncode
 	guild = bot.get_guild(880008097370865706)
 	if ctx.message.guild == guild:
 		print('In guild')
@@ -1591,15 +1606,59 @@ async def promo(ctx, code):
 		with open('user_balance.json','r', encoding='utf-8') as f:
 			user_balance = json.load(f)
 
-		if code == "TESTv1":
-			user_balance[str(ctx.message.author.name)]['NTB'] += 1000
-			await ctx.send(f'{ctx.message.author.mention} Вы активировали промокод на `1000`NTB!')
+		if code == "donat1":
+			if donat1s == False:
+				await CreateFarmChannel(ctx.message.author, 'FARM ПЛАТА')
+				await ctx.message.author.send("Вы получили `FARM ПЛАТА`!")
 
-			log = bot.get_channel(888053213750779934)
-			embed1 = discord.Embed(color=0x388E3C, title="АКТИВАЦИЯ ПРОМОКОДА", description=f'**`{ctx.message.author}` Активировал промокод `TESTv1`**')
-			await log.send(embed=embed1)
+				log = bot.get_channel(888053213750779934)
+				embed1 = discord.Embed(color=0x388E3C, title="АКТИВАЦИЯ ПРОМОКОДА", description=f'**`{ctx.message.author}` Активировал промокод `donat1`**')
+				await log.send(embed=embed1)
+				donat1s = True
 
-		elif code != "TESTv1":
+			else:
+				await ctx.message.author.send("Этот промокод нельзя активировать больше 1 раза.")
+
+
+		elif code == "donat2":
+			if donat2s == False:
+				await CreateFarmChannel(ctx.message.author, 'FARM ПЛАТА')
+				await ctx.message.author.send("Вы получили `FARM ПЛАТА`!")
+
+				log = bot.get_channel(888053213750779934)
+				embed1 = discord.Embed(color=0x388E3C, title="АКТИВАЦИЯ ПРОМОКОДА", description=f'**`{ctx.message.author}` Активировал промокод `donat2`**')
+				await log.send(embed=embed1)
+				donat2s = True
+
+		elif code == "test5":
+			if ctx.message.author.id == 891032252350357565:
+				if membercode == False:
+					user_balance[str(ctx.message.author.name)]['RUB'] += 5
+
+					log = bot.get_channel(888053213750779934)
+					embed1 = discord.Embed(color=0x388E3C, title="АКТИВАЦИЯ ПРОМОКОДА", description=f'**`{ctx.message.author}` Активировал промокод `test5`**')
+					await log.send(embed=embed1)
+					membercode = True
+
+				else:
+					await ctx.message.author.send("Этот промокод нельзя активировать больше 1 раза.")
+
+		elif code == "GONANEXT":
+			if gncode < 3:
+				user_balance[str(ctx.message.author.name)]['RUB'] += 5
+
+				log = bot.get_channel(888053213750779934)
+				embed1 = discord.Embed(color=0x388E3C, title="АКТИВАЦИЯ ПРОМОКОДА", description=f'**`{ctx.message.author}` Активировал промокод `test5`**')
+				await log.send(embed=embed1)
+				gncode += 1
+
+			elif gncode >= 3:
+				await ctx.message.author.send("Этот промокод нельзя активировать больше 3 раз.")
+
+			else:
+				print("No member activated")
+
+		else:
 			await ctx.send("Промокод не найден.")
 
 		with open('user_balance.json','w') as f:
@@ -1624,6 +1683,17 @@ async def ban(ctx, member: discord.Member, time: int, *, about: str):
 	await asyncio.sleep(time*60)
 	await member.remove_roles(getrole)
 
+# Unban
+@bot.command()
+@commands.has_any_role(881141342959439882, 881141987108085770)
+async def unban(ctx, member: discord.Member):
+	getrole = discord.utils.get(ctx.guild.roles, id = 888483227080224779)
+	await member.remove_roles(getrole)
+
+	log = bot.get_channel(888053213750779934)
+	embed1 = discord.Embed(color=0x388E3C, title="РАЗБАН", description=f'**`{member.name}` Был разбанен `{ctx.message.author}`**')
+	await log.send(embed=embed1)
+
 # Mute
 @bot.command()
 @commands.has_any_role(881141342959439882, 881141987108085770)
@@ -1641,6 +1711,25 @@ async def mute(ctx, member: discord.Member, time: int, *, about: str):
 	await asyncio.sleep(time*60)
 	await member.remove_roles(getrole)
 
+# Unmute
+@bot.command()
+@commands.has_any_role(881141342959439882, 881141987108085770)
+async def unmute(ctx, member: discord.Member):
+	getrole = discord.utils.get(ctx.guild.roles, id = 888461992824799283)
+	await member.remove_roles(getrole)
+
+	log = bot.get_channel(888053213750779934)
+	embed1 = discord.Embed(color=0x388E3C, title="РАЗМЬЮТ", description=f'**`{member.name}` Был размьючен `{ctx.message.author}`**')
+	await log.send(embed=embed1)
+
+
+# ubal
+@bot.command()
+#@commands.has_any_role(881141342959439882, 881141987108085770)
+async def ubal(ctx, member: discord.Member, op, type, amount):
+	if op == "+":
+		pass
+
 # ----------------------- /Moderation ------------------------|
 
 
@@ -1648,20 +1737,35 @@ async def mute(ctx, member: discord.Member, time: int, *, about: str):
 async def upd(ctx):
 	guild = bot.get_guild(880008097370865706)
 
+	'''
+	farms = bot.get_channel(880025073963122718)
+	m = await farms.fetch_message(886528504068464640)
+	embedf10 = discord.Embed(color=0x3C55FA, title="FARM ПЛАТА", description=f'Самая простая видеокарта\n\n**Для покупки за RUB нажмите :euro:**\n')
+	embedf10.set_thumbnail(url="https://i.ibb.co/pd6w8dt/plata.png")
+	embedf10.add_field(name = '**Макс срок работы:**', value = "11дней", inline = True)
+	embedf10.add_field(name = '**Производительность:**', value = "0.3v/ч", inline = True)
+	embedf10.add_field(name = '**Срок окупаемости:**', value = "10 дней", inline = True)
+
+	embedf10.add_field(name = '**Сложность:**', value = "EASY", inline = True)
+	embedf10.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
+	embedf10.add_field(name = '**ЦЕНА:**', value = "79RUB", inline = True)
+	await m.edit(embed = embedf10)
+
+	
 	system = bot.get_channel(880024762942889994)
 	m = await system.fetch_message(881782363191910440)
 	embed = discord.Embed(color=0x3C55FA, title="НАША СИСТЕМА", description=f'**НАША КОНЦЕПЦИЯ**\n:dash:NEXT Invest:dash: - проект основная цель которого дать людям проводить время на сервере общаясь, выполняя какие либо задания, получая за это деньги. Специально для Вас была разработана уникальная система автоматизированного получения прибыли путем так называемого майнинга, позволяющая получать внутрисерверную криптовалюту, всем без исключений, которую в дальнейшем можно обменять на реальные деньги. При входе на сервер, для Вас создаётся личный счёт с нашей валютой. С помощью данного счета, вы можете осуществлять вывод, конвертацию и пополнение средств. Все покупки внутри сервера, включая покупку ферм, не является обязательным условием для нахождения на нашем сервере и носит лишь развлекательный характер.\n\n**Насколько безопасна ваша система?**\nТехнология проекта — имеет проверенный временем высокий уровень безопасности! Система грамотно спроектирована, что не позволит дать доступ к вашей уч.Записи злоумышленникам\nНаша валюта защищена от инфляции и внешних факторов экономики.Благодаря нашей технологии, проект защищен от внешнего контроля и управлением, эмиссия этой криптовалюты происходит в процессе работы ферм, использования нашего ПО.\n\n**ВАРИАНТЫ ПОЛУЧЕНИЯ ВАЛЮТЫ:**\n[▽ ОБЩЕНИЕ В ГОЛОСОВЫХ КАНАЛАХ]()\n[▽ ПРИОБРЕТЕНИЕ МАЙНИНГ ФЕРМ]()\n▽ТОРГОВЛЯ КРИПТОВАЛЮТОЙ\n▽ВЫПОЛНЕНИЕ ЗАДАНИЙ СЕРВЕРА\n▽СЁРФИНГ\n[▽ ТОРГОВЛЯ]()\n[▽ ЕЖЕДНЕВНЫЕ ЗАДАНИЯ]()\n[▽ РЕФЕРАЛЬНАЯ СИСТЕМА]()\n[▽ ОТКРЫТИЕ КЕЙСОВ]()\n[▽ УЧАСТИЕ И ИВЕНТАХ]()\n[▽ УЧАСТИЕ В РОЗЫГРЫШАХ]()\n[▽ S.UP И BUMP СЕРВЕРА]()\n')
 	await m.edit(embed=embed)
 
 
-	'''
+	
 	navigation = bot.get_channel(889216233604526132)
 	embed = discord.Embed(color=0x3C55FA, title=f'БАНК', description=f'**Кратко о системе:**\nВ Банке вы можете открыть депозит и ни о чем не париться. Преимущество депозита от покупки ферм в том, что вам не нужно заходить ежедневно и собирать прибыль, при этом у вас ничего не будет ломаться и вы 100% выйдете в плюс . Вы можете не заходить неделями, а чтобы получить начисления по депозиту вам нужно просто наведаться в Банк, и деньги поступят на ваш баланс . Выбирайте тариф, создавайте депозит и получайте ежедневные начисления!\n\n**Выберите инвестиционный план:**\n\n:one:\nДоходность - 110%\nСрок вклада - 25 дней\nсумма вклада - 20-500 рублей\n\n:two:\nДоходность - 120%\nСрок вклада - 45 дней\nсумма вклада - 400-2000 рублей')
 	embed.set_thumbnail(url="https://im0-tub-ru.yandex.net/i?id=162008a3587f9cc3f2da4904ce53e275&n=13")
 	message = await navigation.send(embed = embed)
 	await message.add_reaction('1️⃣')
 	await message.add_reaction('2️⃣')
-
+	
 
 	
 	channel = bot.get_channel(889843449300398111)
@@ -1670,13 +1774,14 @@ async def upd(ctx):
 	embed = discord.Embed(color=0x80F7FF, title=f'PLATINUM CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**850RUB | 650RUB | 500RUB | 420RUB | 400RUB|** 350 RUB| 200RUB | 100RUB | 65 RUB| Premium  45 day\n-FARM GTX\n-FARM RTX\n-FARM ASIC\nУНИКАЛЬНАЯ РОЛЬ 🌀\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 500RUB\n:credit_card: 5шт - 2500RUB')
 	embed.set_thumbnail(url="https://i.ibb.co/1MDfBNc/PLATINUM.png")
 	await m.edit(embed = embed)
-
+	
 
 	
-	m1 = await channel.fetch_message(890117698636365824)
-	embed1 = discord.Embed(color=0x2E62FF, title=f'PREMIUM CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**6400RUB  | 3200RUB  | 1600RUB |** 800RUB  |  400RUB  |  200RUB  |\nУНИКАЛЬНАЯ РОЛЬ  ☄️**\n\nНАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 1000RUB\n:credit_card: 5шт - 5000RUB')
-	embed1.set_thumbnail(url="https://i.ibb.co/1LWW1R8/PREMIUM.png")
-	await m1.edit(embed = embed1)
+	channel = bot.get_channel(889843449300398111)
+	m2 = await channel.fetch_message(891665705655746600)
+	embed = discord.Embed(color=0x2E62FF, title=f'Кейс открытие', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**500RUB | 350RUB | 120RUB | 45RUB | 35RUB | 25RUB |** 10RUB | 5RUB |\n**Ферма** - FARM ПЛАТА\n**УНИКАЛЬНАЯ РОЛЬ** ☄️; Бизнесмен;\n\nНАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - ~~75RUB~~ 25RUB**\n:credit_card: 5шт - ~~375RUB~~ 125RUB')
+	embed.set_thumbnail(url="https://i.ibb.co/1LWW1R8/PREMIUM.png")
+	await m2.edit(embed = embed)
 	
 
 
@@ -1710,7 +1815,6 @@ async def upd(ctx):
 	embed168 = discord.Embed(color=0x2E62FF, description=f':l_::b_::b_::b_::b_::b_::b_::b_::b_::b_: `1/10`')
 	await channel1.send(embed = embed168)
 	await channel1.send('<:dfgf:> :dfgf: :a_::a_::b_::b_::b_::b_::b_::b_::b_: `3/10`')
-
 	'''
 
 bot.run('ODc5NjkzNDk5ODQ1NDU1ODcy.YSTcag.KiNpzAVZ_isc-HIdeeLw6FbJZgM')

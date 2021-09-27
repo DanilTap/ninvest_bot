@@ -1117,10 +1117,10 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
-		farm_messages.append(message.id)
-
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
+
+		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]['farms'] = f'{farm}'
 		farms[str(member.name)]['life_time'] = 2505600
@@ -1142,10 +1142,10 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
-		farm_messages.append(message.id)
-
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
+
+		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]['farms'] = f'{farm}'
 		farms[str(member.name)]['life_time'] = 2505600
@@ -1167,10 +1167,10 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
-		farm_messages.append(message.id)
-
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
+
+		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]['farms'] = f'{farm}'
 		farms[str(member.name)]['life_time'] = 3888000
@@ -1192,10 +1192,10 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
-		farm_messages.append(message.id)
-
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
+
+		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]['farms'] = f'{farm}'
 		farms[str(member.name)]['life_time'] = 3456000
@@ -1217,10 +1217,10 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
-		farm_messages.append(message.id)
-
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
+
+		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]['farms'] = f'{farm}'
 		farms[str(member.name)]['life_time'] = 1728000
@@ -1242,10 +1242,10 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
-		farm_messages.append(message.id)
-
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
+
+		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]['farms'] = f'{farm}'
 		farms[str(member.name)]['life_time'] = 2592000
@@ -1267,10 +1267,10 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
-		farm_messages.append(message.id)
-
 		with open('user_farms.json','r', encoding='utf-8') as f:
-			farms = json.load(f)	
+			farms = json.load(f)
+
+		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]['farms'] = f'{farm}'
 		farms[str(member.name)]['life_time'] = 3283200
@@ -1292,10 +1292,10 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
-		farm_messages.append(message.id)
-
 		with open('user_farms.json','r', encoding='utf-8') as f:
-			farms = json.load(f)	
+			farms = json.load(f)
+
+		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]['farms'] = f'{farm}'
 		farms[str(member.name)]['life_time'] = 3196800
@@ -1317,10 +1317,10 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
-		farm_messages.append(message.id)
-
 		with open('user_farms.json','r', encoding='utf-8') as f:
-			farms = json.load(f)	
+			farms = json.load(f)
+
+		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]['farms'] = f'{farm}'
 		farms[str(member.name)]['life_time'] = 3628800
@@ -1342,10 +1342,10 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
-		farm_messages.append(message.id)
-
 		with open('user_farms.json','r', encoding='utf-8') as f:
-			farms = json.load(f)	
+			farms = json.load(f)
+
+		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]['farms'] = f'{farm}'
 		farms[str(member.name)]['life_time'] = 950400

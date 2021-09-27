@@ -1745,51 +1745,55 @@ async def unmute(ctx, member: discord.Member):
 
 # ubal
 @bot.command()
-@commands.has_any_role(881141342959439882, 881141987108085770)
+#@commands.has_any_role(881141342959439882, 881141987108085770)
 async def ubal(ctx, member: discord.Member, ctype, op: str, amount: int):
-	await ctx.message.add_reaction('✅')
 	with open('user_balance.json','r', encoding='utf-8') as f:
 		user_balance = json.load(f)
+		
+	if ctx.message.author.id == 663424295854407692:
+		await ctx.message.add_reaction('✅')
+		if op == "=":
+			if ctype == "RUB":
+				user_balance[str(member.name)]['RUB'] = amount
+				await ctx.message.add_reaction('✅')
 
-	if op == "=":
-		if ctype == "RUB":
-			user_balance[str(member.name)]['RUB'] = amount
-			await ctx.message.add_reaction('✅')
+			elif ctype == "NTB":
+				user_balance[str(member.name)]['NTB'] = amount
+				await ctx.message.add_reaction('✅')
 
-		elif ctype == "NTB":
-			user_balance[str(member.name)]['NTB'] = amount
-			await ctx.message.add_reaction('✅')
+			else:
+				await ctx.send('Указан неверный тип валюты.')
 
-		else:
-			await ctx.send('Указан неверный тип валюты.')
+		elif op == "+":
+			if ctype == "RUB":
+				user_balance[str(member.name)]['RUB'] += amount
+				await ctx.message.add_reaction('✅')
 
-	elif op == "+":
-		if ctype == "RUB":
-			user_balance[str(member.name)]['RUB'] += amount
-			await ctx.message.add_reaction('✅')
+			elif ctype == "NTB":
+				user_balance[str(member.name)]['NTB'] = amount
+				await ctx.message.add_reaction('✅')
 
-		elif ctype == "NTB":
-			user_balance[str(member.name)]['NTB'] = amount
-			await ctx.message.add_reaction('✅')
+			else:
+				await ctx.send('Указан неверный тип валюты.')
 
-		else:
-			await ctx.send('Указан неверный тип валюты.')
+		elif op == "-":
+			if ctype == "RUB":
+				user_balance[str(member.name)]['RUB'] -= amount
+				await ctx.message.add_reaction('✅')
 
-	elif op == "-":
-		if ctype == "RUB":
-			user_balance[str(member.name)]['RUB'] -= amount
-			await ctx.message.add_reaction('✅')
+			elif ctype == "NTB":
+				user_balance[str(member.name)]['NTB'] -= amount
+				await ctx.message.add_reaction('✅')
 
-		elif ctype == "NTB":
-			user_balance[str(member.name)]['NTB'] -= amount
-			await ctx.message.add_reaction('✅')
+			else:
+				await ctx.send('Указан неверный тип валюты.')
 
-		else:
-			await ctx.send('Указан неверный тип валюты.')
+		with open('user_balance.json','w') as f:
+			json.dump(user_balance,f)	
 
-	with open('user_balance.json','w') as f:
-		json.dump(user_balance,f)	
-
+	else:
+		print("Not man")
+			
 # ----------------------- /Moderation ------------------------|
 
 

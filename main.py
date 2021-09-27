@@ -896,10 +896,14 @@ async def on_raw_reaction_add(payload):
 				with open('user_balance.json','r', encoding='utf-8') as f:
 					mined = json.load(f)
 
+				minedd = mined[str(member.name)]['mined']
+				await member.send(f'Вы вывели **{minedd}RUB**')
+
 				mined[str(member.name)]['RUB'] += mined[str(member.name)]['mined']
 				mined[str(member.name)]['mined'] = 0
 				with open('user_balance.json','w') as f:
 					json.dump(mined,f)
+
 	
 
 # Welcome

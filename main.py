@@ -41,18 +41,8 @@ async def on_ready():
 		farms = json.load(f)
 
 	print("----------Loading farms-----------")
-
-	for i in farms: # For all members
+	for i in farms:
 		member = farms[i]['name']
-		farm_list = farms[i]['farms']
-
-
-		for i in range(len(farm_list)): # For all farms
-			print(f'{farm_list[i]}')
-			dict1 = json.loads("'{}'".format(farm_list))
-			print(type(dict1)) 
-
-		'''
 		if farms[i]['farms'] != "none":
 
 			life = farms[i]['life_time']
@@ -67,7 +57,7 @@ async def on_ready():
 
 		else:
 			print(f'{member} NO FARMS')
-		'''
+
 	print("----------Loading done!----------\n\n\n")
 
 
@@ -466,15 +456,21 @@ async def on_raw_reaction_add(payload):
 
 			elif balance >= 49:
 				user_balance[str(member.name)]['RUB'] -= 49
-				items = [220, 140, 100, 50, 35, 20, 10, 'role']
+				items = [220, 140, 100, 50, 35, 20, 15, 10, 'role', 'role1']
 
 				item = random.choice(items)
 				print(item)
 
 				if item == 'role':
-					getrole = discord.utils.get(guild.roles, id = 890960183155630191 )
+					getrole = discord.utils.get(guild.roles, id = 890960183155630191)
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@бизнесмен`!")
+
+				elif item == 'role1':
+					getrole = discord.utils.get(guild.roles, id = 892435708881539103)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@Trainer`!")
+
 
 				else:
 					user_balance[str(member.name)]['RUB'] += item
@@ -521,7 +517,7 @@ async def on_raw_reaction_add(payload):
 
 			elif balance >= 99:
 				user_balance[str(member.name)]['RUB'] -= 99
-				items = [450, 320, 160, 80, 50, 55, 40, 20, 10, 'premium', 'farm', 'farm2' 'jet']
+				items = [80, 50, 55, 40, 20, 10, 'premium', 'farm', 'farm2' 'jet']
 
 				item = random.choice(items)
 				print(item)
@@ -601,7 +597,7 @@ async def on_raw_reaction_add(payload):
 
 			elif balance >= 199:
 				user_balance[str(member.name)]['RUB'] -= 199
-				items = [450, 330, 250, 210, 200, 150, 100, 85, 65, 50, 'premium', 'farm', 'farm1', 'role1', 'role2', 'role3']
+				items = [210, 200, 150, 100, 85, 65, 50, 'premium', 'farm', 'farm1', 'role1', 'role2', 'role3']
 
 				item = random.choice(items)
 				print(item)
@@ -615,9 +611,9 @@ async def on_raw_reaction_add(payload):
 					await CreateFarmChannel(member, 'FARM ЗАТЫЧКА')
 					await member.send("Вы выиграли ферму `FARM ЗАТЫЧКА`!")
 
-				elif item == 'farm1':
-					await CreateFarmChannel(member, 'FARM GTX')
-					await member.send("Вы выиграли ферму `FARM GTX`!")
+				#elif item == 'farm1':
+					#await CreateFarmChannel(member, 'FARM GTX')
+					#await member.send("Вы выиграли ферму `FARM GTX`!")
 
 				elif item == 'role1':
 					getrole = discord.utils.get(guild.roles, id = 890119411153911839)
@@ -701,7 +697,7 @@ async def on_raw_reaction_add(payload):
 
 			elif balance >= 500:
 				user_balance[str(member.name)]['RUB'] -= 500
-				items = [3200, 1600, 800, 400, 400, 200, 100, 'premium', 'role', 'farm1', 'farm2', 'farm3']
+				items = [535, 500, 420, 400, 350, 200, 100, 65, 'premium', 'role', 'farm1', 'farm2', 'farm3']
 
 				item = random.choice(items)
 				print(item)
@@ -896,14 +892,10 @@ async def on_raw_reaction_add(payload):
 				with open('user_balance.json','r', encoding='utf-8') as f:
 					mined = json.load(f)
 
-				minedd = mined[str(member.name)]['mined']
-				await member.send(f'Вы вывели **{minedd}RUB**')
-
 				mined[str(member.name)]['RUB'] += mined[str(member.name)]['mined']
 				mined[str(member.name)]['mined'] = 0
 				with open('user_balance.json','w') as f:
 					json.dump(mined,f)
-
 	
 
 # Welcome
@@ -998,7 +990,7 @@ async def on_member_join(member):
 
 
 # |------------------------------- METHODS --------------------------------|
-def Farm(member: discord.Member, life, amount: float, auto: bool):
+def Farm(member: discord.Member.name, life, amount: float, auto: bool):
 	print(f'----------Farm started----------')
 	out_time = 3600
 	m_chance = 0
@@ -1021,12 +1013,12 @@ def Farm(member: discord.Member, life, amount: float, auto: bool):
 
 			# If farm is automatic
 			if auto == True:
-				mined[str(member.name)]['RUB'] += round(amount, 2)
+				mined[str(member)]['RUB'] += round(amount, 2)
 				with open('user_balance.json','w') as f:
 					json.dump(mined,f)
 
 			elif auto == False:
-				mined[str(member.name)]['mined'] += round(amount, 2)
+				mined[str(member)]['mined'] += round(amount, 2)
 				with open('user_balance.json','w') as f:
 					json.dump(mined,f)
 
@@ -1040,11 +1032,11 @@ def Farm(member: discord.Member, life, amount: float, auto: bool):
 					with open('user_farms.json','r', encoding='utf-8') as f:
 						farms = json.load(f)
 
-					farms[str(member.name)]['farms'] = "none"
-					farms[str(member.name)]['life_time'] = 0
-					farms[str(member.name)]['out'] = 0
-					farms[str(member.name)]['auto'] = False
-					farms[str(member.name)]['channel_id'] = 0
+					farms[str(member)]['farms'] = "none"
+					farms[str(member)]['life_time'] = 0
+					farms[str(member)]['out'] = 0
+					farms[str(member)]['auto'] = False
+					farms[str(member)]['channel_id'] = 0
 					with open('user_farms.json','w') as f:
 						json.dump(farms,f)
 
@@ -1054,8 +1046,7 @@ def Farm(member: discord.Member, life, amount: float, auto: bool):
 				with open('user_farms.json','r', encoding='utf-8') as f:
 					farms = json.load(f)
 
-				farms[str(member.name)]['farms'] = "none"
-				farms[str(member.name)]['life_time'] -= 3600
+				farms[str(member)]['life_time'] -= 3600
 				with open('user_farms.json','w') as f:
 					json.dump(farms,f)
 
@@ -1109,7 +1100,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, 3024000, 0.25, False))
+		farmth = Thread(target=Farm, args=(member.name, 3024000, 0.25, False))
 		farmth.start()
 
 
@@ -1134,7 +1125,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, 2505600, 0.5, False))
+		farmth = Thread(target=Farm, args=(member.name, 2505600, 0.5, False))
 		farmth.start()
 
 
@@ -1159,7 +1150,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, 2505600, 1.0, False))
+		farmth = Thread(target=Farm, args=(member.name, 2505600, 1.0, False))
 		farmth.start()
 
 
@@ -1177,22 +1168,22 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]['farms'] = f'{farm}'
-		farms[str(member.name)]['life_time'] = 3888000
+		farms[str(member.name)]['life_time'] = 3024000
 		farms[str(member.name)]['out'] = 1.5
 		farms[str(member.name)]['auto'] = True
 		farms[str(member.name)]['channel_id'] = channel.id
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, 3888000, 1.5, True))
+		farmth = Thread(target=Farm, args=(member.name, 3024000, 1.5, True))
 		farmth.start()
 
 
 	elif farm == "FARM MULTI":
 		embed = discord.Embed(color=0x3C55FA, title="ПАНЕЛЬ УПРАВЛЕНИЯ FARM MULTI", description=f'Панель управления майнинг фермой "FARM MULTI"\n\n**АВТОМАТИЧЕСКИЙ ВЫВОД**\n\n')
 		embed.set_thumbnail(url="https://i.ibb.co/SmQ7bNk/M.png")
-		embed.add_field(name = '**Срок работы:**', value = f'40дней', inline = True)
-		embed.add_field(name = '**Срок окупаемости:**', value = f'21 день', inline = True)
+		embed.add_field(name = '**Срок работы:**', value = f'33дней', inline = True)
+		embed.add_field(name = '**Срок окупаемости:**', value = f'26 день', inline = True)
 		embed.add_field(name = '**До вывода осталось:**', value = f'60 минут', inline = True)
 		message = await channel.send(embed=embed)
 		await message.add_reaction('📤')
@@ -1202,14 +1193,14 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]['farms'] = f'{farm}'
-		farms[str(member.name)]['life_time'] = 3456000
+		farms[str(member.name)]['life_time'] = 2851200
 		farms[str(member.name)]['out'] = 2.0
 		farms[str(member.name)]['auto'] = True
 		farms[str(member.name)]['channel_id'] = channel.id
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, 3456000, 2.0, True))
+		farmth = Thread(target=Farm, args=(member.name, 2851200, 2.0, True))
 		farmth.start()
 
 
@@ -1234,7 +1225,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, 1728000, 3.0, False))
+		farmth = Thread(target=Farm, args=(member.name, 1728000, 3.0, False))
 		farmth.start()
 
 
@@ -1259,7 +1250,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, 2592000, 4.0, False))
+		farmth = Thread(target=Farm, args=(member.name, 2592000, 4.0, False))
 		farmth.start()
 
 
@@ -1284,7 +1275,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, 3283200, 7.0, False))
+		farmth = Thread(target=Farm, args=(member.name, 3283200, 7.0, False))
 		farmth.start()
 
 
@@ -1309,7 +1300,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, 3196800, 14.0, True))
+		farmth = Thread(target=Farm, args=(member.name, 3196800, 14.0, True))
 		farmth.start()
 
 
@@ -1334,7 +1325,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, 3628800, 25.0, True))
+		farmth = Thread(target=Farm, args=(member.name, 3628800, 25.0, True))
 		farmth.start()
 
 
@@ -1359,7 +1350,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, 950400, 0.3, False))
+		farmth = Thread(target=Farm, args=(member.name, 950400, 0.3, False))
 		farmth.start()
 
 
@@ -1793,238 +1784,257 @@ async def ubal(ctx, member: discord.Member, ctype, op: str, amount: int):
 
 	else:
 		print("Not man")
-			
+
+@bot.command()
+async def db(ctx):
+	guild = bot.get_guild(880008097370865706)
+	if ctx.message.guild == guild:
+		print('In guild')
+
+	else:
+		with open('user_balance.json','r', encoding='utf-8') as f:
+			user_balance = json.load(f)
+
+		with open('user_farms.json','r', encoding='utf-8') as f:
+			user_farms = json.load(f)
+
+		with open('referal.json','r', encoding='utf-8') as f:
+			ref = json.load(f)
+
+		with open('user_bank.json','r', encoding='utf-8') as f:
+			bank = json.load(f)
+
+		with open('db.txt','w+', encoding='utf-8') as f:
+			f.write(f'user_balance.json:\n{user_balance}\n\n\nuser_farms.json:\n{user_farms}\n\n\nreferal.json:\n{ref}\n\n\nuser_bank.json:\n{bank}')
+
+		member = guild.get_member(677453905227022349)
+		await ctx.send(file=discord.File(r'db.txt'))
+
 # ----------------------- /Moderation ------------------------|
 
 
 @bot.command()
 async def upd(ctx):
-	guild = bot.get_guild(880008097370865706)
+	if ctx.message.author.id == 677453905227022349:
 
-	farms = bot.get_channel(880025073963122718)
+		guild = bot.get_guild(880008097370865706)
+		'''
+		farms = bot.get_channel(880025073963122718)
+		m = await farms.fetch_message(886528458887401473)
+		embedf = discord.Embed(color=0x3C55FA, title="FARM ЗАТЫЧКА", description=f'На слабой видеокарте\n\n**Для покупки за RUB нажмите :euro:**\n')
+		embedf.set_thumbnail(url="https://i.ibb.co/92f8Cw8/Z.png")
+		embedf.add_field(name = '**Макс срок работы:**', value = "35дней", inline = True)
+		embedf.add_field(name = '**Производительность:**', value = "0.25RUB/ч", inline = True)
+		embedf.add_field(name = '**Срок окупаемости:**', value = "25 дней", inline = True)
 
-	m = await farms.fetch_message(886528458887401473)
-	embedf = discord.Embed(color=0x3C55FA, title="FARM ЗАТЫЧКА", description=f'На слабой видеокарте\n\n**Для покупки за RUB нажмите :euro:**\n')
-	embedf.set_thumbnail(url="https://i.ibb.co/92f8Cw8/Z.png")
-	embedf.add_field(name = '**Макс срок работы:**', value = "35дней", inline = True)
-	embedf.add_field(name = '**Производительность:**', value = "0.25RUB/ч", inline = True)
-	embedf.add_field(name = '**Срок окупаемости:**', value = "25 дней", inline = True)
-
-	embedf.add_field(name = '**Сложность:**', value = "EASY", inline = True)
-	embedf.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
-	embedf.add_field(name = '**ЦЕНА:**', value = "149RUB", inline = True)
-	await m.edit(embed = embedf)
-
-
-	m1 = await farms.fetch_message(886528465631862905)
-	embedf1 = discord.Embed(color=0x3C55FA, title="FARM GTX", description=f'На игровой видеокарте\n\n**Для покупки за RUB нажмите :euro:**\n')
-	embedf1.set_thumbnail(url="https://i.ibb.co/RCt8s0K/G.png")
-	embedf1.add_field(name = '**Макс срок работы:**', value = "29дней", inline = True)
-	embedf1.add_field(name = '**Производительность:**', value = "0.5RUB/ч", inline = True)
-	embedf1.add_field(name = '**Срок окупаемости:**', value = "21 день", inline = True)
-
-	embedf1.add_field(name = '**Сложность:**', value = "EASY", inline = True)
-	embedf1.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
-	embedf1.add_field(name = '**ЦЕНА:**', value = "249RUB", inline = True)
-	await m1.edit(embed = embedf1)
+		embedf.add_field(name = '**Сложность:**', value = "EASY", inline = True)
+		embedf.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
+		embedf.add_field(name = '**ЦЕНА:**', value = "149RUB", inline = True)
+		await m.edit(embed = embedf)
 
 
-	m2 = await farms.fetch_message(886528471159930961)
-	embedf2 = discord.Embed(color=0x3C55FA, title="FARM RTX", description=f'На мощной видеокарте\n\n**Для покупки за RUB нажмите :euro:**\n')
-	embedf2.set_thumbnail(url="https://i.ibb.co/z72pGRR/R.png")
-	embedf2.add_field(name = '**Макс срок работы:**', value = "29дней", inline = True)
-	embedf2.add_field(name = '**Производительность:**', value = "1RUB/ч", inline = True)
-	embedf2.add_field(name = '**Срок окупаемости:**', value = "21 день", inline = True)
+		m1 = await farms.fetch_message(886528465631862905)
+		embedf1 = discord.Embed(color=0x3C55FA, title="FARM GTX", description=f'На игровой видеокарте\n\n**Для покупки за RUB нажмите :euro:**\n')
+		embedf1.set_thumbnail(url="https://i.ibb.co/RCt8s0K/G.png")
+		embedf1.add_field(name = '**Макс срок работы:**', value = "29дней", inline = True)
+		embedf1.add_field(name = '**Производительность:**', value = "0.5RUB/ч", inline = True)
+		embedf1.add_field(name = '**Срок окупаемости:**', value = "21 день", inline = True)
 
-	embedf2.add_field(name = '**Сложность:**', value = "NORM", inline = True)
-	embedf2.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
-	embedf2.add_field(name = '**ЦЕНА:**', value = "**499RUB**", inline = True)
-	await m2.edit(embed = embedf2)
-
-
-	m3 = await farms.fetch_message(886528474192437278)
-	embedf3 = discord.Embed(color=0x3C55FA, title="FARM ASIC", description=f'На автоматическом оборудовании для майнинга\n\n**Для покупки за RUB нажмите :euro:**\n')
-	embedf3.set_thumbnail(url="https://i.ibb.co/RHfBJvm/A.png")
-	embedf3.add_field(name = '**Макс срок работы:**', value = "35дней", inline = True)
-	embedf3.add_field(name = '**Производительность:**', value = "1.5RUB/ч", inline = True)
-	embedf3.add_field(name = '**Срок окупаемости:**', value = "21 дней", inline = True)
-
-	embedf3.add_field(name = '**Сложность:**', value = "NORM", inline = True)
-	embedf3.add_field(name = '**Вывод RUB на баланс:**', value = "Автоматический", inline = True)
-	embedf3.add_field(name = '**ЦЕНА:**', value = "**749RUB**", inline = True)
-	await m3.edit(embed = embedf3)
+		embedf1.add_field(name = '**Сложность:**', value = "EASY", inline = True)
+		embedf1.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
+		embedf1.add_field(name = '**ЦЕНА:**', value = "249RUB", inline = True)
+		await m1.edit(embed = embedf1)
 
 
-	m4 = await farms.fetch_message(886528476797083668)
-	embedf4 = discord.Embed(color=0x3C55FA, title="FARM MULTI", description=f'На мощном оборудовании для майнинга\n\n**Для покупки за RUB нажмите :euro:**\n')
-	embedf4.set_thumbnail(url="https://i.ibb.co/SmQ7bNk/M.png")
-	embedf4.add_field(name = '**Макс срок работы:**', value = "40дней", inline = True)
-	embedf4.add_field(name = '**Производительность:**', value = "2RUB/ч", inline = True)
-	embedf4.add_field(name = '**Срок окупаемости:**', value = "21 день", inline = True)
+		m2 = await farms.fetch_message(886528471159930961)
+		embedf2 = discord.Embed(color=0x3C55FA, title="FARM RTX", description=f'На мощной видеокарте\n\n**Для покупки за RUB нажмите :euro:**\n')
+		embedf2.set_thumbnail(url="https://i.ibb.co/z72pGRR/R.png")
+		embedf2.add_field(name = '**Макс срок работы:**', value = "29дней", inline = True)
+		embedf2.add_field(name = '**Производительность:**', value = "1RUB/ч", inline = True)
+		embedf2.add_field(name = '**Срок окупаемости:**', value = "21 день", inline = True)
 
-	embedf4.add_field(name = '**Сложность:**', value = "NORM", inline = True)
-	embedf4.add_field(name = '**Вывод RUB на баланс:**', value = "Автоматический", inline = True)
-	embedf4.add_field(name = '**ЦЕНА:**', value = "**999RUB**", inline = True)
-	await m4.edit(embed = embedf4)
-
-
-	m5 = await farms.fetch_message(886528481381462076)
-	embedf5 = discord.Embed(color=0x3C55FA, title="FARM BOOST", description=f'На улучшенном оборудовании для майнинга\n\n**Для покупки за RUB нажмите :euro:**\n')
-	embedf5.set_thumbnail(url="https://i.ibb.co/rf67N6Y/B.png")
-	embedf5.add_field(name = '**Макс срок работы:**', value = "20дней", inline = True)
-	embedf5.add_field(name = '**Производительность:**', value = "3RUB/ч", inline = True)
-	embedf5.add_field(name = '**Срок окупаемости:**', value = "14 дней", inline = True)
-
-	embedf5.add_field(name = '**Сложность:**', value = "HARD", inline = True)
-	embedf5.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
-	embedf5.add_field(name = '**ЦЕНА:**', value = "**999RUB**", inline = True)
-	await m5.edit(embed = embedf5)
+		embedf2.add_field(name = '**Сложность:**', value = "NORM", inline = True)
+		embedf2.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
+		embedf2.add_field(name = '**ЦЕНА:**', value = "**499RUB**", inline = True)
+		await m2.edit(embed = embedf2)
 
 
-	m6 = await farms.fetch_message(886528484460097546)
-	embedf6 = discord.Embed(color=0x3C55FA, title="FARM TITAN", description=f'На мощных видеокартах\n\n**Для покупки за RUB нажмите :euro:**\n')
-	embedf6.set_thumbnail(url="https://i.ibb.co/87WYdBB/T.png")
-	embedf6.add_field(name = '**Макс срок работы:**', value = "30дней", inline = True)
-	embedf6.add_field(name = '**Производительность:**', value = "4RUB/ч", inline = True)
-	embedf6.add_field(name = '**Срок окупаемости:**', value = "16 дней", inline = True)
+		m3 = await farms.fetch_message(886528474192437278)
+		embedf3 = discord.Embed(color=0x3C55FA, title="FARM ASIC", description=f'На автоматическом оборудовании для майнинга\n\n**Для покупки за RUB нажмите :euro:**\n')
+		embedf3.set_thumbnail(url="https://i.ibb.co/RHfBJvm/A.png")
+		embedf3.add_field(name = '**Макс срок работы:**', value = "35дней", inline = True)
+		embedf3.add_field(name = '**Производительность:**', value = "0.6RUB/ч", inline = True)
+		embedf3.add_field(name = '**Срок окупаемости:**', value = "21 дней", inline = True)
 
-	embedf6.add_field(name = '**Сложность:**', value = "HARD", inline = True)
-	embedf6.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
-	embedf6.add_field(name = '**ЦЕНА:**', value = "**1499RUB **", inline = True)
-	await m6.edit(embed = embedf6)
-
-	'''
-	m7 = await farms.fetch_message(881782363191910440)
-	embedf7 = discord.Embed(color=0x3C55FA, title="FARM SERVER", description=f'На серверном оборудовании\n\n**Для покупки за RUB нажмите :euro:**\n')
-	embedf7.set_thumbnail(url="https://i.ibb.co/0KDHq9W/S.png")
-	embedf7.add_field(name = '**Макс срок работы:**', value = "50дней", inline = True)
-	embedf7.add_field(name = '**Производительность:**', value = "8RUB/ч", inline = True)
-	embedf7.add_field(name = '**Срок окупаемости:**', value = "13 дней", inline = True)
-
-	embedf7.add_field(name = '**Сложность:**', value = "MASTER", inline = True)
-	embedf7.add_field(name = '**Вывод V на баланс:**', value = "Ручной", inline = True)
-	embedf7.add_field(name = '**ЦЕНА:**', value = "**2499V**", inline = True)
-	await m7.edit(embed = embedf7)
-	'''
-
-	m8 = await farms.fetch_message(886528488234971207)
-	embedf8 = discord.Embed(color=0x3C55FA, title="FARM FACTORY", description=f'На автоматическом заводском оборудовании\n\n**Для покупки за RUB нажмите :euro:**\n')
-	embedf8.set_thumbnail(url="https://i.ibb.co/NL6qq9w/F.png")
-	embedf8.add_field(name = '**Макс срок работы:**', value = "37дней", inline = True)
-	embedf8.add_field(name = '**Производительность:**', value = "14RUB/ч", inline = True)
-	embedf8.add_field(name = '**Срок окупаемости:**', value = "13 дней", inline = True)
-
-	embedf8.add_field(name = '**Сложность:**', value = "EXPERT", inline = True)
-	embedf8.add_field(name = '**Вывод RUB на баланс:**', value = "Автоматический", inline = True)
-	embedf8.add_field(name = '**ЦЕНА:**', value = "**4999RUB**", inline = True)
-	await m8.edit(embed = embedf8)
+		embedf3.add_field(name = '**Сложность:**', value = "NORM", inline = True)
+		embedf3.add_field(name = '**Вывод RUB на баланс:**', value = "Автоматический", inline = True)
+		embedf3.add_field(name = '**ЦЕНА:**', value = "**299RUB**", inline = True)
+		await m3.edit(embed = embedf3)
 
 
-	m9 = await farms.fetch_message(886528493339422774)
-	embedf9 = discord.Embed(color=0x3C55FA, title="FARM QUANTUM", description=f'Мощный квантовый компьютер\n\n**Для покупки за RUB нажмите :euro:**\n')
-	embedf9.set_thumbnail(url="https://i.ibb.co/JBnsbKS/Q.png")
-	embedf9.add_field(name = '**Макс срок работы:**', value = "42дня", inline = True)
-	embedf9.add_field(name = '**Производительность:**', value = "25RUB/ч", inline = True)
-	embedf9.add_field(name = '**Срок окупаемости:**', value = "10 дней", inline = True)
+		m4 = await farms.fetch_message(886528476797083668)
+		embedf4 = discord.Embed(color=0x3C55FA, title="FARM MULTI", description=f'На мощном оборудовании для майнинга\n\n**Для покупки за RUB нажмите :euro:**\n')
+		embedf4.set_thumbnail(url="https://i.ibb.co/SmQ7bNk/M.png")
+		embedf4.add_field(name = '**Макс срок работы:**', value = "33дней", inline = True)
+		embedf4.add_field(name = '**Производительность:**', value = "0.8RUB/ч", inline = True)
+		embedf4.add_field(name = '**Срок окупаемости:**', value = "26 день", inline = True)
 
-	embedf9.add_field(name = '**Сложность:**', value = "INSANE", inline = True)
-	embedf9.add_field(name = '**Вывод RUB на баланс:**', value = "Автоматический", inline = True)
-	embedf9.add_field(name = '**ЦЕНА:**', value = "**9999RUB**", inline = True)
-	await m9.edit(embed = embedf9)
-
-
-	m10 = await farms.fetch_message(886528504068464640)
-	embedf10 = discord.Embed(color=0x3C55FA, title="FARM ПЛАТА", description=f'Самая простая видеокарта\n\n**Для покупки за RUB нажмите :euro:**\n')
-	embedf10.set_thumbnail(url="https://i.ibb.co/pd6w8dt/plata.png")
-	embedf10.add_field(name = '**Макс срок работы:**', value = "14дней", inline = True)
-	embedf10.add_field(name = '**Производительность:**', value = "0.3RUB/ч", inline = True)
-	embedf10.add_field(name = '**Срок окупаемости:**', value = "11 дней", inline = True)
-
-	embedf10.add_field(name = '**Сложность:**', value = "EASY", inline = True)
-	embedf10.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
-	embedf10.add_field(name = '**ЦЕНА:**', value = "79RUB", inline = True)
-	await m10.edit(embed = embedf10)
+		embedf4.add_field(name = '**Сложность:**', value = "NORM", inline = True)
+		embedf4.add_field(name = '**Вывод RUB на баланс:**', value = "Автоматический", inline = True)
+		embedf4.add_field(name = '**ЦЕНА:**', value = "**499RUB**", inline = True)
+		await m4.edit(embed = embedf4)
 
 
+		m5 = await farms.fetch_message(886528481381462076)
+		embedf5 = discord.Embed(color=0x3C55FA, title="FARM BOOST", description=f'На улучшенном оборудовании для майнинга\n\n**Для покупки за RUB нажмите :euro:**\n')
+		embedf5.set_thumbnail(url="https://i.ibb.co/rf67N6Y/B.png")
+		embedf5.add_field(name = '**Макс срок работы:**', value = "20дней", inline = True)
+		embedf5.add_field(name = '**Производительность:**', value = "3RUB/ч", inline = True)
+		embedf5.add_field(name = '**Срок окупаемости:**', value = "14 дней", inline = True)
 
-	'''
-	farms = bot.get_channel(880025073963122718)
-	m = await farms.fetch_message(886528504068464640)
-	embedf10 = discord.Embed(color=0x3C55FA, title="FARM ПЛАТА", description=f'Самая простая видеокарта\n\n**Для покупки за RUB нажмите :euro:**\n')
-	embedf10.set_thumbnail(url="https://i.ibb.co/pd6w8dt/plata.png")
-	embedf10.add_field(name = '**Макс срок работы:**', value = "11дней", inline = True)
-	embedf10.add_field(name = '**Производительность:**', value = "0.3v/ч", inline = True)
-	embedf10.add_field(name = '**Срок окупаемости:**', value = "10 дней", inline = True)
-
-	embedf10.add_field(name = '**Сложность:**', value = "EASY", inline = True)
-	embedf10.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
-	embedf10.add_field(name = '**ЦЕНА:**', value = "79RUB", inline = True)
-	await m.edit(embed = embedf10)
-
-	
-	system = bot.get_channel(880024762942889994)
-	m = await system.fetch_message(881782363191910440)
-	embed = discord.Embed(color=0x3C55FA, title="НАША СИСТЕМА", description=f'**НАША КОНЦЕПЦИЯ**\n:dash:NEXT Invest:dash: - проект основная цель которого дать людям проводить время на сервере общаясь, выполняя какие либо задания, получая за это деньги. Специально для Вас была разработана уникальная система автоматизированного получения прибыли путем так называемого майнинга, позволяющая получать внутрисерверную криптовалюту, всем без исключений, которую в дальнейшем можно обменять на реальные деньги. При входе на сервер, для Вас создаётся личный счёт с нашей валютой. С помощью данного счета, вы можете осуществлять вывод, конвертацию и пополнение средств. Все покупки внутри сервера, включая покупку ферм, не является обязательным условием для нахождения на нашем сервере и носит лишь развлекательный характер.\n\n**Насколько безопасна ваша система?**\nТехнология проекта — имеет проверенный временем высокий уровень безопасности! Система грамотно спроектирована, что не позволит дать доступ к вашей уч.Записи злоумышленникам\nНаша валюта защищена от инфляции и внешних факторов экономики.Благодаря нашей технологии, проект защищен от внешнего контроля и управлением, эмиссия этой криптовалюты происходит в процессе работы ферм, использования нашего ПО.\n\n**ВАРИАНТЫ ПОЛУЧЕНИЯ ВАЛЮТЫ:**\n[▽ ОБЩЕНИЕ В ГОЛОСОВЫХ КАНАЛАХ]()\n[▽ ПРИОБРЕТЕНИЕ МАЙНИНГ ФЕРМ]()\n▽ТОРГОВЛЯ КРИПТОВАЛЮТОЙ\n▽ВЫПОЛНЕНИЕ ЗАДАНИЙ СЕРВЕРА\n▽СЁРФИНГ\n[▽ ТОРГОВЛЯ]()\n[▽ ЕЖЕДНЕВНЫЕ ЗАДАНИЯ]()\n[▽ РЕФЕРАЛЬНАЯ СИСТЕМА]()\n[▽ ОТКРЫТИЕ КЕЙСОВ]()\n[▽ УЧАСТИЕ И ИВЕНТАХ]()\n[▽ УЧАСТИЕ В РОЗЫГРЫШАХ]()\n[▽ S.UP И BUMP СЕРВЕРА]()\n')
-	await m.edit(embed=embed)
+		embedf5.add_field(name = '**Сложность:**', value = "HARD", inline = True)
+		embedf5.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
+		embedf5.add_field(name = '**ЦЕНА:**', value = "**999RUB**", inline = True)
+		await m5.edit(embed = embedf5)
 
 
-	
-	navigation = bot.get_channel(889216233604526132)
-	embed = discord.Embed(color=0x3C55FA, title=f'БАНК', description=f'**Кратко о системе:**\nВ Банке вы можете открыть депозит и ни о чем не париться. Преимущество депозита от покупки ферм в том, что вам не нужно заходить ежедневно и собирать прибыль, при этом у вас ничего не будет ломаться и вы 100% выйдете в плюс . Вы можете не заходить неделями, а чтобы получить начисления по депозиту вам нужно просто наведаться в Банк, и деньги поступят на ваш баланс . Выбирайте тариф, создавайте депозит и получайте ежедневные начисления!\n\n**Выберите инвестиционный план:**\n\n:one:\nДоходность - 110%\nСрок вклада - 25 дней\nсумма вклада - 20-500 рублей\n\n:two:\nДоходность - 120%\nСрок вклада - 45 дней\nсумма вклада - 400-2000 рублей')
-	embed.set_thumbnail(url="https://im0-tub-ru.yandex.net/i?id=162008a3587f9cc3f2da4904ce53e275&n=13")
-	message = await navigation.send(embed = embed)
-	await message.add_reaction('1️⃣')
-	await message.add_reaction('2️⃣')
-	
+		m6 = await farms.fetch_message(886528484460097546)
+		embedf6 = discord.Embed(color=0x3C55FA, title="FARM TITAN", description=f'На мощных видеокартах\n\n**Для покупки за RUB нажмите :euro:**\n')
+		embedf6.set_thumbnail(url="https://i.ibb.co/87WYdBB/T.png")
+		embedf6.add_field(name = '**Макс срок работы:**', value = "30дней", inline = True)
+		embedf6.add_field(name = '**Производительность:**', value = "4RUB/ч", inline = True)
+		embedf6.add_field(name = '**Срок окупаемости:**', value = "16 дней", inline = True)
 
-	
-	channel = bot.get_channel(889843449300398111)
+		embedf6.add_field(name = '**Сложность:**', value = "HARD", inline = True)
+		embedf6.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
+		embedf6.add_field(name = '**ЦЕНА:**', value = "**1499RUB **", inline = True)
+		await m6.edit(embed = embedf6)
 
-	m = await channel.fetch_message(890117691388600320)
-	embed = discord.Embed(color=0x80F7FF, title=f'PLATINUM CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**850RUB | 650RUB | 500RUB | 420RUB | 400RUB|** 350 RUB| 200RUB | 100RUB | 65 RUB| Premium  45 day\n-FARM GTX\n-FARM RTX\n-FARM ASIC\nУНИКАЛЬНАЯ РОЛЬ 🌀\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 500RUB\n:credit_card: 5шт - 2500RUB')
-	embed.set_thumbnail(url="https://i.ibb.co/1MDfBNc/PLATINUM.png")
-	await m.edit(embed = embed)
-	
+		
+		m7 = await farms.fetch_message(881782363191910440)
+		embedf7 = discord.Embed(color=0x3C55FA, title="FARM SERVER", description=f'На серверном оборудовании\n\n**Для покупки за RUB нажмите :euro:**\n')
+		embedf7.set_thumbnail(url="https://i.ibb.co/0KDHq9W/S.png")
+		embedf7.add_field(name = '**Макс срок работы:**', value = "50дней", inline = True)
+		embedf7.add_field(name = '**Производительность:**', value = "8RUB/ч", inline = True)
+		embedf7.add_field(name = '**Срок окупаемости:**', value = "13 дней", inline = True)
 
-	
-	channel = bot.get_channel(889843449300398111)
-	m2 = await channel.fetch_message(891665705655746600)
-	embed = discord.Embed(color=0x2E62FF, title=f'Кейс открытие', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**500RUB | 350RUB | 120RUB | 45RUB | 35RUB | 25RUB |** 10RUB | 5RUB |\n**Ферма** - FARM ПЛАТА\n**УНИКАЛЬНАЯ РОЛЬ** ☄️; Бизнесмен;\n\nНАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - ~~75RUB~~ 25RUB**\n:credit_card: 5шт - ~~375RUB~~ 125RUB')
-	embed.set_thumbnail(url="https://i.ibb.co/1LWW1R8/PREMIUM.png")
-	await m2.edit(embed = embed)
-	
+		embedf7.add_field(name = '**Сложность:**', value = "MASTER", inline = True)
+		embedf7.add_field(name = '**Вывод V на баланс:**', value = "Ручной", inline = True)
+		embedf7.add_field(name = '**ЦЕНА:**', value = "**2499V**", inline = True)
+		await m7.edit(embed = embedf7)
+		
+
+		m8 = await farms.fetch_message(886528488234971207)
+		embedf8 = discord.Embed(color=0x3C55FA, title="FARM FACTORY", description=f'На автоматическом заводском оборудовании\n\n**Для покупки за RUB нажмите :euro:**\n')
+		embedf8.set_thumbnail(url="https://i.ibb.co/NL6qq9w/F.png")
+		embedf8.add_field(name = '**Макс срок работы:**', value = "37дней", inline = True)
+		embedf8.add_field(name = '**Производительность:**', value = "14RUB/ч", inline = True)
+		embedf8.add_field(name = '**Срок окупаемости:**', value = "13 дней", inline = True)
+
+		embedf8.add_field(name = '**Сложность:**', value = "EXPERT", inline = True)
+		embedf8.add_field(name = '**Вывод RUB на баланс:**', value = "Автоматический", inline = True)
+		embedf8.add_field(name = '**ЦЕНА:**', value = "**4999RUB**", inline = True)
+		await m8.edit(embed = embedf8)
 
 
-	m2 = await channel.fetch_message(890117683478147092)
-	embed2 = discord.Embed(color=0xFBFF29, title=f'GOLD CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**450RUB | 330RUB | 250RUB | 210RUB | 200RUB |** 150RUB | 100RUB | 85 RUB | 65RUB | 50RUB | Premium  - 30 day\n**-FARM ЗАТЫЧКА\n-FARM GTX\nУНИКАЛЬНАЯ РОЛЬ :zap: Gold Monopolis**\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 199RUB\n:credit_card: 5шт - 995RUB')
-	embed2.set_thumbnail(url="https://i.ibb.co/Kq8j5qT/GOLD.png")
-	await m2.edit(embed = embed2)
+		m9 = await farms.fetch_message(886528493339422774)
+		embedf9 = discord.Embed(color=0x3C55FA, title="FARM QUANTUM", description=f'Мощный квантовый компьютер\n\n**Для покупки за RUB нажмите :euro:**\n')
+		embedf9.set_thumbnail(url="https://i.ibb.co/JBnsbKS/Q.png")
+		embedf9.add_field(name = '**Макс срок работы:**', value = "42дня", inline = True)
+		embedf9.add_field(name = '**Производительность:**', value = "25RUB/ч", inline = True)
+		embedf9.add_field(name = '**Срок окупаемости:**', value = "10 дней", inline = True)
+
+		embedf9.add_field(name = '**Сложность:**', value = "INSANE", inline = True)
+		embedf9.add_field(name = '**Вывод RUB на баланс:**', value = "Автоматический", inline = True)
+		embedf9.add_field(name = '**ЦЕНА:**', value = "**9999RUB**", inline = True)
+		await m9.edit(embed = embedf9)
+
+
+		m10 = await farms.fetch_message(886528504068464640)
+		embedf10 = discord.Embed(color=0x3C55FA, title="FARM ПЛАТА", description=f'Самая простая видеокарта\n\n**Для покупки за RUB нажмите :euro:**\n')
+		embedf10.set_thumbnail(url="https://i.ibb.co/pd6w8dt/plata.png")
+		embedf10.add_field(name = '**Макс срок работы:**', value = "14дней", inline = True)
+		embedf10.add_field(name = '**Производительность:**', value = "0.3RUB/ч", inline = True)
+		embedf10.add_field(name = '**Срок окупаемости:**', value = "11 дней", inline = True)
+
+		embedf10.add_field(name = '**Сложность:**', value = "EASY", inline = True)
+		embedf10.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
+		embedf10.add_field(name = '**ЦЕНА:**', value = "79RUB", inline = True)
+		await m10.edit(embed = embedf10)
 
 
 
-	m3 = await channel.fetch_message(890117675408322580)
-	embed3 = discord.Embed(color=0x949494, title=f'SILVER CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**450RUB | 320RUB | 160RUB | 80RUB |** 55RUB | 40RUB | 20RUB | Premium  - 14 day\n-FARM ПЛАТА\n-FARM ЗАТЫЧКА\nУникальная роль :airplane:\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 99RUB\n:credit_card: 5шт - 496RUB')
-	embed3.set_thumbnail(url="https://i.ibb.co/xXnJTXq/SILVER.png")
-	await m3.edit(embed = embed3)
+		
+		system = bot.get_channel(880024762942889994)
+		m = await system.fetch_message(881782363191910440)
+		embed = discord.Embed(color=0x3C55FA, title="НАША СИСТЕМА", description=f'**НАША КОНЦЕПЦИЯ**\n:dash:NEXT Invest:dash: - проект основная цель которого дать людям проводить время на сервере общаясь, выполняя какие либо задания, получая за это деньги. Специально для Вас была разработана уникальная система автоматизированного получения прибыли путем так называемого майнинга, позволяющая получать внутрисерверную криптовалюту, всем без исключений, которую в дальнейшем можно обменять на реальные деньги. При входе на сервер, для Вас создаётся личный счёт с нашей валютой. С помощью данного счета, вы можете осуществлять вывод, конвертацию и пополнение средств. Все покупки внутри сервера, включая покупку ферм, не является обязательным условием для нахождения на нашем сервере и носит лишь развлекательный характер.\n\n**Насколько безопасна ваша система?**\nТехнология проекта — имеет проверенный временем высокий уровень безопасности! Система грамотно спроектирована, что не позволит дать доступ к вашей уч.Записи злоумышленникам\nНаша валюта защищена от инфляции и внешних факторов экономики.Благодаря нашей технологии, проект защищен от внешнего контроля и управлением, эмиссия этой криптовалюты происходит в процессе работы ферм, использования нашего ПО.\n\n**ВАРИАНТЫ ПОЛУЧЕНИЯ ВАЛЮТЫ:**\n[▽ ОБЩЕНИЕ В ГОЛОСОВЫХ КАНАЛАХ]()\n[▽ ПРИОБРЕТЕНИЕ МАЙНИНГ ФЕРМ]()\n▽ТОРГОВЛЯ КРИПТОВАЛЮТОЙ\n▽ВЫПОЛНЕНИЕ ЗАДАНИЙ СЕРВЕРА\n▽СЁРФИНГ\n[▽ ТОРГОВЛЯ]()\n[▽ ЕЖЕДНЕВНЫЕ ЗАДАНИЯ]()\n[▽ РЕФЕРАЛЬНАЯ СИСТЕМА]()\n[▽ ОТКРЫТИЕ КЕЙСОВ]()\n[▽ УЧАСТИЕ И ИВЕНТАХ]()\n[▽ УЧАСТИЕ В РОЗЫГРЫШАХ]()\n[▽ S.UP И BUMP СЕРВЕРА]()\n')
+		await m.edit(embed=embed)
 
 
+		
+		navigation = bot.get_channel(889216233604526132)
+		embed = discord.Embed(color=0x3C55FA, title=f'БАНК', description=f'**Кратко о системе:**\nВ Банке вы можете открыть депозит и ни о чем не париться. Преимущество депозита от покупки ферм в том, что вам не нужно заходить ежедневно и собирать прибыль, при этом у вас ничего не будет ломаться и вы 100% выйдете в плюс . Вы можете не заходить неделями, а чтобы получить начисления по депозиту вам нужно просто наведаться в Банк, и деньги поступят на ваш баланс . Выбирайте тариф, создавайте депозит и получайте ежедневные начисления!\n\n**Выберите инвестиционный план:**\n\n:one:\nДоходность - 110%\nСрок вклада - 25 дней\nсумма вклада - 20-500 рублей\n\n:two:\nДоходность - 120%\nСрок вклада - 45 дней\nсумма вклада - 400-2000 рублей')
+		embed.set_thumbnail(url="https://im0-tub-ru.yandex.net/i?id=162008a3587f9cc3f2da4904ce53e275&n=13")
+		message = await navigation.send(embed = embed)
+		await message.add_reaction('1️⃣')
+		await message.add_reaction('2️⃣')
+		
 
-	m4 = await channel.fetch_message(890117667908878347)
-	embed4 = discord.Embed(color=0xB88947, title=f'BRONZE CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**300RUB| 220RUB | 140RUB | 100RUB | 50RUB |** 35RUB | 20RUB |  10RUB |\nУникальная роль бизнесмен\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:**\n:pound: 1шт - 49RUB\n:credit_card: 5шт - 245RUB')
-	embed4.set_thumbnail(url="https://i.imgur.com/MRvrOW2.png")
-	await m4.edit(embed = embed4)
-	
+		
+		channel = bot.get_channel(889843449300398111)
 
-	channel1 = bot.get_channel(890982389881384991)
-	embed165 = discord.Embed(color=0x2E62FF, description=f'<:dfgf:> :dfgf: :a_::a_::b_::b_::b_::b_::b_::b_::b_: `3/10`')
-	await channel1.send(embed = embed165)
+		m = await channel.fetch_message(890117691388600320)
+		embed = discord.Embed(color=0x80F7FF, title=f'PLATINUM CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**850RUB | 650RUB | 500RUB | 420RUB | 400RUB|** 350 RUB| 200RUB | 100RUB | 65 RUB| Premium  45 day\n-FARM GTX\n-FARM RTX\n-FARM ASIC\nУНИКАЛЬНАЯ РОЛЬ 🌀\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 500RUB\n:credit_card: 5шт - 2500RUB')
+		embed.set_thumbnail(url="https://i.ibb.co/1MDfBNc/PLATINUM.png")
+		await m.edit(embed = embed)
+		
 
-	embed168 = discord.Embed(color=0x2E62FF, description=f':l_::a_::a_::a_::a_::b_::b_::b_::b_::b_: `5/10`')
-	await channel1.send(embed = embed168)
+		
+		channel = bot.get_channel(889843449300398111)
+		m2 = await channel.fetch_message(891665705655746600)
+		embed = discord.Embed(color=0x2E62FF, title=f'Кейс открытие', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**500RUB | 350RUB | 120RUB | 45RUB | 35RUB | 25RUB |** 10RUB | 5RUB |\n**Ферма** - FARM ПЛАТА\n**УНИКАЛЬНАЯ РОЛЬ** ☄️; Бизнесмен;\n\nНАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - ~~75RUB~~ 25RUB**\n:credit_card: 5шт - ~~375RUB~~ 125RUB')
+		embed.set_thumbnail(url="https://i.ibb.co/1LWW1R8/PREMIUM.png")
+		await m2.edit(embed = embed)
+		
 
-	embed168 = discord.Embed(color=0x2E62FF, description=f':l_::b_::b_::b_::b_::b_::b_::b_::b_::b_: `1/10`')
-	await channel1.send(embed = embed168)
-	await channel1.send('<:dfgf:> :dfgf: :a_::a_::b_::b_::b_::b_::b_::b_::b_: `3/10`')
-	'''
+		'''
+		m2 = await channel.fetch_message(890117683478147092)
+		embed2 = discord.Embed(color=0xFBFF29, title=f'GOLD CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**450RUB | 330RUB | 250RUB | 210RUB | 200RUB |** 150RUB | 100RUB | 85 RUB | 65RUB | 50RUB | Premium  - 30 day\n**-FARM ЗАТЫЧКА\n-FARM GTX\nУНИКАЛЬНАЯ РОЛЬ :zap: Gold Monopolis**\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 199RUB\n:credit_card: 5шт - 995RUB')
+		embed2.set_thumbnail(url="https://i.ibb.co/Kq8j5qT/GOLD.png")
+		await m2.edit(embed = embed2)
+		
+		channel = bot.get_channel(889843449300398111)
+
+		m = await channel.fetch_message(890117691388600320)
+		embed = discord.Embed(color=0x80F7FF, title=f'PLATINUM CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**850RUB | 650RUB | 500RUB | 535RUB | 420RUB | 400RUB|** 350 RUB| 200RUB | 100RUB | 65 RUB| Premium  45 day\n-FARM GTX\n-FARM RTX\n-FARM ASIC\nУНИКАЛЬНАЯ РОЛЬ 🌀\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 500RUB\n:credit_card: 5шт - 2500RUB')
+		embed.set_thumbnail(url="https://i.ibb.co/1MDfBNc/PLATINUM.png")
+		await m.edit(embed = embed)
+		
+		m3 = await channel.fetch_message(890117675408322580)
+		embed3 = discord.Embed(color=0x949494, title=f'SILVER CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**450RUB | 320RUB | 160RUB | 80RUB |** 55RUB | 40RUB | 20RUB | Premium  - 14 day\n-FARM ПЛАТА\n-FARM ЗАТЫЧКА\n-FARM ASIC\nУникальная роль :airplane:\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 99RUB\n:credit_card: 5шт - 496RUB')
+		embed3.set_thumbnail(url="https://i.ibb.co/xXnJTXq/SILVER.png")
+		await m3.edit(embed = embed3)
+
+		
+		m4 = await channel.fetch_message(890117667908878347)
+		embed4 = discord.Embed(color=0xB88947, title=f'BRONZE CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**300RUB| 220RUB | 140RUB | 100RUB | 65RUB | 50RUB |** 35RUB | 20RUB | 15RUB | 10RUB |\nУникальная роль бизнесмен\nУникальная роль Trainer\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:**\n:pound: 1шт - 49RUB\n:credit_card: 5шт - 245RUB')
+		embed4.set_thumbnail(url="https://i.imgur.com/MRvrOW2.png")
+		await m4.edit(embed = embed4)
+		'''
+
+		channel1 = bot.get_channel(890982389881384991)
+		embed165 = discord.Embed(color=0x2E62FF, description=f'<:dfgf:> :dfgf: :a_::a_::b_::b_::b_::b_::b_::b_::b_: `3/10`')
+		await channel1.send(embed = embed165)
+
+		embed168 = discord.Embed(color=0x2E62FF, description=f':l_::a_::a_::a_::a_::b_::b_::b_::b_::b_: `5/10`')
+		await channel1.send(embed = embed168)
+
+		embed168 = discord.Embed(color=0x2E62FF, description=f':l_::b_::b_::b_::b_::b_::b_::b_::b_::b_: `1/10`')
+		await channel1.send(embed = embed168)
+		await channel1.send('<:dfgf:> :dfgf: :a_::a_::b_::b_::b_::b_::b_::b_::b_: `3/10`')
+		'''
+
+	else:
+		print("Not man")
 
 bot.run('ODc5NjkzNDk5ODQ1NDU1ODcy.YSTcag.KiNpzAVZ_isc-HIdeeLw6FbJZgM')

@@ -16,7 +16,6 @@ bot = discord.ext.commands.Bot(command_prefix = "!", intents = intents)
 
 # |------------------------------ VARIABLES ------------------------------|
 # Reactions lists
-farm_messages = []
 tickets_messages = []
 donat1s = False
 donat2s = False
@@ -40,23 +39,26 @@ async def on_ready():
 	with open('user_farms.json','r', encoding='utf-8') as f:
 		farms = json.load(f)
 
-	print("----------Loading farms-----------")
+	print("----------Loading farms-----------\n")
+
 	for i in farms:
 		member = farms[i]['name']
-		if farms[i]['farms'] != "none":
+		farm_list = farms[i]['farms']
 
-			life = farms[i]['life_time']
-			out = farms[i]['out']
-			mode = farms[i]['auto']
-			channel = farms[i]['channel_id']
-			print(f'{member} HAVE FARM.')
-			print(f'{life} {out} {mode} {channel} \n\n')
+		for i in farm_list.items():
+			if i[0] != "none":
+				life = i[1]["life_time"]
+				out = i[1]["out"]
+				mode = i[1]["auto"]
+				channel = i[1]["channel_id"]
+				print(f'{member} HAVE FARM.\n')
+				print(f'{life}  {out}  {mode}  {channel}')
 
-			farmth = Thread(target=Farm, args=(member, life, out, mode))
-			farmth.start()
+				farmth = Thread(target=Farm, args=(member, i[0], life, out, mode))
+				farmth.start()
 
-		else:
-			print(f'{member} NO FARMS')
+			else:
+				print(f'{member} NO FARMS\n')
 
 	print("----------Loading done!----------\n\n\n")
 
@@ -456,7 +458,7 @@ async def on_raw_reaction_add(payload):
 
 			elif balance >= 49:
 				user_balance[str(member.name)]['RUB'] -= 49
-				items = [220, 140, 100, 50, 35, 20, 15, 10, 'role', 'role1']
+				items = [50, 35, 20, 15, 10, 'role', 'role1']
 
 				item = random.choice(items)
 				print(item)
@@ -844,6 +846,11 @@ async def on_raw_reaction_add(payload):
 					with open('user_balance.json','w') as f:
 						json.dump(user_balance,f)
 
+	# Super money boxes
+	elif message_id == 892573662694215760:
+		embed = discord.Embed(description="Укажите количество валюты для вложения в копилку **№1** от 1 до 50RUB.\nКомандой: `!box 1 СУММА`")
+		await member.send(embed = embed)
+
 
 	# Bank
 	elif message_id == 890961877520240690:
@@ -938,11 +945,6 @@ async def on_member_join(member):
 			user_farms[str(member.name)] = {}
 			user_farms[str(member.name)]['name'] = str(member.name)
 			user_farms[str(member.name)]['farms'] = 'none'
-			user_farms[str(member.name)]['life_time'] = 0
-			user_farms[str(member.name)]['out'] = 0
-			user_farms[str(member.name)]['auto'] = False
-			user_farms[str(member.name)]['channel_id'] = 0
-
 
 			with open('user_farms.json','w') as f:
 				json.dump(user_farms,f)
@@ -990,7 +992,7 @@ async def on_member_join(member):
 
 
 # |------------------------------- METHODS --------------------------------|
-def Farm(member: discord.Member.name, life, amount: float, auto: bool):
+def Farm(member: discord.Member.name, name, life, amount: float, auto: bool):
 	print(f'----------Farm started----------')
 	out_time = 3600
 	m_chance = 0
@@ -1032,11 +1034,12 @@ def Farm(member: discord.Member.name, life, amount: float, auto: bool):
 					with open('user_farms.json','r', encoding='utf-8') as f:
 						farms = json.load(f)
 
-					farms[str(member)]['farms'] = "none"
-					farms[str(member)]['life_time'] = 0
-					farms[str(member)]['out'] = 0
-					farms[str(member)]['auto'] = False
-					farms[str(member)]['channel_id'] = 0
+					farm_list = farms[str(member.name)]['farms']
+
+					for i in farm_list.items():
+						if i[0] == str(name):
+							i[0] = "none"
+
 					with open('user_farms.json','w') as f:
 						json.dump(farms,f)
 
@@ -1059,11 +1062,12 @@ def Farm(member: discord.Member.name, life, amount: float, auto: bool):
 			with open('user_farms.json','r', encoding='utf-8') as f:
 				farms = json.load(f)
 
-			farms[str(member.name)]['farms'] = "none"
-			farms[str(member.name)]['life_time'] = 0
-			farms[str(member.name)]['out'] = 0
-			farms[str(member.name)]['auto'] = False
-			farms[str(member.name)]['channel_id'] = 0
+			farm_list = farms[str(member.name)]['farms']
+
+			for i in farm_list.items():
+				if i[0] == str(name):
+					i[0] = "none"
+
 			with open('user_farms.json','w') as f:
 				json.dump(farms,f)
 
@@ -1092,15 +1096,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]['farms'] = f'{farm}'
-		farms[str(member.name)]['life_time'] = 3024000
-		farms[str(member.name)]['out'] = 0.25
-		farms[str(member.name)]['auto'] = False
-		farms[str(member.name)]['channel_id'] = channel.id
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 3024000, "out": 0.25, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member.name, 3024000, 0.25, False))
+		farmth = Thread(target=Farm, args=(member, farm, 3024000, 0.25, False))
 		farmth.start()
 
 
@@ -1117,15 +1117,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]['farms'] = f'{farm}'
-		farms[str(member.name)]['life_time'] = 2505600
-		farms[str(member.name)]['out'] = 0.5
-		farms[str(member.name)]['auto'] = False
-		farms[str(member.name)]['channel_id'] = channel.id
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 2505600, "out": 0.5, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member.name, 2505600, 0.5, False))
+		farmth = Thread(target=Farm, args=(member, farm, 2505600, 0.5, False))
 		farmth.start()
 
 
@@ -1142,15 +1138,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]['farms'] = f'{farm}'
-		farms[str(member.name)]['life_time'] = 2505600
-		farms[str(member.name)]['out'] = 1.0
-		farms[str(member.name)]['auto'] = False
-		farms[str(member.name)]['channel_id'] = channel.id
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 2505600, "out": 1.0, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member.name, 2505600, 1.0, False))
+		farmth = Thread(target=Farm, args=(member, farm, 2505600, 1.0, False))
 		farmth.start()
 
 
@@ -1167,15 +1159,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]['farms'] = f'{farm}'
-		farms[str(member.name)]['life_time'] = 3024000
-		farms[str(member.name)]['out'] = 1.5
-		farms[str(member.name)]['auto'] = True
-		farms[str(member.name)]['channel_id'] = channel.id
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 3024000, "out": 1.5, "auto": True, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member.name, 3024000, 1.5, True))
+		farmth = Thread(target=Farm, args=(member, farm, 3024000, 1.5, True))
 		farmth.start()
 
 
@@ -1192,15 +1180,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]['farms'] = f'{farm}'
-		farms[str(member.name)]['life_time'] = 2851200
-		farms[str(member.name)]['out'] = 2.0
-		farms[str(member.name)]['auto'] = True
-		farms[str(member.name)]['channel_id'] = channel.id
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 2851200, "out": 2.0, "auto": True, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member.name, 2851200, 2.0, True))
+		farmth = Thread(target=Farm, args=(member, farm, 2851200, 2.0, True))
 		farmth.start()
 
 
@@ -1217,15 +1201,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]['farms'] = f'{farm}'
-		farms[str(member.name)]['life_time'] = 1728000
-		farms[str(member.name)]['out'] = 0.3
-		farms[str(member.name)]['auto'] = False
-		farms[str(member.name)]['channel_id'] = channel.id
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 1728000, "out": 0.3, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member.name, 1728000, 3.0, False))
+		farmth = Thread(target=Farm, args=(member, farm, 1728000, 3.0, False))
 		farmth.start()
 
 
@@ -1242,15 +1222,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]['farms'] = f'{farm}'
-		farms[str(member.name)]['life_time'] = 2592000
-		farms[str(member.name)]['out'] = 4.0
-		farms[str(member.name)]['auto'] = False
-		farms[str(member.name)]['channel_id'] = channel.id
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 2592000, "out": 4.0, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member.name, 2592000, 4.0, False))
+		farmth = Thread(target=Farm, args=(member, farm, 2592000, 4.0, False))
 		farmth.start()
 
 
@@ -1267,15 +1243,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]['farms'] = f'{farm}'
-		farms[str(member.name)]['life_time'] = 3283200
-		farms[str(member.name)]['out'] = 7.0
-		farms[str(member.name)]['auto'] = False
-		farms[str(member.name)]['channel_id'] = channel.id
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 3283200, "out": 7.0, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member.name, 3283200, 7.0, False))
+		farmth = Thread(target=Farm, args=(member, farm, 3283200, 7.0, False))
 		farmth.start()
 
 
@@ -1292,15 +1264,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]['farms'] = f'{farm}'
-		farms[str(member.name)]['life_time'] = 3196800
-		farms[str(member.name)]['out'] = 14.0
-		farms[str(member.name)]['auto'] = True
-		farms[str(member.name)]['channel_id'] = channel.id
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 3196800, "out": 14.0, "auto": True, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member.name, 3196800, 14.0, True))
+		farmth = Thread(target=Farm, args=(member, farm, 3196800, 14.0, True))
 		farmth.start()
 
 
@@ -1317,15 +1285,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]['farms'] = f'{farm}'
-		farms[str(member.name)]['life_time'] = 3628800
-		farms[str(member.name)]['out'] = 25.0
-		farms[str(member.name)]['auto'] = True
-		farms[str(member.name)]['channel_id'] = channel.id
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 3628800, "out": 25.0, "auto": True, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member.name, 3628800, 25.0, True))
+		farmth = Thread(target=Farm, args=(member, farm, 3628800, 25.0, True))
 		farmth.start()
 
 
@@ -1342,15 +1306,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]['farms'] = f'{farm}'
-		farms[str(member.name)]['life_time'] = 950400
-		farms[str(member.name)]['out'] = 0.3
-		farms[str(member.name)]['auto'] = False
-		farms[str(member.name)]['channel_id'] = channel.id
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 950400, "out": 0.3, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member.name, 950400, 0.3, False))
+		farmth = Thread(target=Farm, args=(member, farm, 950400, 0.3, False))
 		farmth.start()
 
 
@@ -1785,6 +1745,137 @@ async def ubal(ctx, member: discord.Member, ctype, op: str, amount: int):
 	else:
 		print("Not man")
 
+
+# Super money boxes
+@bot.command()
+async def box(ctx, box: int, amount: int):
+	guild = bot.get_guild(880008097370865706)
+	if ctx.message.guild == guild:
+		print('In guild')
+
+	else:
+		with open('user_balance.json','r', encoding='utf-8') as f:
+			user_balance = json.load(f)
+
+		balance = user_balance[str(ctx.message.author.name)]['RUB']
+
+		# Box 1
+		if box == 1:
+			if amount >= 1 and amount <= 50:
+				if balance > 1:
+					with open('super_boxes.json','r', encoding='utf-8') as f:
+						super_boxes = json.load(f)
+
+					target = super_boxes["box1"]["target"]
+					invested = super_boxes["box1"]["invested"]
+					members = super_boxes["box1"]["members"]
+					percent = super_boxes["box1"]["percent"]
+					stats = super_boxes["box1"]["stats"]
+					ones = super_boxes["box1"]["ones"]
+
+					if stats == True:
+						# if box filled
+						if invested >= target:
+
+							# logs
+							logs = guild.get_channel(892584515162210324)
+							embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №1", description=f'Список вложившихся в супер копилку участников:\n```\n{members}\n```')
+							await logs.send(embed=embed)
+
+							for i in members.items():
+								user = i[0]
+								user_amount = i[1]
+								percent1 = user_amount / 100 * percent
+								money = user_amount + percent1
+								print(money)
+
+								super_boxes["box1"]["members"][f'{str(ctx.message.author.name)}'] = 0
+								super_boxes["box1"]["stats"] = False
+								with open('super_boxes.json','w') as f:
+									json.dump(super_boxes,f)
+
+								with open('user_balance.json','r', encoding='utf-8') as f:
+									user_balance = json.load(f)
+								user_balance[str(user)]['RUB'] += money
+								with open('user_balance.json','w') as f:
+									json.dump(user_balance,f)
+
+
+						elif invested <= target:
+							super_boxes["box1"]["invested"] += amount
+
+							print(members)
+							if not ctx.message.author.name in ones:
+								super_boxes["box1"]["members"][f'{str(ctx.message.author.name)}'] = int(amount)
+								super_boxes["box1"]["ones"].append(ctx.message.author.name)
+
+							elif ctx.message.author.name in ones:
+								super_boxes["box1"]["members"][f'{str(ctx.message.author.name)}'] += int(amount)
+
+
+							with open('super_boxes.json','w') as f:
+								json.dump(super_boxes,f)
+
+							user_balance[str(ctx.message.author.name)]['RUB'] -= amount
+							with open('user_balance.json','w') as f:
+								json.dump(user_balance,f)
+
+							await ctx.message.author.send(f'Вы вложили {amount}RUB в копилку №1')
+
+
+							channel = bot.get_channel(888500024214966282)
+							m = await channel.fetch_message(892573662694215760)
+							ac = round(target / 4)
+							at = round(target / 3)
+							po = round(target / 2)
+							dt = at + at
+
+							with open('super_boxes.json','r', encoding='utf-8') as f:
+								super_boxes = json.load(f)
+
+							invested = super_boxes["box1"]["invested"]
+							if invested <= ac:# 1/10
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧⬛⬛⬛⬛⬛⬛⬛⬛ `{invested}/500`')
+								await m.edit(embed = box)
+
+							elif invested > ac and invested < at + 20:# 1/4 -
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧⬛⬛⬛⬛⬛⬛⬛ `{invested}/500`')
+								await m.edit(embed = box)
+
+							elif invested > at + 20 and invested <= po:# 1/2 -
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧⬛⬛⬛⬛⬛ `{invested}/500`')
+								await m.edit(embed = box)
+
+							elif invested >= po and invested < dt + 95:# 1/2 +
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧⬛⬛⬛⬛ `{invested}/500`')
+								await m.edit(embed = box)
+
+							elif invested >= po and invested < dt + 70:# 1/2 +
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧🟧🟧⬛⬛ `{invested}/500`')
+								await m.edit(embed = box)
+
+							elif invested > dt + 95:
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧 `{invested}/500`')
+								await m.edit(embed = box)
+
+							# logs
+							logs = guild.get_channel(892584515162210324)
+							embed = discord.Embed(color=0x00a550, title="ВКЛАД В СУПЕР КОПИЛКУ", description=f'Участник {ctx.message.author} положил {amount} в копилку №1')
+							await logs.send(embed=embed)
+
+					else:
+						await ctx.message.author.send("Вы не можете вложится в эту копилку так как она уже заполнена.")	
+
+				else:
+					await ctx.message.author.send("У вас недостаточно средств.")
+			else:
+				await ctx.message.author.send("Сумма вложения должна быть не менее 1 и не боле 50RUB.")
+
+
+		else:
+			await ctx.message.author.send(f'Копилка с номером {box} не найдена.')
+
+
 @bot.command()
 async def db(ctx):
 	guild = bot.get_guild(880008097370865706)
@@ -1997,7 +2088,7 @@ async def upd(ctx):
 		await m2.edit(embed = embed)
 		
 
-		'''
+		
 		m2 = await channel.fetch_message(890117683478147092)
 		embed2 = discord.Embed(color=0xFBFF29, title=f'GOLD CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**450RUB | 330RUB | 250RUB | 210RUB | 200RUB |** 150RUB | 100RUB | 85 RUB | 65RUB | 50RUB | Premium  - 30 day\n**-FARM ЗАТЫЧКА\n-FARM GTX\nУНИКАЛЬНАЯ РОЛЬ :zap: Gold Monopolis**\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 199RUB\n:credit_card: 5шт - 995RUB')
 		embed2.set_thumbnail(url="https://i.ibb.co/Kq8j5qT/GOLD.png")
@@ -2015,8 +2106,9 @@ async def upd(ctx):
 		embed3.set_thumbnail(url="https://i.ibb.co/xXnJTXq/SILVER.png")
 		await m3.edit(embed = embed3)
 
-		
-		m4 = await channel.fetch_message(890117667908878347)
+		'''
+		channel1 = bot.get_channel(889843449300398111)
+		m4 = await channel1.fetch_message(890117667908878347)
 		embed4 = discord.Embed(color=0xB88947, title=f'BRONZE CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**300RUB| 220RUB | 140RUB | 100RUB | 65RUB | 50RUB |** 35RUB | 20RUB | 15RUB | 10RUB |\nУникальная роль бизнесмен\nУникальная роль Trainer\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:**\n:pound: 1шт - 49RUB\n:credit_card: 5шт - 245RUB')
 		embed4.set_thumbnail(url="https://i.imgur.com/MRvrOW2.png")
 		await m4.edit(embed = embed4)
@@ -2033,6 +2125,18 @@ async def upd(ctx):
 		await channel1.send(embed = embed168)
 		await channel1.send('<:dfgf:> :dfgf: :a_::a_::b_::b_::b_::b_::b_::b_::b_: `3/10`')
 		'''
+
+		# SUPER MONEY BOXES
+		channel = bot.get_channel(888500024214966282)
+		embed = discord.Embed(color=0x2E62FF, title="**Супер копилка**", description=f'**Супер копилка** - это место, где можно заработать огромные проценты за короткое время.\nСуть данного раздела заключается в том, что каждый игрок может внести свой вклад в общее дело и получить +10% чистого профита после полного заполнения следующей копилки.\n\nТ.е. если коротко, вложил 100 рублей в  копилку №1, после заполнения копилки №2 Вы получите 110 руб. на вывод.')
+		await channel.send(embed = embed)
+
+		m = await channel.fetch_message(892573662694215760)
+		box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛ `0/500`')
+		await m.edit(embed = box)
+		#box1 = discord.Embed(color=0x2E62FF, title="Супер копилка", description=f'**Супер копилка** - это место, где можно заработать огромные проценты за короткое время.\nСуть данного раздела заключается в том, что каждый игрок может внести свой вклад в общее дело и получить +10% чистого профита после полного заполнения следующей копилки.\n\nТ.е. если коротко, вложил 100 рублей в  копилку №1, после заполнения копилки №2 Вы получите 110 руб. на вывод.')
+		#await channel.send(embed = box1)
+
 
 	else:
 		print("Not man")

@@ -458,7 +458,7 @@ async def on_raw_reaction_add(payload):
 
 			elif balance >= 49:
 				user_balance[str(member.name)]['RUB'] -= 49
-				items = [50, 35, 20, 15, 10, 'role', 'role1']
+				items = [50, 35, 25, 20, 15, 10, 'role', 'role1']
 
 				item = random.choice(items)
 				print(item)
@@ -475,7 +475,7 @@ async def on_raw_reaction_add(payload):
 
 
 				else:
-					user_balance[str(member.name)]['RUB'] += item
+					user_balance[str(member.name)]['RUB'] += float(item)
 					await member.send(f'Вы выиграли **`{item}` RUB**!')
 
 				with open('user_balance.json','w') as f:
@@ -488,7 +488,7 @@ async def on_raw_reaction_add(payload):
 			elif balance >= 245:
 				user_balance[str(member.name)]['RUB'] -= 245
 				for i in range(5):
-					items = [220, 140, 100, 50, 35, 20, 10, 'role']
+					items = [50, 35, 25, 20, 10, 'role', 'role1']
 
 					item = random.choice(items)
 					print(item)
@@ -498,13 +498,17 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@бизнесмен`!")
 
+					elif item == 'role1':
+						getrole = discord.utils.get(guild.roles, id = 892435708881539103)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@Trainer`!")
+
 					else:
-						user_balance[str(member.name)]['RUB'] += item
+						user_balance[str(member.name)]['RUB'] += float(item)
 						await member.send(f'Вы выиграли **`{item}` RUB**!')
 
 					with open('user_balance.json','w') as f:
 						json.dump(user_balance,f)
-
 
 
 	elif message_id == 890117675408322580:
@@ -519,28 +523,34 @@ async def on_raw_reaction_add(payload):
 
 			elif balance >= 99:
 				user_balance[str(member.name)]['RUB'] -= 99
-				items = [80, 50, 55, 40, 20, 10, 'premium', 'farm', 'farm2' 'jet']
+				items = [80, 50, 55, 40, 20, 10, 'premium16', 'premium10', 'farm', 'jet', 'zap']
 
 				item = random.choice(items)
 				print(item)
 
-				if item == 'premium':
+				if item == 'premium16':
 					getrole = discord.utils.get(guild.roles, id = 890112591395966977)
 					await member.add_roles(getrole)
-					await member.send("Вы выиграли роль `@Premium 14 days`!")
+					await member.send("Вы выиграли роль `@Premium 16 days`!")
+
+				elif item == 'premium10':
+					getrole = discord.utils.get(guild.roles, id = 890112591395966977)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@Premium 10 days`!")
 
 				elif item == 'farm':
 					await CreateFarmChannel(member, 'FARM ПЛАТА')
 					await member.send("Вы выиграли ферму `FARM ПЛАТА`!")
 
-				elif item == 'farm':
-					await CreateFarmChannel(member, 'FARM ЗАТЫЧКА')
-					await member.send("Вы выиграли ферму `FARM ЗАТЫЧКА`!")
-
 				elif item == 'jet':
 					getrole = discord.utils.get(guild.roles, id = 890112890722463774)
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@:plane:`!")
+
+				elif item == 'zap':
+					getrole = discord.utils.get(guild.roles, id = 890099592752939009)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@:zap:`!")
 
 				else:
 					user_balance[str(member.name)]['RUB'] += item
@@ -556,28 +566,34 @@ async def on_raw_reaction_add(payload):
 			elif balance >= 496:
 				user_balance[str(member.name)]['RUB'] -= 496
 				for i in range(5):
-					items = [450, 320, 160, 80, 50, 55, 40, 20, 10, 'premium', 'farm', 'farm2' 'jet']
+					items = [80, 50, 55, 40, 20, 10, 'premium16', 'premium10', 'farm', 'zap', 'jet']
 
 					item = random.choice(items)
 					print(item)
 
-					if item == 'premium':
+					if item == 'premium16':
 						getrole = discord.utils.get(guild.roles, id = 890112591395966977)
 						await member.add_roles(getrole)
-						await member.send("Вы выиграли роль `@Premium 14 days`!")
+						await member.send("Вы выиграли роль `@Premium 16 days`!")
+
+					elif item == 'premium10':
+						getrole = discord.utils.get(guild.roles, id = 890112591395966977)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@Premium 10 days`!")
 
 					elif item == 'farm':
 						await CreateFarmChannel(member, 'FARM ПЛАТА')
 						await member.send("Вы выиграли ферму `FARM ПЛАТА`!")
 
-					elif item == 'farm':
-						await CreateFarmChannel(member, 'FARM ЗАТЫЧКА')
-						await member.send("Вы выиграли ферму `FARM ЗАТЫЧКА`!")
-
 					elif item == 'jet':
 						getrole = discord.utils.get(guild.roles, id = 890112890722463774)
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@:plane:`!")
+
+					elif item == 'zap':
+						getrole = discord.utils.get(guild.roles, id = 890099592752939009)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@:zap:`!")
 
 					else:
 						user_balance[str(member.name)]['RUB'] += item
@@ -599,28 +615,24 @@ async def on_raw_reaction_add(payload):
 
 			elif balance >= 199:
 				user_balance[str(member.name)]['RUB'] -= 199
-				items = [210, 200, 150, 100, 85, 65, 50, 'premium', 'farm', 'farm1', 'role1', 'role2', 'role3']
+				items = [210, 200, 150, 100, 125, 85, 65, 50, 'premium30', 'premium21', 'farm', 'role2', 'role3']
 
 				item = random.choice(items)
 				print(item)
 
-				if item == 'premium':
+				if item == 'premium30':
 					getrole = discord.utils.get(guild.roles, id = 888115759933431909)
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@Premium 30 day`!")
 
+				elif item == 'premium21':
+					getrole = discord.utils.get(guild.roles, id = 888115759933431909)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@Premium 21 day`!")
+
 				elif item == 'farm':
 					await CreateFarmChannel(member, 'FARM ЗАТЫЧКА')
 					await member.send("Вы выиграли ферму `FARM ЗАТЫЧКА`!")
-
-				#elif item == 'farm1':
-					#await CreateFarmChannel(member, 'FARM GTX')
-					#await member.send("Вы выиграли ферму `FARM GTX`!")
-
-				elif item == 'role1':
-					getrole = discord.utils.get(guild.roles, id = 890119411153911839)
-					await member.add_roles(getrole)
-					await member.send("Вы выиграли роль `@Monopolis`!")
 
 				elif item == 'role2':
 					getrole = discord.utils.get(guild.roles, id = 890119660488491049)
@@ -646,28 +658,24 @@ async def on_raw_reaction_add(payload):
 			elif balance >= 995:
 				user_balance[str(member.name)]['RUB'] -= 995
 				for i in range(5):
-					items = [450, 330, 250, 210, 200, 150, 100, 85, 65, 50, 'premium', 'farm', 'farm1', 'role1', 'role2', 'role3']
+					items = [210, 200, 150, 125, 100, 85, 65, 50, 'premium30', 'premium21', 'farm', 'role2', 'role3']
 
 					item = random.choice(items)
 					print(item)
 
-					if item == 'premium':
+					if item == 'premium30':
 						getrole = discord.utils.get(guild.roles, id = 888115759933431909)
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium 30 day`!")
 
+					elif item == 'premium21':
+						getrole = discord.utils.get(guild.roles, id = 888115759933431909)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@Premium 21 day`!")
+
 					elif item == 'farm':
 						await CreateFarmChannel(member, 'FARM ЗАТЫЧКА')
 						await member.send("Вы выиграли ферму `FARM ЗАТЫЧКА`!")
-
-					elif item == 'farm1':
-						await CreateFarmChannel(member, 'FARM GTX')
-						await member.send("Вы выиграли ферму `FARM GTX`!")
-
-					elif item == 'role1':
-						getrole = discord.utils.get(guild.roles, id = 890119411153911839)
-						await member.add_roles(getrole)
-						await member.send("Вы выиграли роль `@Monopolis`!")
 
 					elif item == 'role2':
 						getrole = discord.utils.get(guild.roles, id = 890119660488491049)
@@ -699,30 +707,32 @@ async def on_raw_reaction_add(payload):
 
 			elif balance >= 500:
 				user_balance[str(member.name)]['RUB'] -= 500
-				items = [535, 500, 420, 400, 350, 200, 100, 65, 'premium', 'role', 'farm1', 'farm2', 'farm3']
+				items = [420, 400, 350, 200, 100, 65, 'premium45', 'premium26', 'premium35', 'zap', 'asic']
 
 				item = random.choice(items)
 				print(item)
 
-				if item == 'premium':
+				if item == 'premium45':
 					getrole = discord.utils.get(guild.roles, id = 888115759933431909)
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@Premium - 45 days`!")
 
-				elif item == 'role':
+				if item == 'premium26':
+					getrole = discord.utils.get(guild.roles, id = 888115759933431909)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@Premium - 26 days`!")
+
+				if item == 'premium35':
+					getrole = discord.utils.get(guild.roles, id = 888115759933431909)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@Premium - 35 days`!")
+
+				elif item == 'zap':
 					getrole = discord.utils.get(guild.roles, id = 890587785856155649)
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@🌀`!")
 
-				elif item == 'farm1':
-					await CreateFarmChannel(member, 'FARM GTX')
-					await member.send("Вы выиграли ферму `FARM GTX`!")
-
-				elif item == 'farm2':
-					await CreateFarmChannel(member, 'FARM RTX')
-					await member.send("Вы выиграли ферму `FARM RTX`!")
-
-				elif item == 'farm3':
+				elif item == 'asic':
 					await CreateFarmChannel(member, 'FARM ASIC')
 					await member.send("Вы выиграли ферму `FARM ASIC`!")
 
@@ -740,30 +750,32 @@ async def on_raw_reaction_add(payload):
 			elif balance >= 2500:
 				user_balance[str(member.name)]['RUB'] -= 2500
 				for i in range(5):
-					items = [3200, 1600, 800, 400, 400, 200, 100, 'premium', 'role', 'farm1', 'farm2', 'farm3']
+					items = [420, 400, 350, 200, 100, 65, 'premium45', 'premium26', 'premium35', 'zap', 'asic']
 
 					item = random.choice(items)
 					print(item)
 
-					if item == 'premium':
+					if item == 'premium45':
 						getrole = discord.utils.get(guild.roles, id = 888115759933431909)
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium - 45 days`!")
 
-					elif item == 'role':
+					if item == 'premium26':
+						getrole = discord.utils.get(guild.roles, id = 888115759933431909)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@Premium - 26 days`!")
+
+					if item == 'premium35':
+						getrole = discord.utils.get(guild.roles, id = 888115759933431909)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@Premium - 35 days`!")
+
+					elif item == 'zap':
 						getrole = discord.utils.get(guild.roles, id = 890587785856155649)
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@🌀`!")
 
-					elif item == 'farm1':
-						await CreateFarmChannel(member, 'FARM GTX')
-						await member.send("Вы выиграли ферму `FARM GTX`!")
-
-					elif item == 'farm2':
-						await CreateFarmChannel(member, 'FARM RTX')
-						await member.send("Вы выиграли ферму `FARM RTX`!")
-
-					elif item == 'farm3':
+					elif item == 'asic':
 						await CreateFarmChannel(member, 'FARM ASIC')
 						await member.send("Вы выиграли ферму `FARM ASIC`!")
 
@@ -846,11 +858,110 @@ async def on_raw_reaction_add(payload):
 					with open('user_balance.json','w') as f:
 						json.dump(user_balance,f)
 
+
+	# LITE CASE
+	elif message_id == 893551335511830649:
+		with open('user_balance.json','r', encoding='utf-8') as f:
+			user_balance = json.load(f)
+
+		balance = user_balance[str(member.name)]['RUB']
+
+		if payload.emoji.name == "💷":
+			if balance < 35:
+				await member.send("У вас недостаточно средств для покупки кейса.")
+
+			elif balance >= 35:
+				user_balance[str(member.name)]['RUB'] -= 35
+				items = [35, 35, 25, 15, 10, 5, 'premium7', 'zap', 'comet', 'bussines', 'gold']
+
+				item = random.choice(items)
+				print(item)
+
+				if item == 'premium7':
+					getrole = discord.utils.get(guild.roles, id = 888115759933431909)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@Premium 7 days`!")
+
+				elif item == 'zap':
+					getrole = discord.utils.get(guild.roles, id = 890099592752939009)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@:zap:`!")
+
+				elif item == 'comet':
+					getrole = discord.utils.get(guild.roles, id = 890123446682521621)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@☄`!")
+
+				elif item == 'bussines':
+					getrole = discord.utils.get(guild.roles, id = 890960183155630191)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@Бизнесмен`!")
+
+				elif item == 'gold':
+					getrole = discord.utils.get(guild.roles, id = 890119660488491049)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@Gold`!")
+
+				else:
+					user_balance[str(member.name)]['RUB'] += item
+					await member.send(f'Вы выиграли **`{item}` RUB**!')
+
+				with open('user_balance.json','w') as f:
+					json.dump(user_balance,f)
+
+		elif payload.emoji.name == "💳":
+			if balance < 175:
+				await member.send("У вас недостаточно средств для покупки 5 кейсов.")
+
+			elif balance >= 175:
+				user_balance[str(member.name)]['RUB'] -= 175
+				for i in range(5):
+					items = [35, 35, 25, 15, 10, 5, 'premium7', 'zap', 'comet', 'bussines', 'gold']
+
+					item = random.choice(items)
+					print(item)
+
+					if item == 'premium7':
+						getrole = discord.utils.get(guild.roles, id = 888115759933431909)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@Premium 7 days`!")
+
+					elif item == 'zap':
+						getrole = discord.utils.get(guild.roles, id = 890099592752939009)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@:zap:`!")
+
+					elif item == 'comet':
+						getrole = discord.utils.get(guild.roles, id = 890123446682521621)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@☄`!")
+
+					elif item == 'bussines':
+						getrole = discord.utils.get(guild.roles, id = 890960183155630191)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@Бизнесмен`!")
+
+					elif item == 'gold':
+						getrole = discord.utils.get(guild.roles, id = 890119660488491049)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@Gold`!")
+
+					else:
+						user_balance[str(member.name)]['RUB'] += item
+						await member.send(f'Вы выиграли **`{item}` RUB**!')
+
+					with open('user_balance.json','w') as f:
+						json.dump(user_balance,f)
+
 	# Super money boxes
-	elif message_id == 892573662694215760:
+	elif message_id == 893397579663044629:
 		embed = discord.Embed(description="Укажите количество валюты для вложения в копилку **№1** от 1 до 50RUB.\nКомандой: `!box 1 СУММА`")
 		await member.send(embed = embed)
 
+
+	elif message_id == 893397582523547678:
+		embed = discord.Embed(description="Укажите количество валюты для вложения в копилку **№1** от 1 до 50RUB.\nКомандой: `!box 2 СУММА`")
+		await member.send(embed = embed)
 
 	# Bank
 	elif message_id == 890961877520240690:
@@ -893,7 +1004,6 @@ async def on_raw_reaction_add(payload):
 		mlist = farms['bot']['out_messages_id']
 
 	for i in range(len(mlist)):
-		print(mlist[i])
 		if message_id == mlist[i]:
 			if payload.emoji.name == "📤":
 				with open('user_balance.json','r', encoding='utf-8') as f:
@@ -944,7 +1054,7 @@ async def on_member_join(member):
 		if not member.name in user_farms:
 			user_farms[str(member.name)] = {}
 			user_farms[str(member.name)]['name'] = str(member.name)
-			user_farms[str(member.name)]['farms'] = 'none'
+			user_farms[str(member.name)]['farms'] = {}
 
 			with open('user_farms.json','w') as f:
 				json.dump(user_farms,f)
@@ -1824,7 +1934,7 @@ async def box(ctx, box: int, amount: int):
 
 
 							channel = bot.get_channel(888500024214966282)
-							m = await channel.fetch_message(892573662694215760)
+							m = await channel.fetch_message(893397579663044629)
 							ac = round(target / 4)
 							at = round(target / 3)
 							po = round(target / 2)
@@ -1835,27 +1945,27 @@ async def box(ctx, box: int, amount: int):
 
 							invested = super_boxes["box1"]["invested"]
 							if invested <= ac:# 1/10
-								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧⬛⬛⬛⬛⬛⬛⬛⬛ `{invested}/500`')
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧⬛⬛⬛⬛⬛⬛⬛⬛')
 								await m.edit(embed = box)
 
 							elif invested > ac and invested < at + 20:# 1/4 -
-								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧⬛⬛⬛⬛⬛⬛⬛ `{invested}/500`')
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧⬛⬛⬛⬛⬛⬛⬛')
 								await m.edit(embed = box)
 
 							elif invested > at + 20 and invested <= po:# 1/2 -
-								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧⬛⬛⬛⬛⬛ `{invested}/500`')
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧⬛⬛⬛⬛⬛')
 								await m.edit(embed = box)
 
 							elif invested >= po and invested < dt + 95:# 1/2 +
-								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧⬛⬛⬛⬛ `{invested}/500`')
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧⬛⬛⬛⬛')
 								await m.edit(embed = box)
 
 							elif invested >= po and invested < dt + 70:# 1/2 +
-								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧🟧🟧⬛⬛ `{invested}/500`')
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧🟧🟧⬛⬛')
 								await m.edit(embed = box)
 
 							elif invested > dt + 95:
-								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧 `{invested}/500`')
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧')
 								await m.edit(embed = box)
 
 							# logs
@@ -1870,6 +1980,123 @@ async def box(ctx, box: int, amount: int):
 					await ctx.message.author.send("У вас недостаточно средств.")
 			else:
 				await ctx.message.author.send("Сумма вложения должна быть не менее 1 и не боле 50RUB.")
+
+
+
+
+
+		# Box 2
+		elif box == 2:
+			if amount >= 1 and amount <= 50:
+				if balance > 1:
+					with open('super_boxes.json','r', encoding='utf-8') as f:
+						super_boxes = json.load(f)
+
+					target = super_boxes["box2"]["target"]
+					invested = super_boxes["box2"]["invested"]
+					members = super_boxes["box2"]["members"]
+					percent = super_boxes["box2"]["percent"]
+					stats = super_boxes["box2"]["stats"]
+					ones = super_boxes["box2"]["ones"]
+
+					if stats == True:
+						# if box filled
+						if invested >= target:
+
+							# logs
+							logs = guild.get_channel(892584515162210324)
+							embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №2", description=f'Список вложившихся в супер копилку участников:\n```\n{members}\n```')
+							await logs.send(embed=embed)
+
+							for i in members.items():
+								user = i[0]
+								user_amount = i[1]
+								percent1 = user_amount / 100 * percent
+								money = user_amount + percent1
+								print(money)
+
+								super_boxes["box2"]["members"][f'{str(ctx.message.author.name)}'] = 0
+								super_boxes["box2"]["stats"] = False
+								with open('super_boxes.json','w') as f:
+									json.dump(super_boxes,f)
+
+								with open('user_balance.json','r', encoding='utf-8') as f:
+									user_balance = json.load(f)
+								user_balance[str(user)]['RUB'] += money
+								with open('user_balance.json','w') as f:
+									json.dump(user_balance,f)
+
+
+						elif invested <= target:
+							super_boxes["box2"]["invested"] += amount
+
+							print(members)
+							if not ctx.message.author.name in ones:
+								super_boxes["box2"]["members"][f'{str(ctx.message.author.name)}'] = int(amount)
+								super_boxes["box2"]["ones"].append(ctx.message.author.name)
+
+							elif ctx.message.author.name in ones:
+								super_boxes["box2"]["members"][f'{str(ctx.message.author.name)}'] += int(amount)
+
+
+							with open('super_boxes.json','w') as f:
+								json.dump(super_boxes,f)
+
+							user_balance[str(ctx.message.author.name)]['RUB'] -= amount
+							with open('user_balance.json','w') as f:
+								json.dump(user_balance,f)
+
+							await ctx.message.author.send(f'Вы вложили {amount}RUB в копилку №2')
+
+
+							channel = bot.get_channel(888500024214966282)
+							m = await channel.fetch_message(893397582523547678)
+							ac = round(target / 4)
+							at = round(target / 3)
+							po = round(target / 2)
+							dt = at + at
+
+							with open('super_boxes.json','r', encoding='utf-8') as f:
+								super_boxes = json.load(f)
+
+							invested = super_boxes["box2"]["invested"]
+							if invested <= ac:# 1/10
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №2", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧⬛⬛⬛⬛⬛⬛⬛⬛')
+								await m.edit(embed = box)
+
+							elif invested > ac and invested < at + 20:# 1/4 -
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №2", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧⬛⬛⬛⬛⬛⬛⬛')
+								await m.edit(embed = box)
+
+							elif invested > at + 20 and invested <= po:# 1/2 -
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №2", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧⬛⬛⬛⬛⬛')
+								await m.edit(embed = box)
+
+							elif invested >= po and invested < dt + 95:# 1/2 +
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №2", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧⬛⬛⬛⬛')
+								await m.edit(embed = box)
+
+							elif invested >= po and invested < dt + 70:# 1/2 +
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №2", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧🟧🟧⬛⬛')
+								await m.edit(embed = box)
+
+							elif invested > dt + 95:
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №2", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧')
+								await m.edit(embed = box)
+
+							# logs
+							logs = guild.get_channel(892584515162210324)
+							embed = discord.Embed(color=0x00a550, title="ВКЛАД В СУПЕР КОПИЛКУ", description=f'Участник {ctx.message.author} положил {amount} в копилку №2')
+							await logs.send(embed=embed)
+
+					else:
+						await ctx.message.author.send("Вы не можете вложится в эту копилку так как она уже заполнена.")	
+
+				else:
+					await ctx.message.author.send("У вас недостаточно средств.")
+			else:
+				await ctx.message.author.send("Сумма вложения должна быть не менее 1 и не боле 50RUB.")
+
 
 
 		else:
@@ -2088,32 +2315,40 @@ async def upd(ctx):
 		await m2.edit(embed = embed)
 		
 
-		
+		'''
+		channel = bot.get_channel(889843449300398111)
 		m2 = await channel.fetch_message(890117683478147092)
-		embed2 = discord.Embed(color=0xFBFF29, title=f'GOLD CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**450RUB | 330RUB | 250RUB | 210RUB | 200RUB |** 150RUB | 100RUB | 85 RUB | 65RUB | 50RUB | Premium  - 30 day\n**-FARM ЗАТЫЧКА\n-FARM GTX\nУНИКАЛЬНАЯ РОЛЬ :zap: Gold Monopolis**\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 199RUB\n:credit_card: 5шт - 995RUB')
+		embed2 = discord.Embed(color=0xFBFF29, title=f'GOLD CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**450RUB | 330RUB | 250RUB | 210RUB | 200RUB |** 150RUB | 125RUB | 100RUB | 85 RUB | 65RUB | 50RUB |\nPremium 30 day\n Premium 21 day\n-FARM ЗАТЫЧКА\n-FARM GTX\n-FARM RTX\nУНИКАЛЬНАЯ РОЛЬ :zap: Gold Monopolis**\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n:pound: 1шт - 199RUB\n:credit_card: 5шт - 995RUB')
 		embed2.set_thumbnail(url="https://i.ibb.co/Kq8j5qT/GOLD.png")
 		await m2.edit(embed = embed2)
-		
-		channel = bot.get_channel(889843449300398111)
 
+				
 		m = await channel.fetch_message(890117691388600320)
-		embed = discord.Embed(color=0x80F7FF, title=f'PLATINUM CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**850RUB | 650RUB | 500RUB | 535RUB | 420RUB | 400RUB|** 350 RUB| 200RUB | 100RUB | 65 RUB| Premium  45 day\n-FARM GTX\n-FARM RTX\n-FARM ASIC\nУНИКАЛЬНАЯ РОЛЬ 🌀\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 500RUB\n:credit_card: 5шт - 2500RUB')
+		embed = discord.Embed(color=0x80F7FF, title=f'PLATINUM CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**850RUB | 650RUB | 500RUB | 535RUB | 420RUB | 400RUB|** 350 RUB| 200RUB | 100RUB | 65 RUB|\nPremium 45 day\nPremium 35 day\nPremium 26 day\n-FARM MULTI\n-FARM GTX\n-FARM RTX\n-FARM ASIC\nУНИКАЛЬНАЯ РОЛЬ 🌀\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 500RUB\n:credit_card: 5шт - 2500RUB')
 		embed.set_thumbnail(url="https://i.ibb.co/1MDfBNc/PLATINUM.png")
 		await m.edit(embed = embed)
-		
+
+		#embed3 = discord.Embed(color=0x80F7FF, title=f'LITE CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**625RUB| 500RUB | 350RUB | 120RUB | 45RUB** | 35RUB | 25RUB | 15 RUB| 10RUB | 5RUB |\nPremium 7 days\nФерма - FARM ПЛАТА\nУНИКАЛЬНАЯ РОЛЬ  ⚡; Gold; ☄️; Бизнесмен;\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - ~~125~~RUB **35**RUB\n:credit_card: 5шт - ~~625~~RUB **175**RUB')
+		#embed3.set_thumbnail(url="https://cdn.discordapp.com/attachments/828213712736354305/893521241724563527/PREMIUM.png")
+		#message = await channel.send(embed = embed3)
+		#await message.add_reaction('💷')
+		#await message.add_reaction('💳')
+		'''
+		channel = bot.get_channel(889843449300398111)
 		m3 = await channel.fetch_message(890117675408322580)
-		embed3 = discord.Embed(color=0x949494, title=f'SILVER CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**450RUB | 320RUB | 160RUB | 80RUB |** 55RUB | 40RUB | 20RUB | Premium  - 14 day\n-FARM ПЛАТА\n-FARM ЗАТЫЧКА\n-FARM ASIC\nУникальная роль :airplane:\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 99RUB\n:credit_card: 5шт - 496RUB')
+		embed3 = discord.Embed(color=0x949494, title=f'SILVER CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**450RUB | 320RUB | 160RUB | 80RUB | 65RUB |** 55RUB | 40RUB | 20RUB |\nPremium 16 days\nPremium 10 days\n-FARM ПЛАТА\n-FARM ЗАТЫЧКА\n-FARM ASIC\nУникальная роль :airplane:\nУникальная роль :zap:\nУникальная роль ☄️\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 99RUB\n:credit_card: 5шт - 496RUB')
 		embed3.set_thumbnail(url="https://i.ibb.co/xXnJTXq/SILVER.png")
 		await m3.edit(embed = embed3)
-
-		'''
+		
+		
+		
 		channel1 = bot.get_channel(889843449300398111)
 		m4 = await channel1.fetch_message(890117667908878347)
-		embed4 = discord.Embed(color=0xB88947, title=f'BRONZE CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**300RUB| 220RUB | 140RUB | 100RUB | 65RUB | 50RUB |** 35RUB | 20RUB | 15RUB | 10RUB |\nУникальная роль бизнесмен\nУникальная роль Trainer\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:**\n:pound: 1шт - 49RUB\n:credit_card: 5шт - 245RUB')
+		embed4 = discord.Embed(color=0xB88947, title=f'BRONZE CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**300RUB| 220RUB | 140RUB | 100RUB | 65RUB | 50RUB |** 35RUB | 25RUB | 20RUB | 15RUB | 10RUB |\nУникальная роль бизнесмен\nУникальная роль Trainer\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:**\n:pound: 1шт - 49RUB\n:credit_card: 5шт - 245RUB')
 		embed4.set_thumbnail(url="https://i.imgur.com/MRvrOW2.png")
 		await m4.edit(embed = embed4)
-		'''
-
+		
+		
 		channel1 = bot.get_channel(890982389881384991)
 		embed165 = discord.Embed(color=0x2E62FF, description=f'<:dfgf:> :dfgf: :a_::a_::b_::b_::b_::b_::b_::b_::b_: `3/10`')
 		await channel1.send(embed = embed165)
@@ -2124,19 +2359,24 @@ async def upd(ctx):
 		embed168 = discord.Embed(color=0x2E62FF, description=f':l_::b_::b_::b_::b_::b_::b_::b_::b_::b_: `1/10`')
 		await channel1.send(embed = embed168)
 		await channel1.send('<:dfgf:> :dfgf: :a_::a_::b_::b_::b_::b_::b_::b_::b_: `3/10`')
-		'''
+		
 
 		# SUPER MONEY BOXES
 		channel = bot.get_channel(888500024214966282)
-		embed = discord.Embed(color=0x2E62FF, title="**Супер копилка**", description=f'**Супер копилка** - это место, где можно заработать огромные проценты за короткое время.\nСуть данного раздела заключается в том, что каждый игрок может внести свой вклад в общее дело и получить +10% чистого профита после полного заполнения следующей копилки.\n\nТ.е. если коротко, вложил 100 рублей в  копилку №1, после заполнения копилки №2 Вы получите 110 руб. на вывод.')
-		await channel.send(embed = embed)
+		#embed = discord.Embed(color=0x2E62FF, title="**Супер копилка**", description=f'**Супер копилка** - это место, где можно заработать огромные проценты за короткое время.\nСуть данного раздела заключается в том, что каждый игрок может внести свой вклад в общее дело и получить +10% чистого профита после полного заполнения следующей копилки.\n\nТ.е. если коротко, вложил 100 рублей в  копилку №1, после заполнения копилки №2 Вы получите 110 руб. на вывод.')
+		#await channel.send(embed = embed)
 
-		m = await channel.fetch_message(892573662694215760)
-		box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛ `0/500`')
-		await m.edit(embed = box)
+		#m = await channel.fetch_message(892573662694215760)
+		box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛')
+		message1 = await channel.send(embed = box)
+		await message1.add_reaction('📤')
+
+		box2 = discord.Embed(color=0x2E62FF, title="Супер копилка №2", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛')
+		message2 = await channel.send(embed = box2)
+		await message2.add_reaction('📤')
 		#box1 = discord.Embed(color=0x2E62FF, title="Супер копилка", description=f'**Супер копилка** - это место, где можно заработать огромные проценты за короткое время.\nСуть данного раздела заключается в том, что каждый игрок может внести свой вклад в общее дело и получить +10% чистого профита после полного заполнения следующей копилки.\n\nТ.е. если коротко, вложил 100 рублей в  копилку №1, после заполнения копилки №2 Вы получите 110 руб. на вывод.')
 		#await channel.send(embed = box1)
-
+		'''
 
 	else:
 		print("Not man")

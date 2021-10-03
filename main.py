@@ -46,7 +46,7 @@ async def on_ready():
 		farm_list = farms[i]['farms']
 
 		for i in farm_list.items():
-			if i[0] != "none":
+			if i[1]['stats'] != False:
 				life = i[1]["life_time"]
 				out = i[1]["out"]
 				mode = i[1]["auto"]
@@ -1160,13 +1160,21 @@ async def on_raw_reaction_add(payload):
 
 	# Super money boxes
 	elif message_id == 893397579663044629:
-		embed = discord.Embed(description="Укажите количество валюты для вложения в копилку **№1** от 1 до 50RUB.\nКомандой: `!box 1 СУММА`")
+		embed = discord.Embed(description="Укажите количество валюты для вложения в копилку **№1** от 1 до 250RUB.\nКомандой: `!box 1 СУММА`")
 		await member.send(embed = embed)
-
 
 	elif message_id == 893397582523547678:
-		embed = discord.Embed(description="Укажите количество валюты для вложения в копилку **№1** от 1 до 50RUB.\nКомандой: `!box 2 СУММА`")
+		embed = discord.Embed(description="Укажите количество валюты для вложения в копилку **№2** от 1 до 350RUB.\nКомандой: `!box 2 СУММА`")
 		await member.send(embed = embed)
+
+	elif message_id == 894214944034279435:
+		embed = discord.Embed(description="Укажите количество валюты для вложения в копилку **№3** от 1 до 450RUB.\nКомандой: `!box 3 СУММА`")
+		await member.send(embed = embed)
+
+	elif message_id == 894214947473588255:
+		embed = discord.Embed(description="Укажите количество валюты для вложения в копилку **№4** от 1 до 650RUB.\nКомандой: `!box 4 СУММА`")
+		await member.send(embed = embed)
+
 
 	# Bank
 	elif message_id == 890961877520240690:
@@ -1307,7 +1315,7 @@ async def on_member_join(member):
 
 
 # |------------------------------- METHODS --------------------------------|
-def Farm(member: discord.Member.name, name, life, amount: float, auto: bool):
+def Farm(member, name, life, amount: float, auto: bool):
 	print(f'----------Farm started----------')
 	out_time = 3600
 	m_chance = 0
@@ -1349,7 +1357,7 @@ def Farm(member: discord.Member.name, name, life, amount: float, auto: bool):
 					with open('user_farms.json','r', encoding='utf-8') as f:
 						farms = json.load(f)
 
-					farm_list = farms[str(member.name)]['farms']
+					farm_list = farms[str(member)]['farms']
 
 					for i in farm_list.items():
 						if i[0] == str(name):
@@ -1364,11 +1372,12 @@ def Farm(member: discord.Member.name, name, life, amount: float, auto: bool):
 				with open('user_farms.json','r', encoding='utf-8') as f:
 					farms = json.load(f)
 
-				farm_list1 = farms[str(member.name)]['farms']
+				farm_list = farms[str(member)]['farms']
 
-				for i in farm_list1.items():
+				for i in farm_list.items():
 					if i[0] == str(name):
-						i[0] = "none"
+						i[1]["life_time"] -= 3600
+
 				with open('user_farms.json','w') as f:
 					json.dump(farms,f)
 
@@ -1381,11 +1390,11 @@ def Farm(member: discord.Member.name, name, life, amount: float, auto: bool):
 			with open('user_farms.json','r', encoding='utf-8') as f:
 				farms = json.load(f)
 
-			farm_list = farms[str(member.name)]['farms']
+			farm_list = farms[str(member)]['farms']
 
 			for i in farm_list.items():
 				if i[0] == str(name):
-					i[1]["life_time"] -= 3600
+					i[1]['stats'] = False
 
 			with open('user_farms.json','w') as f:
 				json.dump(farms,f)
@@ -1415,11 +1424,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 3024000, "out": 0.25, "auto": False, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3024000, "out": 0.25, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, farm, 3024000, 0.25, False))
+		farmth = Thread(target=Farm, args=(member.name, farm, 3024000, 0.25, False))
 		farmth.start()
 
 
@@ -1436,11 +1445,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 2505600, "out": 0.5, "auto": False, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 2505600, "out": 0.5, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, farm, 2505600, 0.5, False))
+		farmth = Thread(target=Farm, args=(member.name, farm, 2505600, 0.5, False))
 		farmth.start()
 
 
@@ -1457,11 +1466,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 2505600, "out": 1.0, "auto": False, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 2505600, "out": 1.0, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, farm, 2505600, 1.0, False))
+		farmth = Thread(target=Farm, args=(member.name, farm, 2505600, 1.0, False))
 		farmth.start()
 
 
@@ -1478,11 +1487,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 3024000, "out": 1.5, "auto": True, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3024000, "out": 1.5, "auto": True, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, farm, 3024000, 1.5, True))
+		farmth = Thread(target=Farm, args=(member.name, farm, 3024000, 1.5, True))
 		farmth.start()
 
 
@@ -1499,11 +1508,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 2851200, "out": 2.0, "auto": True, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 2851200, "out": 2.0, "auto": True, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, farm, 2851200, 2.0, True))
+		farmth = Thread(target=Farm, args=(member.name, farm, 2851200, 2.0, True))
 		farmth.start()
 
 
@@ -1520,11 +1529,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 1728000, "out": 0.3, "auto": False, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 1728000, "out": 0.3, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, farm, 1728000, 3.0, False))
+		farmth = Thread(target=Farm, args=(member.name, farm, 1728000, 3.0, False))
 		farmth.start()
 
 
@@ -1541,11 +1550,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 2592000, "out": 4.0, "auto": False, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 2592000, "out": 4.0, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, farm, 2592000, 4.0, False))
+		farmth = Thread(target=Farm, args=(member.name, farm, 2592000, 4.0, False))
 		farmth.start()
 
 
@@ -1562,11 +1571,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 3283200, "out": 7.0, "auto": False, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3283200, "out": 7.0, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, farm, 3283200, 7.0, False))
+		farmth = Thread(target=Farm, args=(member.name, farm, 3283200, 7.0, False))
 		farmth.start()
 
 
@@ -1583,11 +1592,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 3196800, "out": 14.0, "auto": True, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3196800, "out": 14.0, "auto": True, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, farm, 3196800, 14.0, True))
+		farmth = Thread(target=Farm, args=(member.name, farm, 3196800, 14.0, True))
 		farmth.start()
 
 
@@ -1604,11 +1613,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 3628800, "out": 25.0, "auto": True, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3628800, "out": 25.0, "auto": True, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, farm, 3628800, 25.0, True))
+		farmth = Thread(target=Farm, args=(member.name, farm, 3628800, 25.0, True))
 		farmth.start()
 
 
@@ -1625,11 +1634,11 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"life_time": 950400, "out": 0.3, "auto": False, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 950400, "out": 0.3, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
-		farmth = Thread(target=Farm, args=(member, farm, 950400, 0.3, False))
+		farmth = Thread(target=Farm, args=(member.name, farm, 950400, 0.3, False))
 		farmth.start()
 
 
@@ -2065,6 +2074,17 @@ async def ubal(ctx, member: discord.Member, ctype, op: str, amount: int):
 		print("Not man")
 
 
+@bot.command()
+async def bal(ctx, member: discord.Member):
+	with open('user_balance.json','r', encoding='utf-8') as f:
+		balance = json.load(f)
+
+	rub = balance[str(member.name)]['RUB']
+	ntb = balance[str(member.name)]['NTB']
+
+	await ctx.send(f'**{member}**: {rub}RUB **|** {ntb}NTB')
+
+
 # Super money boxes
 @bot.command()
 async def box(ctx, box: int, amount: int):
@@ -2080,7 +2100,7 @@ async def box(ctx, box: int, amount: int):
 
 		# Box 1
 		if box == 1:
-			if amount >= 1 and amount <= 50:
+			if amount >= 1 and amount <= 250:
 				if balance > 1:
 					with open('super_boxes.json','r', encoding='utf-8') as f:
 						super_boxes = json.load(f)
@@ -2093,12 +2113,13 @@ async def box(ctx, box: int, amount: int):
 					ones = super_boxes["box1"]["ones"]
 
 					if stats == True:
-						# if box filled
-						if invested >= target:
-
+						# if box2 filled
+						box2t = super_boxes["box2"]["target"]
+						box2i = super_boxes["box2"]["invested"]
+						if box2i >= box2t:
 							# logs
 							logs = guild.get_channel(892584515162210324)
-							embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №1", description=f'Список вложившихся в супер копилку участников:\n```\n{members}\n```')
+							embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №2 И ВЫВОД №1", description=f'Список вложившихся в супер копилку №1 участников:\n```\n{members}\n```')
 							await logs.send(embed=embed)
 
 							for i in members.items():
@@ -2108,10 +2129,10 @@ async def box(ctx, box: int, amount: int):
 								money = user_amount + percent1
 								print(money)
 
-								super_boxes["box1"]["members"][f'{str(ctx.message.author.name)}'] = 0
-								super_boxes["box1"]["stats"] = False
-								with open('super_boxes.json','w') as f:
-									json.dump(super_boxes,f)
+								#super_boxes["box1"]["members"][f'{str(ctx.message.author.name)}'] = 0
+								#super_boxes["box1"]["stats"] = False
+								#with open('super_boxes.json','w') as f:
+								#	json.dump(super_boxes,f)
 
 								with open('user_balance.json','r', encoding='utf-8') as f:
 									user_balance = json.load(f)
@@ -2120,7 +2141,7 @@ async def box(ctx, box: int, amount: int):
 									json.dump(user_balance,f)
 
 
-						elif invested <= target:
+						elif box2i <= box2t:
 							super_boxes["box1"]["invested"] += amount
 
 							print(members)
@@ -2179,7 +2200,7 @@ async def box(ctx, box: int, amount: int):
 
 							# logs
 							logs = guild.get_channel(892584515162210324)
-							embed = discord.Embed(color=0x00a550, title="ВКЛАД В СУПЕР КОПИЛКУ", description=f'Участник {ctx.message.author} положил {amount} в копилку №1')
+							embed = discord.Embed(color=0x00a550, title="ВКЛАД В СУПЕР КОПИЛКУ", description=f'Участник {ctx.message.author} положил {amount} в копилку №1\n\nДля заполнения копилки осталось вложить `{target - invested}`')
 							await logs.send(embed=embed)
 
 					else:
@@ -2188,7 +2209,7 @@ async def box(ctx, box: int, amount: int):
 				else:
 					await ctx.message.author.send("У вас недостаточно средств.")
 			else:
-				await ctx.message.author.send("Сумма вложения должна быть не менее 1 и не боле 50RUB.")
+				await ctx.message.author.send("Сумма вложения должна быть не менее 1 и не боле 250RUB.")
 
 
 
@@ -2196,7 +2217,7 @@ async def box(ctx, box: int, amount: int):
 
 		# Box 2
 		elif box == 2:
-			if amount >= 1 and amount <= 50:
+			if amount >= 1 and amount <= 350:
 				if balance > 1:
 					with open('super_boxes.json','r', encoding='utf-8') as f:
 						super_boxes = json.load(f)
@@ -2209,12 +2230,14 @@ async def box(ctx, box: int, amount: int):
 					ones = super_boxes["box2"]["ones"]
 
 					if stats == True:
-						# if box filled
-						if invested >= target:
+						# if box3 filled
+						box3t = super_boxes["box3"]["target"]
+						box3i = super_boxes["box3"]["invested"]
+						if box3i >= box3t:
 
 							# logs
 							logs = guild.get_channel(892584515162210324)
-							embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №2", description=f'Список вложившихся в супер копилку участников:\n```\n{members}\n```')
+							embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №3 И ВЫВОД №2", description=f'Список вложившихся в супер копилку №2 участников:\n```\n{members}\n```')
 							await logs.send(embed=embed)
 
 							for i in members.items():
@@ -2224,10 +2247,10 @@ async def box(ctx, box: int, amount: int):
 								money = user_amount + percent1
 								print(money)
 
-								super_boxes["box2"]["members"][f'{str(ctx.message.author.name)}'] = 0
-								super_boxes["box2"]["stats"] = False
-								with open('super_boxes.json','w') as f:
-									json.dump(super_boxes,f)
+								#super_boxes["box2"]["members"][f'{str(ctx.message.author.name)}'] = 0
+								#super_boxes["box2"]["stats"] = False
+								#with open('super_boxes.json','w') as f:
+								#	json.dump(super_boxes,f)
 
 								with open('user_balance.json','r', encoding='utf-8') as f:
 									user_balance = json.load(f)
@@ -2236,7 +2259,7 @@ async def box(ctx, box: int, amount: int):
 									json.dump(user_balance,f)
 
 
-						elif invested <= target:
+						elif box3i <= box3t:
 							super_boxes["box2"]["invested"] += amount
 
 							print(members)
@@ -2295,8 +2318,36 @@ async def box(ctx, box: int, amount: int):
 
 							# logs
 							logs = guild.get_channel(892584515162210324)
-							embed = discord.Embed(color=0x00a550, title="ВКЛАД В СУПЕР КОПИЛКУ", description=f'Участник {ctx.message.author} положил {amount} в копилку №2')
+							embed = discord.Embed(color=0x00a550, title="ВКЛАД В СУПЕР КОПИЛКУ", description=f'Участник {ctx.message.author} положил {amount} в копилку №2\n\nДля заполнения копилки осталось вложить `{target - invested}`')
 							await logs.send(embed=embed)
+
+
+							# if box2 filled
+							if invested >= target:
+								members1 = super_boxes["box1"]["members"]
+								# logs
+								logs = guild.get_channel(892584515162210324)
+								embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №2 И ВЫВОД №1", description=f'Список вложившихся в супер копилку №1 участников:\n```\n{members}\n```')
+								await logs.send(embed=embed)
+
+								for i in members1.items():
+									user = i[0]
+									user_amount = i[1]
+									percent1 = user_amount / 100 * percent
+									money = user_amount + percent1
+									print(money)
+
+									#super_boxes["box1"]["members"][f'{str(ctx.message.author.name)}'] = 0
+									#super_boxes["box1"]["stats"] = False
+									#with open('super_boxes.json','w') as f:
+									#	json.dump(super_boxes,f)
+
+									with open('user_balance.json','r', encoding='utf-8') as f:
+										user_balance = json.load(f)
+									user_balance[str(user)]['RUB'] += money
+									with open('user_balance.json','w') as f:
+										json.dump(user_balance,f)
+
 
 					else:
 						await ctx.message.author.send("Вы не можете вложится в эту копилку так как она уже заполнена.")	
@@ -2304,7 +2355,293 @@ async def box(ctx, box: int, amount: int):
 				else:
 					await ctx.message.author.send("У вас недостаточно средств.")
 			else:
-				await ctx.message.author.send("Сумма вложения должна быть не менее 1 и не боле 50RUB.")
+				await ctx.message.author.send("Сумма вложения должна быть не менее 1 и не боле 350RUB.")
+
+
+
+
+		# Box 3
+		elif box == 3:
+			if amount >= 1 and amount <= 450:
+				if balance > 1:
+					with open('super_boxes.json','r', encoding='utf-8') as f:
+						super_boxes = json.load(f)
+
+					target = super_boxes["box3"]["target"]
+					invested = super_boxes["box3"]["invested"]
+					members = super_boxes["box3"]["members"]
+					percent = super_boxes["box3"]["percent"]
+					stats = super_boxes["box3"]["stats"]
+					ones = super_boxes["box3"]["ones"]
+
+					if stats == True:
+						# if box4 filled
+						box4t = super_boxes["box4"]["target"]
+						box4i = super_boxes["box4"]["invested"]
+						if box4i >= box4t:
+
+							# logs
+							logs = guild.get_channel(892584515162210324)
+							embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №4 И ВЫВОД №3", description=f'Список вложившихся в супер копилку №3 участников:\n```\n{members}\n```')
+							await logs.send(embed=embed)
+
+							for i in members.items():
+								user = i[0]
+								user_amount = i[1]
+								percent1 = user_amount / 100 * percent
+								money = user_amount + percent1
+								print(money)
+
+								#super_boxes["box2"]["members"][f'{str(ctx.message.author.name)}'] = 0
+								#super_boxes["box2"]["stats"] = False
+								#with open('super_boxes.json','w') as f:
+								#	json.dump(super_boxes,f)
+
+								with open('user_balance.json','r', encoding='utf-8') as f:
+									user_balance = json.load(f)
+								user_balance[str(user)]['RUB'] += money
+								with open('user_balance.json','w') as f:
+									json.dump(user_balance,f)
+
+
+						elif box4i <= box4t:
+							super_boxes["box3"]["invested"] += amount
+
+							print(members)
+							if not ctx.message.author.name in ones:
+								super_boxes["box3"]["members"][f'{str(ctx.message.author.name)}'] = int(amount)
+								super_boxes["box3"]["ones"].append(ctx.message.author.name)
+
+							elif ctx.message.author.name in ones:
+								super_boxes["box3"]["members"][f'{str(ctx.message.author.name)}'] += int(amount)
+
+
+							with open('super_boxes.json','w') as f:
+								json.dump(super_boxes,f)
+
+							user_balance[str(ctx.message.author.name)]['RUB'] -= amount
+							with open('user_balance.json','w') as f:
+								json.dump(user_balance,f)
+
+							await ctx.message.author.send(f'Вы вложили {amount}RUB в копилку №3')
+
+
+							channel = bot.get_channel(888500024214966282)
+							m = await channel.fetch_message(894214944034279435)
+							ac = round(target / 4)
+							at = round(target / 3)
+							po = round(target / 2)
+							dt = at + at
+
+							with open('super_boxes.json','r', encoding='utf-8') as f:
+								super_boxes = json.load(f)
+
+							invested = super_boxes["box3"]["invested"]
+							if invested <= ac:# 1/10
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №3", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧⬛⬛⬛⬛⬛⬛⬛⬛')
+								await m.edit(embed = box)
+
+							elif invested > ac and invested < at + 20:# 1/4 -
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №3", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧⬛⬛⬛⬛⬛⬛⬛')
+								await m.edit(embed = box)
+
+							elif invested > at + 20 and invested <= po:# 1/2 -
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №3", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧⬛⬛⬛⬛⬛')
+								await m.edit(embed = box)
+
+							elif invested >= po and invested < dt + 95:# 1/2 +
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №3", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧⬛⬛⬛⬛')
+								await m.edit(embed = box)
+
+							elif invested >= po and invested < dt + 70:# 1/2 +
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №2", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧🟧🟧⬛⬛')
+								await m.edit(embed = box)
+
+							elif invested > dt + 95:
+								box = discord.Embed(color=0x2E62FF, title="Супер копилка №2", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧')
+								await m.edit(embed = box)
+
+							# logs
+							logs = guild.get_channel(892584515162210324)
+							embed = discord.Embed(color=0x00a550, title="ВКЛАД В СУПЕР КОПИЛКУ", description=f'Участник {ctx.message.author} положил {amount} в копилку №2\n\nДля заполнения копилки осталось вложить `{target - invested}`')
+							await logs.send(embed=embed)
+
+
+							# if box3 filled
+							if invested >= target:
+								members1 = super_boxes["box2"]["members"]
+								# logs
+								logs = guild.get_channel(892584515162210324)
+								embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №3 И ВЫВОД №2", description=f'Список вложившихся в супер копилку №2 участников:\n```\n{members}\n```')
+								await logs.send(embed=embed)
+
+								for i in members1.items():
+									user = i[0]
+									user_amount = i[1]
+									percent1 = user_amount / 100 * percent
+									money = user_amount + percent1
+									print(money)
+
+									#super_boxes["box1"]["members"][f'{str(ctx.message.author.name)}'] = 0
+									#super_boxes["box1"]["stats"] = False
+									#with open('super_boxes.json','w') as f:
+									#	json.dump(super_boxes,f)
+
+									with open('user_balance.json','r', encoding='utf-8') as f:
+										user_balance = json.load(f)
+									user_balance[str(user)]['RUB'] += money
+									with open('user_balance.json','w') as f:
+										json.dump(user_balance,f)
+
+
+					else:
+						await ctx.message.author.send("Вы не можете вложится в эту копилку так как она уже заполнена.")	
+
+				else:
+					await ctx.message.author.send("У вас недостаточно средств.")
+			else:
+				await ctx.message.author.send("Сумма вложения должна быть не менее 1 и не боле 450RUB.")
+
+
+
+
+		# Box 4
+		elif box == 4:
+			if amount >= 1 and amount <= 650:
+				if balance > 1:
+					with open('super_boxes.json','r', encoding='utf-8') as f:
+						super_boxes = json.load(f)
+
+					target = super_boxes["box4"]["target"]
+					invested = super_boxes["box4"]["invested"]
+					members = super_boxes["box4"]["members"]
+					percent = super_boxes["box4"]["percent"]
+					stats = super_boxes["box4"]["stats"]
+					ones = super_boxes["box4"]["ones"]
+					'''
+					if stats == True:
+						# if box4 filled
+						box3t = super_boxes["box3"]["target"]
+						box3i = super_boxes["box3"]["invested"]
+						if box3i >= box3t:
+
+							# logs
+							logs = guild.get_channel(892584515162210324)
+							embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №3 И ВЫВОД №2", description=f'Список вложившихся в супер копилку №2 участников:\n```\n{members}\n```')
+							await logs.send(embed=embed)
+
+							for i in members.items():
+								user = i[0]
+								user_amount = i[1]
+								percent1 = user_amount / 100 * percent
+								money = user_amount + percent1
+								print(money)
+
+								#super_boxes["box2"]["members"][f'{str(ctx.message.author.name)}'] = 0
+								#super_boxes["box2"]["stats"] = False
+								#with open('super_boxes.json','w') as f:
+								#	json.dump(super_boxes,f)
+
+								with open('user_balance.json','r', encoding='utf-8') as f:
+									user_balance = json.load(f)
+								user_balance[str(user)]['RUB'] += money
+								with open('user_balance.json','w') as f:
+									json.dump(user_balance,f)
+						'''
+					super_boxes["box4"]["invested"] += amount
+
+					print(members)
+					if not ctx.message.author.name in ones:
+						super_boxes["box4"]["members"][f'{str(ctx.message.author.name)}'] = int(amount)
+						super_boxes["box4"]["ones"].append(ctx.message.author.name)
+
+					elif ctx.message.author.name in ones:
+						super_boxes["box4"]["members"][f'{str(ctx.message.author.name)}'] += int(amount)
+
+
+					with open('super_boxes.json','w') as f:
+						json.dump(super_boxes,f)
+
+					user_balance[str(ctx.message.author.name)]['RUB'] -= amount
+					with open('user_balance.json','w') as f:
+						json.dump(user_balance,f)
+
+					await ctx.message.author.send(f'Вы вложили {amount}RUB в копилку №4')
+
+
+					channel = bot.get_channel(888500024214966282)
+					m = await channel.fetch_message(894214947473588255)
+					ac = round(target / 4)
+					at = round(target / 3)
+					po = round(target / 2)
+					dt = at + at
+
+					with open('super_boxes.json','r', encoding='utf-8') as f:
+						super_boxes = json.load(f)
+
+					invested = super_boxes["box4"]["invested"]
+					if invested <= ac:# 1/10
+						box = discord.Embed(color=0x2E62FF, title="Супер копилка №4", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧⬛⬛⬛⬛⬛⬛⬛⬛')
+						await m.edit(embed = box)
+
+					elif invested > ac and invested < at + 20:# 1/4 -
+						box = discord.Embed(color=0x2E62FF, title="Супер копилка №4", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧⬛⬛⬛⬛⬛⬛⬛')
+						await m.edit(embed = box)
+
+					elif invested > at + 20 and invested <= po:# 1/2 -
+						box = discord.Embed(color=0x2E62FF, title="Супер копилка №4", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧⬛⬛⬛⬛⬛')
+						await m.edit(embed = box)
+
+					elif invested >= po and invested < dt + 95:# 1/2 +
+						box = discord.Embed(color=0x2E62FF, title="Супер копилка №4", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧⬛⬛⬛⬛')
+						await m.edit(embed = box)
+
+					elif invested >= po and invested < dt + 70:# 1/2 +
+						box = discord.Embed(color=0x2E62FF, title="Супер копилка №4", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧🟧🟧⬛⬛')
+						await m.edit(embed = box)
+
+					elif invested > dt + 95:
+						box = discord.Embed(color=0x2E62FF, title="Супер копилка №2", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: 🟧🟧🟧🟧🟧🟧🟧🟧🟧🟧')
+						await m.edit(embed = box)
+
+					# logs
+					logs = guild.get_channel(892584515162210324)
+					embed = discord.Embed(color=0x00a550, title="ВКЛАД В СУПЕР КОПИЛКУ", description=f'Участник {ctx.message.author} положил {amount} в копилку №4\n\nДля заполнения копилки осталось вложить `{target - invested}`')
+					await logs.send(embed=embed)
+
+					'''
+					# if box2 filled
+					if invested >= target:
+						members1 = super_boxes["box1"]["members"]
+						# logs
+						logs = guild.get_channel(892584515162210324)
+						embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №2 И ВЫВОД №1", description=f'Список вложившихся в супер копилку №1 участников:\n```\n{members}\n```')
+						await logs.send(embed=embed)
+
+						for i in members1.items():
+							user = i[0]
+							user_amount = i[1]
+							percent1 = user_amount / 100 * percent
+							money = user_amount + percent1
+							print(money)
+
+							#super_boxes["box1"]["members"][f'{str(ctx.message.author.name)}'] = 0
+							#super_boxes["box1"]["stats"] = False
+							#with open('super_boxes.json','w') as f:
+							#	json.dump(super_boxes,f)
+
+							with open('user_balance.json','r', encoding='utf-8') as f:
+								user_balance = json.load(f)
+							user_balance[str(user)]['RUB'] += money
+							with open('user_balance.json','w') as f:
+								json.dump(user_balance,f)
+					'''
+
+				else:
+					await ctx.message.author.send("У вас недостаточно средств.")
+			else:
+				await ctx.message.author.send("Сумма вложения должна быть не менее 1 и не боле 350RUB.")
+
 
 
 
@@ -2514,7 +2851,7 @@ async def upd(ctx):
 		await m2.edit(embed = embed)
 		
 
-		'''
+		
 
 		channel = bot.get_channel(889843449300398111)
 
@@ -2548,7 +2885,7 @@ async def upd(ctx):
 		embed4.set_thumbnail(url="https://i.imgur.com/MRvrOW2.png")
 		await m4.edit(embed = embed4)
 		await m4.add_reaction('💰')
-		'''
+		
 		
 		channel1 = bot.get_channel(890982389881384991)
 		embed165 = discord.Embed(color=0x2E62FF, description=f'<:dfgf:> :dfgf: :a_::a_::b_::b_::b_::b_::b_::b_::b_: `3/10`')
@@ -2561,23 +2898,31 @@ async def upd(ctx):
 		await channel1.send(embed = embed168)
 		await channel1.send('<:dfgf:> :dfgf: :a_::a_::b_::b_::b_::b_::b_::b_::b_: `3/10`')
 		
-
+	
 		# SUPER MONEY BOXES
 		channel = bot.get_channel(888500024214966282)
 		#embed = discord.Embed(color=0x2E62FF, title="**Супер копилка**", description=f'**Супер копилка** - это место, где можно заработать огромные проценты за короткое время.\nСуть данного раздела заключается в том, что каждый игрок может внести свой вклад в общее дело и получить +10% чистого профита после полного заполнения следующей копилки.\n\nТ.е. если коротко, вложил 100 рублей в  копилку №1, после заполнения копилки №2 Вы получите 110 руб. на вывод.')
 		#await channel.send(embed = embed)
-
-		#m = await channel.fetch_message(892573662694215760)
-		box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛')
-		message1 = await channel.send(embed = box)
-		await message1.add_reaction('📤')
-
-		box2 = discord.Embed(color=0x2E62FF, title="Супер копилка №2", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛')
-		message2 = await channel.send(embed = box2)
-		await message2.add_reaction('📤')
-		#box1 = discord.Embed(color=0x2E62FF, title="Супер копилка", description=f'**Супер копилка** - это место, где можно заработать огромные проценты за короткое время.\nСуть данного раздела заключается в том, что каждый игрок может внести свой вклад в общее дело и получить +10% чистого профита после полного заполнения следующей копилки.\n\nТ.е. если коротко, вложил 100 рублей в  копилку №1, после заполнения копилки №2 Вы получите 110 руб. на вывод.')
-		#await channel.send(embed = box1)
 		'''
+		
+		channel = bot.get_channel(888500024214966282)
+		m1 = await channel.fetch_message(893397579663044629)
+		box = discord.Embed(color=0x2E62FF, title="Супер копилка №1", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛')
+		await m1.edit(embed = box)
+
+		m2 = await channel.fetch_message(893397582523547678)
+		box2 = discord.Embed(color=0x2E62FF, title="Супер копилка №2", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛')
+		await m2.edit(embed = box2)
+	
+		m3 = await channel.fetch_message(894214944034279435)
+		box3 = discord.Embed(color=0x2E62FF, title="Супер копилка №3", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛')
+		await m3.edit(embed = box3)
+
+		m4 = await channel.fetch_message(894214947473588255)
+		box4 = discord.Embed(color=0x2E62FF, title="Супер копилка №4", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛')
+		await m4.edit(embed = box4)
+
+		
 
 	else:
 		print("Not man")

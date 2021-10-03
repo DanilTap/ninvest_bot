@@ -1,1 +1,1 @@
-{"box1": {"target": 500, "invested": 0, "members": {}, "ones": [], "percent": 10, "stats": true}}
+{"box1": {"target": 300, "invested": 0, "members": {}, "ones": [], "percent": 10, "stats": true}, "box2": {"target": 500, "invested": 0, "members": {}, "ones": [], "percent": 20, "stats": true}, "box3": {"target": 750, "invested": 0, "members": {}, "ones": [], "percent": 20, "stats": true}, "box4": {"target": 1000, "invested": 0, "members": {}, "ones": [], "percent": 20, "stats": true}}

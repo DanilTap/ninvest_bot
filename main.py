@@ -17,10 +17,6 @@ bot = discord.ext.commands.Bot(command_prefix = "!", intents = intents)
 # |------------------------------ VARIABLES ------------------------------|
 # Reactions lists
 tickets_messages = []
-donat1s = False
-donat2s = False
-membercode = False
-gncode = 0
 # |------------------------------ /VARIABLES -----------------------------|
 
 
@@ -1891,76 +1887,73 @@ async def get(ctx):
 
 @bot.command()
 async def promo(ctx, code):
-	global donat1s
-	global donat2s
-	global membercode
-	global gncode
 	guild = bot.get_guild(880008097370865706)
+	with open('promocodes.json','r', encoding='utf-8') as f:
+		codes = json.load(f)
+
 	if ctx.message.guild == guild:
 		print('In guild')
 
 	else:
-		with open('user_balance.json','r', encoding='utf-8') as f:
-			user_balance = json.load(f)
+		for i in codes.items():
+			if code == i[0]:
+				with open('user_balance.json','r', encoding='utf-8') as f:
+					user_balance = json.load(f)
 
-		if code == "donat1":
-			if donat1s == False:
-				await CreateFarmChannel(ctx.message.author, 'FARM ПЛАТА')
-				await ctx.message.author.send("Вы получили `FARM ПЛАТА`!")
+				mtype = i[1]["mtype"]
+				money = i[1]['money']
+				activations = i[1]['activations']
+				farm = i[1]['farm']
+				if activations > 0:
 
-				log = bot.get_channel(888053213750779934)
-				embed1 = discord.Embed(color=0x388E3C, title="АКТИВАЦИЯ ПРОМОКОДА", description=f'**`{ctx.message.author}` Активировал промокод `donat1`**')
-				await log.send(embed=embed1)
-				donat1s = True
+					if money != 0:
+						user_balance[str(ctx.message.author.name)][f'{mtype}'] += money
+						i[1]['activations'] -= 1
 
-			else:
-				await ctx.message.author.send("Этот промокод нельзя активировать больше 1 раза.")
+						with open('user_balance.json','w') as f:
+							json.dump(user_balance,f)
 
+					elif farm != "none":
+						await CreateFarmChannel(ctx.message.author, str(farm))
+						i[1]['activations'] -= 1
 
-		elif code == "donat2":
-			if donat2s == False:
-				await CreateFarmChannel(ctx.message.author, 'FARM ПЛАТА')
-				await ctx.message.author.send("Вы получили `FARM ПЛАТА`!")
+					with open('promocodes.json','w') as f:
+						json.dump(codes,f)
 
-				log = bot.get_channel(888053213750779934)
-				embed1 = discord.Embed(color=0x388E3C, title="АКТИВАЦИЯ ПРОМОКОДА", description=f'**`{ctx.message.author}` Активировал промокод `donat2`**')
-				await log.send(embed=embed1)
-				donat2s = True
-
-		elif code == "test5":
-			if ctx.message.author.id == 891032252350357565:
-				if membercode == False:
-					user_balance[str(ctx.message.author.name)]['RUB'] += 5
-
+					await ctx.message.author.send(f'Вы активировали промокод `{code}`')
 					log = bot.get_channel(888053213750779934)
-					embed1 = discord.Embed(color=0x388E3C, title="АКТИВАЦИЯ ПРОМОКОДА", description=f'**`{ctx.message.author}` Активировал промокод `test5`**')
+					embed1 = discord.Embed(color=0x388E3C, title="АКТИВАЦИЯ ПРОМОКОДА", description=f'**`{ctx.message.author}` Активировал промокод `{code}`**')
 					await log.send(embed=embed1)
-					membercode = True
 
-				else:
-					await ctx.message.author.send("Этот промокод нельзя активировать больше 1 раза.")
+				elif activations <= 0:
+					await ctx.message.author.send('Этот прокод больше нельзя активировать.')
 
-		elif code == "GONANEXT":
-			if gncode < 3:
-				user_balance[str(ctx.message.author.name)]['RUB'] += 5
+# Create promocodes
+@bot.command()
+async def addpromo(ctx, ctype, name, activations, mtype=None, money=None):
+	#if ctx.message.author.id == 663424295854407692:
+	with open('promocodes.json','r', encoding='utf-8') as f:
+		codes = json.load(f)
 
-				log = bot.get_channel(888053213750779934)
-				embed1 = discord.Embed(color=0x388E3C, title="АКТИВАЦИЯ ПРОМОКОДА", description=f'**`{ctx.message.author}` Активировал промокод `test5`**')
-				await log.send(embed=embed1)
-				gncode += 1
-
-			elif gncode == 3:
-				await ctx.message.author.send("Этот промокод нельзя активировать больше 3 раз.")
+	if ctype == "cash":	
+		if  mtype != None and money != None :
+			if mtype == "RUB" or mtype == "NTB":
+				codes[str(name)] = {"mtype": f'{mtype}', "money": int(money), "farm": "none", "activations": int(activations)}
+				await ctx.message.add_reaction('✅')
 
 			else:
-				print("No member activated")
+				await ctx.send(f'Валюты {mtype} не существует.')
 
-		else:
-			await ctx.send("Промокод не найден.")
+	elif ctype == "farm":
+		if mtype != None and money == None:
+			codes[str(name)] = {"mtype": "RUB", "money": 0, "farm": f'FARM {mtype}', "activations": activations}
+			await ctx.message.add_reaction('✅')
 
-		with open('user_balance.json','w') as f:
-			json.dump(user_balance,f)
+	else:
+		await ctx.send("Ошибка в синтаксисе команды.\nДля валюты: `!addpromo cash Название Активации Валюта Количество`\nДля фермы: `!addpromo farm Название Активации Ферма`")
 
+	with open('promocodes.json','w') as f:
+		json.dump(codes,f)
 
 # ------------------------ Moderation ------------------------|
 # Ban

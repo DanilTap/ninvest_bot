@@ -1931,29 +1931,32 @@ async def promo(ctx, code):
 # Create promocodes
 @bot.command()
 async def addpromo(ctx, ctype, name, activations, mtype=None, money=None):
-	#if ctx.message.author.id == 663424295854407692:
-	with open('promocodes.json','r', encoding='utf-8') as f:
-		codes = json.load(f)
+	if ctx.message.author.id == 663424295854407692:
+		with open('promocodes.json','r', encoding='utf-8') as f:
+			codes = json.load(f)
 
-	if ctype == "cash":	
-		if  mtype != None and money != None :
-			if mtype == "RUB" or mtype == "NTB":
-				codes[str(name)] = {"mtype": f'{mtype}', "money": int(money), "farm": "none", "activations": int(activations)}
+		if ctype == "cash":	
+			if  mtype != None and money != None :
+				if mtype == "RUB" or mtype == "NTB":
+					codes[str(name)] = {"mtype": f'{mtype}', "money": int(money), "farm": "none", "activations": int(activations)}
+					await ctx.message.add_reaction('✅')
+
+				else:
+					await ctx.send(f'Валюты {mtype} не существует.')
+
+		elif ctype == "farm":
+			if mtype != None and money == None:
+				codes[str(name)] = {"mtype": "RUB", "money": 0, "farm": f'FARM {mtype}', "activations": int(activations)}
 				await ctx.message.add_reaction('✅')
 
-			else:
-				await ctx.send(f'Валюты {mtype} не существует.')
+		else:
+			await ctx.send("Ошибка в синтаксисе команды.\nДля валюты: `!addpromo cash Название Активации Валюта Количество`\nДля фермы: `!addpromo farm Название Активации Ферма`")
 
-	elif ctype == "farm":
-		if mtype != None and money == None:
-			codes[str(name)] = {"mtype": "RUB", "money": 0, "farm": f'FARM {mtype}', "activations": activations}
-			await ctx.message.add_reaction('✅')
+		with open('promocodes.json','w') as f:
+			json.dump(codes,f)
 
 	else:
-		await ctx.send("Ошибка в синтаксисе команды.\nДля валюты: `!addpromo cash Название Активации Валюта Количество`\nДля фермы: `!addpromo farm Название Активации Ферма`")
-
-	with open('promocodes.json','w') as f:
-		json.dump(codes,f)
+		print("addpromo: Not member")
 
 # ------------------------ Moderation ------------------------|
 # Ban

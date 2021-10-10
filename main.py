@@ -1210,7 +1210,7 @@ async def on_raw_reaction_add(payload):
 	# Withdraw the mined
 	with open('user_farms.json','r', encoding='utf-8') as f:
 		farms = json.load(f)
-		mlist = farms['bot']['out_messages_id']
+	mlist = farms['bot']['out_messages_id']
 
 	for i in range(len(mlist)):
 		if message_id == mlist[i]:
@@ -1231,7 +1231,62 @@ async def on_raw_reaction_add(payload):
 
 				await member.send(f'Вы вывели {minedm}RUB со своей фермы.')
 
-	
+
+	# Buy
+	with open('user_sales.json','r', encoding='utf-8') as f:
+		sales = json.load(f)
+
+	for i in sales:
+		smember = sales[i]['name']
+		slist = sales[i]['sales']
+
+		for i in slist.items():
+			print(i)
+
+			if message_id == int(i[0]):
+				ntb = i[1]["ntb"]
+				rub = i[1]["rub"]
+
+				with open('user_balance.json','r', encoding='utf-8') as f:
+					balance = json.load(f)
+
+				mntb = balance[str(smember)]["NTB"]
+				mrub = balance[str(smember)]["RUB"]
+				brub = balance[str(member.name)]["RUB"]
+
+				if mntb >= ntb:
+					if brub >= rub:
+						balance[str(smember)]["NTB"] -= ntb
+						balance[str(smember)]["RUB"] += rub
+
+						balance[str(member.name)]["NTB"] += ntb
+						balance[str(member.name)]["RUB"] -= rub
+
+						with open('user_balance.json','w') as f:
+							json.dump(balance,f)
+
+						await member.send(f'Вы приобрели {ntb}NTB у {smember}.')
+						log_channel = bot.get_channel(888053213750779934)
+						embed1 = discord.Embed(color=0x008000, title="ПОКУПКА ВАЛЮТЫ", description=f'**{member} Купил {ntb}NTB у {smember}\n[ПРЕДЛОЖЕНИЕ](https://discord.com/channels/880008097370865706/896752866759409705/{int(i[0])})**')
+						await log_channel.send(embed=embed1)
+
+
+					else:
+						await member.send('У вас недостаточно средств для покупки этого количества валюты.')
+
+				else:
+					channel = bot.get_channel(896752866759409705)
+					smessage = await channel.fetch_message(message_id)
+					await smessage.delete()
+
+					await member.send("У автора этого предложения недостаточно валюты для ее продажи.")
+
+					log_channel = bot.get_channel(888053213750779934)
+					embed1 = discord.Embed(color=0x008000, title="ЗАКРЫТИЕ ПРЕДЛОЖЕНИЯ", description=f'**У {smember} нет выставленных на продажу средств, предложение было закрыто.**')
+					await log_channel.send(embed=embed1)
+
+
+
 
 # Welcome
 @bot.event
@@ -1306,6 +1361,20 @@ async def on_member_join(member):
 		bank[str(member.name)]['ltime'] = 0
 		with open('user_bank.json','w') as f:
 			json.dump(bank,f)
+
+		# Sales
+		with open('user_sales.json','r', encoding='utf-8') as f:
+			sales = json.load(f)
+
+		if not member.name in sales:
+			sales[str(member.name)] = {}
+			sales[str(member.name)]['name'] = str(member.name)
+			sales[str(member.name)]['sales'] = {}
+
+			with open('user_sales.json','w') as f:
+				json.dump(sales,f)
+
+
 
 	else:
 		print("Another guild")
@@ -2652,6 +2721,48 @@ async def box(ctx, box: int, amount: int):
 
 		else:
 			await ctx.message.author.send(f'Копилка с номером {box} не найдена.')
+
+
+
+@bot.command()
+async def sell(ctx, ntb=None, price=None):
+	guild = bot.get_guild(880008097370865706)
+
+	if ntb != None or price != None: 
+		with open('user_balance.json','r', encoding='utf-8') as f:
+			user_balance = json.load(f)
+
+		ntb_bal = user_balance[str(ctx.message.author.name)]['NTB']
+		rub_bal = user_balance[str(ctx.message.author.name)]['RUB']
+
+		if ntb_bal >= int(ntb):
+			await ctx.channel.purge(limit=1)
+			channel = bot.get_channel(896752866759409705)
+			embed = discord.Embed(color=0x3C55FA, title=f'Предложение {ctx.message.author.name}')
+			embed.add_field(name = '**Предмет:**', value = f'{ntb}NTB', inline = True)
+			embed.add_field(name = '**Цена:**', value = f'{price}RUB', inline = True)
+			message = await channel.send(embed=embed)
+			await message.add_reaction('✅')
+
+			with open('user_sales.json','r', encoding='utf-8') as f:
+				sales = json.load(f)
+
+			sales[str(ctx.message.author.name)]["sales"][message.id] = {"ntb": int(ntb), "rub": int(price)}
+			with open('user_sales.json','w') as f:
+				json.dump(sales,f)
+
+			# logs
+			logs = guild.get_channel(888053213750779934)
+			embed = discord.Embed(color=0x00a550, title="ВЫСТАВКА НА БИРЖЕ", description=f'Участник {ctx.message.author} выставил {ntb}NTB за {price}RUB.')
+			await logs.send(embed=embed)
+
+
+		else:
+			await ctx.message.author.send('У вас недостаточно NTB для продажи.')
+
+	else:
+		await ctx.message.author.send('Ошибка в аргументах команды.')
+
 
 
 @bot.command()

@@ -1758,17 +1758,15 @@ async def RandomImages():
 		date = datetime.datetime.now(timezone)
 		if int(date.hour) == 9:
 			channel = bot.get_channel(881634315514019881)
-			channel1 = bot.get_channel(893508395125071933)
 			with open('bot_constants.json','r', encoding='utf-8') as f:
 				constants = json.load(f)
 
 			images = constants["images"]
-			image = random.choice(images)
+			image = images[0]
 			constants["act_image"] = image
 			print(f'Random image: {image}')
 
 			await channel.send(image)
-			await channel1.send(image)
 
 			with open('bot_constants.json','w') as f:
 				json.dump(constants,f)

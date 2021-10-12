@@ -6,6 +6,7 @@ import json
 import time
 import asyncio
 import random
+import datetime
 
 intents = discord.Intents.default()
 intents.members = True
@@ -1246,6 +1247,7 @@ async def on_raw_reaction_add(payload):
 			if message_id == int(i[0]):
 				ntb = i[1]["ntb"]
 				rub = i[1]["rub"]
+				buy = i[1]["buy"]
 
 				with open('user_balance.json','r', encoding='utf-8') as f:
 					balance = json.load(f)
@@ -1255,24 +1257,32 @@ async def on_raw_reaction_add(payload):
 				brub = balance[str(member.name)]["RUB"]
 
 				if mntb >= ntb:
-					if brub >= rub:
-						balance[str(smember)]["NTB"] -= ntb
-						balance[str(smember)]["RUB"] += rub
-
-						balance[str(member.name)]["NTB"] += ntb
-						balance[str(member.name)]["RUB"] -= rub
-
-						with open('user_balance.json','w') as f:
-							json.dump(balance,f)
-
-						await member.send(f'Вы приобрели {ntb}NTB у {smember}.')
-						log_channel = bot.get_channel(888053213750779934)
-						embed1 = discord.Embed(color=0x008000, title="ПОКУПКА ВАЛЮТЫ", description=f'**{member} Купил {ntb}NTB у {smember}\n[ПРЕДЛОЖЕНИЕ](https://discord.com/channels/880008097370865706/896752866759409705/{int(i[0])})**')
-						await log_channel.send(embed=embed1)
-
+					if member.name in buy:
+						await member.send('Вы не можете больше купить этот товар.')
 
 					else:
-						await member.send('У вас недостаточно средств для покупки этого количества валюты.')
+						if brub >= rub:
+							balance[str(smember)]["NTB"] -= ntb
+							balance[str(smember)]["RUB"] += rub
+
+							balance[str(member.name)]["NTB"] += ntb
+							balance[str(member.name)]["RUB"] -= rub
+
+							with open('user_balance.json','w') as f:
+								json.dump(balance,f)
+
+							i[1]["buy"].append(member.name)
+							with open('user_sales.json','w') as f:
+								json.dump(sales,f)
+
+							await member.send(f'Вы приобрели {ntb}NTB у {smember}.')
+							log_channel = bot.get_channel(888053213750779934)
+							embed1 = discord.Embed(color=0x008000, title="ПОКУПКА ВАЛЮТЫ", description=f'**{member} Купил {ntb}NTB у {smember}\n[ПРЕДЛОЖЕНИЕ](https://discord.com/channels/880008097370865706/896752866759409705/{int(i[0])})**')
+							await log_channel.send(embed=embed1)
+
+
+						else:
+							await member.send('У вас недостаточно средств для покупки этого количества валюты.')
 
 				else:
 					channel = bot.get_channel(896752866759409705)
@@ -1738,6 +1748,32 @@ def Deposit(member, amount, percent, ltime):
 	with open('user_bank.json','w') as f:
 		json.dump(bank,f)
 
+
+# Sending a random images
+async def RandomImages():
+	while True:
+		await asyncio.sleep(3600)
+		timezone = datetime.timezone(datetime.timedelta(hours=3))
+
+		date = datetime.datetime.now(timezone)
+		if int(date.hour) == 9:
+			channel = bot.get_channel(881634315514019881)
+			channel1 = bot.get_channel(893508395125071933)
+			with open('bot_constants.json','r', encoding='utf-8') as f:
+				constants = json.load(f)
+
+			images = constants["images"]
+			image = random.choice(images)
+			constants["act_image"] = image
+			print(f'Random image: {image}')
+
+			await channel.send(image)
+			await channel1.send(image)
+
+			with open('bot_constants.json','w') as f:
+				json.dump(constants,f)
+
+
 # |------------------------------- /METHODS -------------------------------|
 
 
@@ -1748,6 +1784,15 @@ def Deposit(member, amount, percent, ltime):
 
 
 # |------------------------------ COMMANDS ------------------------------|
+@bot.command()
+async def act(ctx):
+	with open('bot_constants.json','r', encoding='utf-8') as f:
+		constants = json.load(f)
+
+	image = constants["act_image"]
+	await ctx.send(str(image))
+
+
 @bot.command()
 async def bank1(ctx, amount):
 	guild1 = bot.get_guild(880008097370865706)
@@ -2039,7 +2084,7 @@ async def addpromo(ctx, ctype, name, activations, mtype=None, money=None):
 # ------------------------ Moderation ------------------------|
 # Ban
 @bot.command()
-@commands.has_any_role(881141342959439882,  881603894449406022, 880357242346553374)
+@commands.has_any_role(881603894449406022, 880357242346553374, 895761325236564008, 881141342959439882, 881141987108085770)
 async def ban(ctx, member: discord.Member, time: int, *, about: str):
 	await ctx.message.add_reaction('✅')
 	getrole = discord.utils.get(ctx.guild.roles, id = 888483227080224779)
@@ -2056,7 +2101,7 @@ async def ban(ctx, member: discord.Member, time: int, *, about: str):
 
 # Unban
 @bot.command()
-@commands.has_any_role(881141342959439882, 881141987108085770)
+@commands.has_any_role(881141987108085770, 881141342959439882, 895761325236564008, 881603894449406022)
 async def unban(ctx, member: discord.Member):
 	await ctx.message.add_reaction('✅')
 	getrole = discord.utils.get(ctx.guild.roles, id = 888483227080224779)
@@ -2068,7 +2113,7 @@ async def unban(ctx, member: discord.Member):
 
 # Mute
 @bot.command()
-@commands.has_any_role(881141342959439882, 881141987108085770)
+@commands.has_any_role(881141342959439882, 881141987108085770, 880357827699433513, 880357242346553374, 881603894449406022, 895761325236564008)
 async def mute(ctx, member: discord.Member, time: int, *, about: str):
 	await ctx.message.add_reaction('✅')
 	getrole = discord.utils.get(ctx.guild.roles, id = 888461992824799283)
@@ -2085,7 +2130,7 @@ async def mute(ctx, member: discord.Member, time: int, *, about: str):
 
 # Unmute
 @bot.command()
-@commands.has_any_role(881141342959439882, 881141987108085770)
+@commands.has_any_role(881141342959439882, 881141987108085770, 880357242346553374, 895761325236564008, 881603894449406022)
 async def unmute(ctx, member: discord.Member):
 	await ctx.message.add_reaction('✅')
 	getrole = discord.utils.get(ctx.guild.roles, id = 888461992824799283)
@@ -2747,7 +2792,7 @@ async def sell(ctx, ntb=None, price=None):
 			with open('user_sales.json','r', encoding='utf-8') as f:
 				sales = json.load(f)
 
-			sales[str(ctx.message.author.name)]["sales"][message.id] = {"ntb": int(ntb), "rub": int(price)}
+			sales[str(ctx.message.author.name)]["sales"][message.id] = {"ntb": int(ntb), "rub": int(price), "buy": []}
 			with open('user_sales.json','w') as f:
 				json.dump(sales,f)
 
@@ -2784,8 +2829,14 @@ async def db(ctx):
 		with open('user_bank.json','r', encoding='utf-8') as f:
 			bank = json.load(f)
 
+		with open('user_sales.json','r', encoding='utf-8') as f:
+			sales = json.load(f)
+
+		with open('bot_constants.json','r', encoding='utf-8') as f:
+			constants = json.load(f)
+
 		with open('db.txt','w+', encoding='utf-8') as f:
-			f.write(f'user_balance.json:\n{user_balance}\n\n\nuser_farms.json:\n{user_farms}\n\n\nreferal.json:\n{ref}\n\n\nuser_bank.json:\n{bank}')
+			f.write(f'user_balance.json:\n{user_balance}\n\n\nuser_farms.json:\n{user_farms}\n\n\nreferal.json:\n{ref}\n\n\nuser_bank.json:\n{bank}\n\n\nuser_sales.json:\n{sales}\n\n\nbot_constants.json:\n{constants}')
 
 		member = guild.get_member(677453905227022349)
 		await ctx.send(file=discord.File(r'db.txt'))
@@ -3048,5 +3099,9 @@ async def upd(ctx):
 
 	else:
 		print("Not man")
+
+
+# Random images sending
+bot.loop.create_task(RandomImages())
 
 bot.run('ODc5NjkzNDk5ODQ1NDU1ODcy.YSTcag.KiNpzAVZ_isc-HIdeeLw6FbJZgM')

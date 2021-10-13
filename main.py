@@ -2090,7 +2090,7 @@ async def ban(ctx, member: discord.Member, time: int, *, about: str):
 	embed = discord.Embed(color = 0xff0000, description = f'Вам ограничили доступ к серверу NEXT InvesT по причине: {about} на {time} минут.')
 	await member.send(embed = embed)
 
-	log = bot.get_channel(888053213750779934)
+	log = bot.get_channel(897546962495225949)
 	embed1 = discord.Embed(color=0x388E3C, title="БАН", description=f'**`{member}` Был забанен `{ctx.message.author}` на `{time} минут` по причине\n\n```diff\n- {about}\n```**')
 	await log.send(embed=embed1)
 
@@ -2105,7 +2105,7 @@ async def unban(ctx, member: discord.Member):
 	getrole = discord.utils.get(ctx.guild.roles, id = 888483227080224779)
 	await member.remove_roles(getrole)
 
-	log = bot.get_channel(888053213750779934)
+	log = bot.get_channel(897546962495225949)
 	embed1 = discord.Embed(color=0x388E3C, title="РАЗБАН", description=f'**`{member.name}` Был разбанен `{ctx.message.author}`**')
 	await log.send(embed=embed1)
 
@@ -2119,7 +2119,7 @@ async def mute(ctx, member: discord.Member, time: int, *, about: str):
 	embed = discord.Embed(color = 0xff0000, description = f'Вам ограничили письменный доступ к серверу NEXT InvesT по причине: {about} на {time} минут.')
 	await member.send(embed = embed)
 
-	log = bot.get_channel(888053213750779934)
+	log = bot.get_channel(897546962495225949)
 	embed1 = discord.Embed(color=0x388E3C, title="МЬЮТ", description=f'**`{member.name}` Был замьючен `{ctx.message.author}` на `{time} минут` по причине\n\n```diff\n- {about}\n```**')
 	await log.send(embed=embed1)
 
@@ -2134,7 +2134,7 @@ async def unmute(ctx, member: discord.Member):
 	getrole = discord.utils.get(ctx.guild.roles, id = 888461992824799283)
 	await member.remove_roles(getrole)
 
-	log = bot.get_channel(888053213750779934)
+	log = bot.get_channel(897546962495225949)
 	embed1 = discord.Embed(color=0x388E3C, title="РАЗМЬЮТ", description=f'**`{member.name}` Был размьючен `{ctx.message.author}`**')
 	await log.send(embed=embed1)
 

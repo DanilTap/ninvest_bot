@@ -47,15 +47,20 @@ async def on_ready():
 				life = i[1]["life_time"]
 				out = i[1]["out"]
 				mode = i[1]["auto"]
-				channel = i[1]["channel_id"]
+				message_id = i[1]["message_id"]
 				print(f'{member} HAVE FARM.\n')
-				print(f'{life}  {out}  {mode}  {channel}')
+				print(f'{life}  {out}  {mode} {message_id}')
 
 				farmth = Thread(target=Farm, args=(member, i[0], life, out, mode))
 				farmth.start()
 
 			else:
 				print(f'{member} NO FARMS\n')
+
+
+	with open('user_farms.json','r', encoding='utf-8') as f:
+		lfarms = json.load(f)
+
 
 	print("----------Loading done!----------\n\n\n")
 
@@ -1210,27 +1215,25 @@ async def on_raw_reaction_add(payload):
 
 	# Withdraw the mined
 	with open('user_farms.json','r', encoding='utf-8') as f:
-		farms = json.load(f)
-	mlist = farms['bot']['out_messages_id']
+		lfarms = json.load(f)
 
-	for i in range(len(mlist)):
-		if message_id == mlist[i]:
-			if payload.emoji.name == "📤":
-				with open('user_balance.json','r', encoding='utf-8') as f:
-					mined = json.load(f)
+	for i in lfarms.items():
+		if member.name == i[0]:
+			farm_list = i[1]["farms"]
+			for i in farm_list.items():
+				message = i[1]["message_id"]
+				if message_id == message:
+					mined = i[1]["mined"]
+					with open('user_balance.json','r', encoding='utf-8') as f:
+						balance = json.load(f)
 
-				minedm = mined[str(member.name)]['mined']
-				mined[str(member.name)]['RUB'] += mined[str(member.name)]['mined']
-				mined[str(member.name)]['mined'] = 0
-				with open('user_balance.json','w') as f:
-					json.dump(mined,f)
+					balance[str(member.name)]["RUB"] += mined
+					with open('user_balance.json','w') as f:
+						json.dump(balance,f)
 
-
-				log = bot.get_channel(888053213750779934)
-				embed1 = discord.Embed(color=0x388E3C, title="ВЫВОД НАКОПЛЕНИЙ ФЕРМЫ", description=f'**`{member}` Вывел `{int(minedm)}`RUB из своей фермы.**')
-				await log.send(embed=embed1)
-
-				await member.send(f'Вы вывели {minedm}RUB со своей фермы.')
+					mined = i[1]["mined"] = 0
+					with open('user_farms.json','w') as f:
+						json.dump(lfarms,f)
 
 
 	# Buy
@@ -1245,57 +1248,70 @@ async def on_raw_reaction_add(payload):
 			print(i)
 
 			if message_id == int(i[0]):
-				ntb = i[1]["ntb"]
-				rub = i[1]["rub"]
-				buy = i[1]["buy"]
+				if payload.emoji.name == "✅":
+					ntb = i[1]["ntb"]
+					rub = i[1]["rub"]
+					buy = i[1]["buy"]
 
-				with open('user_balance.json','r', encoding='utf-8') as f:
-					balance = json.load(f)
+					with open('user_balance.json','r', encoding='utf-8') as f:
+						balance = json.load(f)
 
-				mntb = balance[str(smember)]["NTB"]
-				mrub = balance[str(smember)]["RUB"]
-				brub = balance[str(member.name)]["RUB"]
+					mntb = balance[str(smember)]["NTB"]
+					mrub = balance[str(smember)]["RUB"]
+					brub = balance[str(member.name)]["RUB"]
 
-				if mntb >= ntb:
-					if member.name in buy:
-						await member.send('Вы не можете больше купить этот товар.')
-
-					else:
-						if brub >= rub:
-							balance[str(smember)]["NTB"] -= ntb
-							balance[str(smember)]["RUB"] += rub
-
-							balance[str(member.name)]["NTB"] += ntb
-							balance[str(member.name)]["RUB"] -= rub
-
-							with open('user_balance.json','w') as f:
-								json.dump(balance,f)
-
-							i[1]["buy"].append(member.name)
-							with open('user_sales.json','w') as f:
-								json.dump(sales,f)
-
-							await member.send(f'Вы приобрели {ntb}NTB у {smember}.')
-							log_channel = bot.get_channel(888053213750779934)
-							embed1 = discord.Embed(color=0x008000, title="ПОКУПКА ВАЛЮТЫ", description=f'**{member} Купил {ntb}NTB у {smember}\n[ПРЕДЛОЖЕНИЕ](https://discord.com/channels/880008097370865706/896752866759409705/{int(i[0])})**')
-							await log_channel.send(embed=embed1)
-
+					if mntb >= ntb:
+						if member.name in buy:
+							await member.send('Вы не можете больше купить этот товар.')
 
 						else:
-							await member.send('У вас недостаточно средств для покупки этого количества валюты.')
+							if brub >= rub:
+								balance[str(smember)]["NTB"] -= ntb
+								balance[str(smember)]["RUB"] += rub
 
-				else:
-					channel = bot.get_channel(896752866759409705)
-					smessage = await channel.fetch_message(message_id)
-					await smessage.delete()
+								balance[str(member.name)]["NTB"] += ntb
+								balance[str(member.name)]["RUB"] -= rub
 
-					await member.send("У автора этого предложения недостаточно валюты для ее продажи.")
+								with open('user_balance.json','w') as f:
+									json.dump(balance,f)
 
-					log_channel = bot.get_channel(888053213750779934)
-					embed1 = discord.Embed(color=0x008000, title="ЗАКРЫТИЕ ПРЕДЛОЖЕНИЯ", description=f'**У {smember} нет выставленных на продажу средств, предложение было закрыто.**')
-					await log_channel.send(embed=embed1)
+								i[1]["buy"].append(member.name)
+								with open('user_sales.json','w') as f:
+									json.dump(sales,f)
+
+								await member.send(f'Вы приобрели {ntb}NTB у {smember}.')
+								log_channel = bot.get_channel(888053213750779934)
+								embed1 = discord.Embed(color=0x008000, title="ПОКУПКА ВАЛЮТЫ", description=f'**{member} Купил {ntb}NTB у {smember}\n[ПРЕДЛОЖЕНИЕ](https://discord.com/channels/880008097370865706/896752866759409705/{int(i[0])})**')
+								await log_channel.send(embed=embed1)
 
 
+							else:
+								await member.send('У вас недостаточно средств для покупки этого количества валюты.')
+
+					else:
+						channel = bot.get_channel(896752866759409705)
+						smessage = await channel.fetch_message(message_id)
+						await smessage.delete()
+
+						await member.send("У автора этого предложения недостаточно валюты для ее продажи.")
+
+						log_channel = bot.get_channel(888053213750779934)
+						embed1 = discord.Embed(color=0x008000, title="ЗАКРЫТИЕ ПРЕДЛОЖЕНИЯ", description=f'**У {smember} нет выставленных на продажу средств, предложение было закрыто.**')
+						await log_channel.send(embed=embed1)
+
+				elif payload.emoji.name == "❌":
+					if member.name == smember:
+						i[1]["stats"] = False
+						channel = bot.get_channel(896752866759409705)
+						smessage = await channel.fetch_message(message_id)
+						await smessage.delete()
+
+						log_channel = bot.get_channel(888053213750779934)
+						embed1 = discord.Embed(color=0x008000, title="ЗАКРЫТИЕ ПРЕДЛОЖЕНИЯ", description=f'**{smember} удалил свое предложение.**')
+						await log_channel.send(embed=embed1)		
+
+						with open('user_sales.json','w') as f:
+							json.dump(sales,f)
 
 
 # Welcome
@@ -1427,9 +1443,18 @@ def Farm(member, name, life, amount: float, auto: bool):
 					json.dump(mined,f)
 
 			elif auto == False:
-				mined[str(member)]['mined'] += round(amount, 2)
-				with open('user_balance.json','w') as f:
-					json.dump(mined,f)
+				with open('user_farms.json','r', encoding='utf-8') as f:
+					lfarms = json.load(f)
+
+				for i in lfarms.items():
+					if member == i[0]:
+						farm_list = i[1]["farms"]
+						for i in farm_list.items():
+							if i[0] == name:
+								i[1]["mined"] += round(amount, 2)
+								with open('user_farms.json','w') as f:
+									json.dump(lfarms,f)
+
 
 			# Crash chance
 			chance = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
@@ -1508,7 +1533,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3024000, "out": 0.25, "auto": False, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3024000, "out": 0.25, "auto": False, "message_id": message.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1529,7 +1554,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 2505600, "out": 0.5, "auto": False, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 2505600, "out": 0.5, "auto": False, "message_id": message.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1550,7 +1575,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 2505600, "out": 1.0, "auto": False, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 2505600, "out": 1.0, "auto": False, "message_id": message.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1571,7 +1596,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3024000, "out": 1.5, "auto": True, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3024000, "out": 1.5, "auto": True, "message_id": message.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1592,7 +1617,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 2851200, "out": 2.0, "auto": True, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 2851200, "out": 2.0, "auto": True, "message_id": message.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1613,7 +1638,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 1728000, "out": 0.3, "auto": False, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 1728000, "out": 0.3, "auto": False, "message_id": message.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1634,7 +1659,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 2592000, "out": 4.0, "auto": False, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 2592000, "out": 4.0, "auto": False, "message_id": message.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1655,7 +1680,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3283200, "out": 7.0, "auto": False, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3283200, "out": 7.0, "auto": False, "message_id": message.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1676,7 +1701,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3196800, "out": 14.0, "auto": True, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3196800, "out": 14.0, "auto": True, "message_id": message.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1697,7 +1722,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3628800, "out": 25.0, "auto": True, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3628800, "out": 25.0, "auto": True, "message_id": message.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1718,7 +1743,7 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 
 		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 950400, "out": 0.3, "auto": False, "channel_id": channel.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 950400, "out": 0.3, "auto": False, "message_id": message.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1764,12 +1789,45 @@ async def RandomImages():
 			images = constants["images"]
 			image = images[0]
 			constants["act_image"] = image
-			print(f'Random image: {image}')
+			print(f'Send image: {image}')
 
 			await channel.send(image)
 
 			with open('bot_constants.json','w') as f:
 				json.dump(constants,f)
+
+		elif int(date.hour) == 21:
+			channel = bot.get_channel(896752866759409705)
+			with open('bot_constants.json','r', encoding='utf-8') as f:
+				constants = json.load(f)
+
+			images = constants["images"]
+			image = images[1]
+			constants["act_image"] = image
+			print(f'Send image: {image}')
+
+			await channel.send(image)
+
+			with open('bot_constants.json','w') as f:
+				json.dump(constants,f)
+
+		elif int(date.hour) == 0:
+			channel = bot.get_channel(896752866759409705)
+			with open('bot_constants.json','r', encoding='utf-8') as f:
+				constants = json.load(f)
+
+			images = constants["images"]
+			image = images[2]
+			constants["act_image"] = image
+			print(f'Send image: {image}')
+
+			await channel.send(image)
+
+			with open('bot_constants.json','w') as f:
+				json.dump(constants,f)
+
+		else:
+			pass
 
 
 # |------------------------------- /METHODS -------------------------------|
@@ -2786,11 +2844,12 @@ async def sell(ctx, ntb=None, price=None):
 			embed.add_field(name = '**Цена:**', value = f'{price}RUB', inline = True)
 			message = await channel.send(embed=embed)
 			await message.add_reaction('✅')
+			await message.add_reaction('❌')
 
 			with open('user_sales.json','r', encoding='utf-8') as f:
 				sales = json.load(f)
 
-			sales[str(ctx.message.author.name)]["sales"][message.id] = {"ntb": int(ntb), "rub": int(price), "buy": []}
+			sales[str(ctx.message.author.name)]["sales"][message.id] = {"stats": True, "ntb": int(ntb), "rub": int(price), "buy": []}
 			with open('user_sales.json','w') as f:
 				json.dump(sales,f)
 

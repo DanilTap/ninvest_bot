@@ -47,9 +47,8 @@ async def on_ready():
 				life = i[1]["life_time"]
 				out = i[1]["out"]
 				mode = i[1]["auto"]
-				message_id = i[1]["message_id"]
 				print(f'{member} HAVE FARM.\n')
-				print(f'{life}  {out}  {mode} {message_id}')
+				print(f'{life}  {out}  {mode}')
 
 				farmth = Thread(target=Farm, args=(member, i[0], life, out, mode))
 				farmth.start()

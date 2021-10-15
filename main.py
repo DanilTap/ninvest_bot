@@ -1233,6 +1233,10 @@ async def on_raw_reaction_add(payload):
 					mined = i[1]["mined"] = 0
 					with open('user_farms.json','w') as f:
 						json.dump(lfarms,f)
+					log_channel = bot.get_channel(888053213750779934)
+					embed1 = discord.Embed(color=0x008000, title="ВЫВОД С ФЕРМЫ", description=f'**Участник {member} вывел {mined} со своей фермы.**')
+					await log_channel.send(embed=embed1)
+
 
 
 	# Buy
@@ -1279,7 +1283,7 @@ async def on_raw_reaction_add(payload):
 									json.dump(sales,f)
 
 								await member.send(f'Вы приобрели {ntb}NTB у {smember}.')
-								log_channel = bot.get_channel(888053213750779934)
+								log_channel = bot.get_channel(898204390412943451)
 								embed1 = discord.Embed(color=0x008000, title="ПОКУПКА ВАЛЮТЫ", description=f'**{member} Купил {ntb}NTB у {smember}\n[ПРЕДЛОЖЕНИЕ](https://discord.com/channels/880008097370865706/896752866759409705/{int(i[0])})**')
 								await log_channel.send(embed=embed1)
 
@@ -1294,7 +1298,7 @@ async def on_raw_reaction_add(payload):
 
 						await member.send("У автора этого предложения недостаточно валюты для ее продажи.")
 
-						log_channel = bot.get_channel(888053213750779934)
+						log_channel = bot.get_channel(898204390412943451)
 						embed1 = discord.Embed(color=0x008000, title="ЗАКРЫТИЕ ПРЕДЛОЖЕНИЯ", description=f'**У {smember} нет выставленных на продажу средств, предложение было закрыто.**')
 						await log_channel.send(embed=embed1)
 
@@ -2853,7 +2857,7 @@ async def sell(ctx, ntb=None, price=None):
 				json.dump(sales,f)
 
 			# logs
-			logs = guild.get_channel(888053213750779934)
+			logs = guild.get_channel(898204390412943451)
 			embed = discord.Embed(color=0x00a550, title="ВЫСТАВКА НА БИРЖЕ", description=f'Участник {ctx.message.author} выставил {ntb}NTB за {price}RUB.')
 			await logs.send(embed=embed)
 

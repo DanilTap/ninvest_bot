@@ -1226,16 +1226,20 @@ async def on_raw_reaction_add(payload):
 					with open('user_balance.json','r', encoding='utf-8') as f:
 						balance = json.load(f)
 
+					mined = i[1]["mined"]
+
+					log_channel = bot.get_channel(888053213750779934)
+					embed1 = discord.Embed(color=0x008000, title="ВЫВОД С ФЕРМЫ", description=f'**Участник {member} вывел {mined} со своей фермы.**')
+					await log_channel.send(embed=embed1)
+					await member.send(f'Вы вывели `{mined}`RUB с своей фермы.')
+
 					balance[str(member.name)]["RUB"] += mined
 					with open('user_balance.json','w') as f:
 						json.dump(balance,f)
 
-					mined = i[1]["mined"] = 0
+					i[1]["mined"] = 0
 					with open('user_farms.json','w') as f:
 						json.dump(lfarms,f)
-					log_channel = bot.get_channel(888053213750779934)
-					embed1 = discord.Embed(color=0x008000, title="ВЫВОД С ФЕРМЫ", description=f'**Участник {member} вывел {mined} со своей фермы.**')
-					await log_channel.send(embed=embed1)
 
 
 
@@ -1534,8 +1538,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
-		farms['bot']['out_messages_id'].append(message.id)
-
 		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3024000, "out": 0.25, "auto": False, "message_id": message.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
@@ -1555,7 +1557,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
-		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 2505600, "out": 0.5, "auto": False, "message_id": message.id}
 		with open('user_farms.json','w') as f:
@@ -1576,7 +1577,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
-		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 2505600, "out": 1.0, "auto": False, "message_id": message.id}
 		with open('user_farms.json','w') as f:
@@ -1597,7 +1597,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
-		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3024000, "out": 1.5, "auto": True, "message_id": message.id}
 		with open('user_farms.json','w') as f:
@@ -1618,7 +1617,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
-		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 2851200, "out": 2.0, "auto": True, "message_id": message.id}
 		with open('user_farms.json','w') as f:
@@ -1639,7 +1637,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
-		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 1728000, "out": 0.3, "auto": False, "message_id": message.id}
 		with open('user_farms.json','w') as f:
@@ -1660,7 +1657,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
-		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 2592000, "out": 4.0, "auto": False, "message_id": message.id}
 		with open('user_farms.json','w') as f:
@@ -1681,7 +1677,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
-		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3283200, "out": 7.0, "auto": False, "message_id": message.id}
 		with open('user_farms.json','w') as f:
@@ -1702,7 +1697,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
-		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3196800, "out": 14.0, "auto": True, "message_id": message.id}
 		with open('user_farms.json','w') as f:
@@ -1723,7 +1717,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
-		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3628800, "out": 25.0, "auto": True, "message_id": message.id}
 		with open('user_farms.json','w') as f:
@@ -1744,7 +1737,6 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
-		farms['bot']['out_messages_id'].append(message.id)
 
 		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 950400, "out": 0.3, "auto": False, "message_id": message.id}
 		with open('user_farms.json','w') as f:

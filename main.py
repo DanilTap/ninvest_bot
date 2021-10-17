@@ -1317,7 +1317,7 @@ async def on_raw_reaction_add(payload):
 						mrub = balance[str(smember)]["RUB"]
 						brub = balance[str(member.name)]["RUB"]
 
-						if mntb >= ntb:
+						if mrub >= rub:
 							if member.name in buy:
 								await member.send('Вы не можете больше купить этот товар.')
 
@@ -2872,77 +2872,91 @@ async def box(ctx, box: int, amount: int):
 
 
 @bot.command()
-async def sell(ctx, vtype=None, ntb=None, rub=None):
+async def sell(ctx, ntb=None, rub=None):
 	guild = bot.get_guild(880008097370865706)
 
 	# Sell NTB
-	if vtype != None and ntb != None and rub != None:
-		if vtype == "NTB" or vtype == "ntb":
-			with open('user_balance.json','r', encoding='utf-8') as f:
-				user_balance = json.load(f)
+	if ntb != None and rub != None:
+		with open('user_balance.json','r', encoding='utf-8') as f:
+			user_balance = json.load(f)
 
-			ntb_bal = user_balance[str(ctx.message.author.name)]['NTB']
-			rub_bal = user_balance[str(ctx.message.author.name)]['RUB']
+		ntb_bal = user_balance[str(ctx.message.author.name)]['NTB']
+		rub_bal = user_balance[str(ctx.message.author.name)]['RUB']
 
-			if ntb_bal >= int(ntb):
-				await ctx.channel.purge(limit=1)
-				channel = bot.get_channel(896752866759409705)
-				embed = discord.Embed(color=0x3C55FA, title=f'Предложение {ctx.message.author.name}')
-				embed.add_field(name = '**Предмет:**', value = f'{ntb}NTB', inline = True)
-				embed.add_field(name = '**Цена:**', value = f'{rub}RUB', inline = True)
-				message = await channel.send(embed=embed)
-				await message.add_reaction('✅')
-				await message.add_reaction('❌')
+		if ntb_bal >= int(ntb):
+			await ctx.channel.purge(limit=1)
+			channel = bot.get_channel(896752866759409705)
+			embed = discord.Embed(color=0x008000, title=f'Предложение {ctx.message.author.name}')
+			embed.add_field(name = '**Предмет:**', value = f'{ntb}NTB', inline = True)
+			embed.add_field(name = '**Цена:**', value = f'{rub}RUB', inline = True)
+			message = await channel.send(embed=embed)
+			await message.add_reaction('✅')
+			await message.add_reaction('❌')
 
-				with open('user_sales.json','r', encoding='utf-8') as f:
-					sales = json.load(f)
+			with open('user_sales.json','r', encoding='utf-8') as f:
+				sales = json.load(f)
 
-				sales[str(ctx.message.author.name)]["sales"][message.id] = {"stats": True, "vtype": "NTB",  "ntb": int(ntb), "rub": int(rub), "buy": []}
-				with open('user_sales.json','w') as f:
-					json.dump(sales,f)
+			sales[str(ctx.message.author.name)]["sales"][message.id] = {"stats": True, "vtype": "NTB", "ntb": int(ntb), "rub": int(rub), "buy": []}
+			with open('user_sales.json','w') as f:
+				json.dump(sales,f)
 
-				# logs
-				logs = guild.get_channel(898204390412943451)
-				embed = discord.Embed(color=0x00a550, title="ВЫСТАВКА НА БИРЖЕ", description=f'Участник {ctx.message.author} выставил {ntb}NTB за {rub}RUB.')
-				await logs.send(embed=embed)
-
-		# Sell RUB
-		elif vtype == "RUB" or vtype == "rub":
-			with open('user_balance.json','r', encoding='utf-8') as f:
-				user_balance = json.load(f)
-
-			ntb_bal = user_balance[str(ctx.message.author.name)]['NTB']
-			rub_bal = user_balance[str(ctx.message.author.name)]['RUB']
-
-			if rub_bal >= int(ntb):
-				await ctx.channel.purge(limit=1)
-				channel = bot.get_channel(896752866759409705)
-				embed = discord.Embed(color=0x3C55FA, title=f'Предложение {ctx.message.author.name}')
-				embed.add_field(name = '**Предмет:**', value = f'{ntb}NTB', inline = True)
-				embed.add_field(name = '**Цена:**', value = f'{rub}RUB', inline = True)
-				message = await channel.send(embed=embed)
-				await message.add_reaction('✅')
-				await message.add_reaction('❌')
-
-				with open('user_sales.json','r', encoding='utf-8') as f:
-					sales = json.load(f)
-
-				sales[str(ctx.message.author.name)]["sales"][message.id] = {"stats": True, "vtype": "RUB", "ntb": int(ntb), "rub": int(rub), "buy": []}
-				with open('user_sales.json','w') as f:
-					json.dump(sales,f)
-
-				# logs
-				logs = guild.get_channel(898204390412943451)
-				embed = discord.Embed(color=0x00a550, title="ВЫСТАВКА НА БИРЖЕ", description=f'Участник {ctx.message.author} выставил {ntb}NTB за {rub}RUB.')
-				await logs.send(embed=embed)
-
+			# logs
+			logs = guild.get_channel(898204390412943451)
+			embed = discord.Embed(color=0x00a550, title="ВЫСТАВКА НА БИРЖЕ", description=f'Участник {ctx.message.author} выставил {ntb}NTB за {rub}RUB.')
+			await logs.send(embed=embed)
 
 		else:
+			await ctx.channel.purge(limit=1)
 			await ctx.message.author.send('У вас недостаточно NTB для продажи.')
 
 	else:
-		await ctx.message.author.send('Ошибка в аргументах команды.')
+		await ctx.channel.purge(limit=1)
+		await member.send("Ошибка в аргументах команды.")
 
+
+
+@bot.command()
+async def buy(ctx, ntb=None, rub=None):
+	guild = bot.get_guild(880008097370865706)
+
+	# Sell RUB
+	if ntb != None and rub != None:
+		with open('user_balance.json','r', encoding='utf-8') as f:
+			user_balance = json.load(f)
+
+		ntb_bal = user_balance[str(ctx.message.author.name)]['NTB']
+		rub_bal = user_balance[str(ctx.message.author.name)]['RUB']
+
+		if rub_bal >= int(rub):
+			await ctx.channel.purge(limit=1)
+			channel = bot.get_channel(896752866759409705)
+			embed = discord.Embed(color=0xff0000, title=f'Предложение {ctx.message.author.name}')
+			embed.add_field(name = '**Предмет:**', value = f'{rub}RUB', inline = True)
+			embed.add_field(name = '**Цена:**', value = f'{ntb}NTB', inline = True)
+			message = await channel.send(embed=embed)
+			await message.add_reaction('✅')
+			await message.add_reaction('❌')
+
+			with open('user_sales.json','r', encoding='utf-8') as f:
+				sales = json.load(f)
+
+			sales[str(ctx.message.author.name)]["sales"][message.id] = {"stats": True, "vtype": "RUB", "ntb": int(ntb), "rub": int(rub), "buy": []}
+			with open('user_sales.json','w') as f:
+				json.dump(sales,f)
+
+			# logs
+			logs = guild.get_channel(898204390412943451)
+			embed = discord.Embed(color=0x00a550, title="ВЫСТАВКА НА БИРЖЕ", description=f'Участник {ctx.message.author} выставил {rub}RUB за {ntb}NTB.')
+			await logs.send(embed=embed)
+
+
+		else:
+			await ctx.channel.purge(limit=1)
+			await ctx.message.author.send('У вас недостаточно RUB для продажи.')
+
+	else:
+		await ctx.channel.purge(limit=1)
+		await member.send("Ошибка в аргументах команды.")
 
 
 @bot.command()

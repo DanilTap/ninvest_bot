@@ -1221,25 +1221,27 @@ async def on_raw_reaction_add(payload):
 			farm_list = i[1]["farms"]
 			for i in farm_list.items():
 				message = i[1]["message_id"]
-				if message_id == message:
-					mined = i[1]["mined"]
-					with open('user_balance.json','r', encoding='utf-8') as f:
-						balance = json.load(f)
+				for b in message:
+					if message_id == b:
+						print(f'{member.name} out farm money.')
+						mined = int(i[1]["mined"])
+						with open('user_balance.json','r', encoding='utf-8') as f:
+							balance = json.load(f)
 
-					mined = i[1]["mined"]
+						mined = i[1]["mined"]
 
-					log_channel = bot.get_channel(888053213750779934)
-					embed1 = discord.Embed(color=0x008000, title="ВЫВОД С ФЕРМЫ", description=f'**Участник {member} вывел {mined} со своей фермы.**')
-					await log_channel.send(embed=embed1)
-					await member.send(f'Вы вывели `{mined}`RUB с своей фермы.')
+						log_channel = bot.get_channel(888053213750779934)
+						embed1 = discord.Embed(color=0x008000, title="ВЫВОД С ФЕРМЫ", description=f'**Участник {member} вывел {mined} со своей фермы.**')
+						await log_channel.send(embed=embed1)
+						await member.send(f'Вы вывели `{mined}`RUB с своей фермы.')
 
-					balance[str(member.name)]["RUB"] += mined
-					with open('user_balance.json','w') as f:
-						json.dump(balance,f)
+						balance[str(member.name)]["RUB"] += mined
+						with open('user_balance.json','w') as f:
+							json.dump(balance,f)
 
-					i[1]["mined"] = 0
-					with open('user_farms.json','w') as f:
-						json.dump(lfarms,f)
+						i[1]["mined"] = 0
+						with open('user_farms.json','w') as f:
+							json.dump(lfarms,f)
 
 
 
@@ -1788,8 +1790,18 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
+		if str(farm) in farms[str(member.name)]["farms"]:
+			print('IN')
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 950400, "out": 0.3, "auto": False, "message_id": message.id}
+
+			farms[str(member.name)]["farms"][f'{str(farm)}']["out"] += 0.3
+			farms[str(member.name)]["farms"][f'{str(farm)}']["message_id"].append(message.id)
+
+		else:
+			print('NO')
+			farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 950400, "out": 0.3, "auto": False, "message_id": [message.id]}
+
+
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 

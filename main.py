@@ -1325,11 +1325,11 @@ async def on_raw_reaction_add(payload):
 
 							else:
 								if brub >= rub:
-									balance[str(smember)]["NTB"] += ntb
-									balance[str(smember)]["RUB"] -= rub
+									balance[str(smember)]["NTB"] -= ntb
+									balance[str(smember)]["RUB"] += rub
 
-									balance[str(member.name)]["NTB"] -= ntb
-									balance[str(member.name)]["RUB"] += rub
+									balance[str(member.name)]["NTB"] += ntb
+									balance[str(member.name)]["RUB"] -= rub
 
 									with open('user_balance.json','w') as f:
 										json.dump(balance,f)
@@ -1835,17 +1835,17 @@ def Deposit(member, amount, percent, ltime):
 # Sending a random images
 async def RandomImages():
 	while True:
-		await asyncio.sleep(3600)
+		await asyncio.sleep(30)
 		timezone = datetime.timezone(datetime.timedelta(hours=3))
 
 		date = datetime.datetime.now(timezone)
-		if int(date.hour) == 9:
+		if int(date.hour) == 21 and date.minute == 46:
 			channel = bot.get_channel(881634315514019881)
 			with open('bot_constants.json','r', encoding='utf-8') as f:
 				constants = json.load(f)
 
 			images = constants["images"]
-			image = images[0]
+			image = images[2]
 			constants["act_image"] = image
 			print(f'Send image: {image}')
 
@@ -1854,7 +1854,9 @@ async def RandomImages():
 			with open('bot_constants.json','w') as f:
 				json.dump(constants,f)
 
-		elif int(date.hour) == 21:
+			await asyncio.sleep(30)
+
+		elif int(date.hour) == 21 and date.minute == 39:
 			channel = bot.get_channel(896752866759409705)
 			with open('bot_constants.json','r', encoding='utf-8') as f:
 				constants = json.load(f)
@@ -1869,13 +1871,15 @@ async def RandomImages():
 			with open('bot_constants.json','w') as f:
 				json.dump(constants,f)
 
-		elif int(date.hour) == 0:
+			await asyncio.sleep(30)
+
+		elif int(date.hour) == 21 and date.minute == 35:
 			channel = bot.get_channel(896752866759409705)
 			with open('bot_constants.json','r', encoding='utf-8') as f:
 				constants = json.load(f)
 
 			images = constants["images"]
-			image = images[2]
+			image = images[0]
 			constants["act_image"] = image
 			print(f'Send image: {image}')
 
@@ -1883,6 +1887,26 @@ async def RandomImages():
 
 			with open('bot_constants.json','w') as f:
 				json.dump(constants,f)
+
+			await asyncio.sleep(30)
+
+		elif int(date.hour) == 3 and date.minute == 50:
+			channel = bot.get_channel(896752866759409705)
+			with open('bot_constants.json','r', encoding='utf-8') as f:
+				constants = json.load(f)
+
+			images = constants["images"]
+			image = images[3]
+			constants["act_image"] = image
+			print(f'Send image: {image}')
+
+			await channel.send(image)
+
+			with open('bot_constants.json','w') as f:
+				json.dump(constants,f)
+
+			await asyncio.sleep(30)
+
 
 		else:
 			pass

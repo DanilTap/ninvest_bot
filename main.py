@@ -28,6 +28,7 @@ tickets_messages = []
 
 
 # |-------------------------------- EVENTS --------------------------------|
+bot.remove_command('help')
 @bot.event
 async def on_ready():
 	print('----------Bot is ready!----------\n\n')
@@ -1186,6 +1187,80 @@ async def on_raw_reaction_add(payload):
 			await member.send('Сколько вы хотите положить в банк? Введите сумму `!bank2 СУММА`')
 
 
+	# Trade
+	elif message_id == 902561833037209610:
+		with open('user_balance.json','r', encoding='utf-8') as f:
+			balance = json.load(f)
+
+		ntb = balance[str(member.name)]['NTB']
+		rub = balance[str(member.name)]['RUB']
+
+		with open('bot_constants.json','r', encoding='utf-8') as f:
+			constants = json.load(f)
+
+		clist = constants['trade_list']
+		buyntb = 0
+
+		if not member.name in clist:
+			constants['trade_list'] = {f'{member.name}': 0}
+
+		else:
+			for i in clist.items():
+				if member.name == i[0]:
+					buyntb = i[1]
+					print(buyntb)
+
+			if buyntb >= 1000:
+				await member.send('Вы не можете купить больше 1000NTB')
+
+
+		if payload.emoji.name == "💴":
+			if rub >= 50:
+				balance[str(member.name)]['RUB'] -= 50
+				balance[str(member.name)]['NTB'] += 50
+				await member.send('Вы купили 50NTB за 50RUB')
+
+				last = buyntb + 50
+
+				constants['trade_list'] = {f'{member.name}': last}
+
+			else:
+				await member.send('У вас недостаточно средств.')
+
+		elif payload.emoji.name == "💶":
+			if rub >= 150:
+				balance[str(member.name)]['RUB'] -= 150
+				balance[str(member.name)]['NTB'] += 150
+				await member.send('Вы купили 150NTB за 150RUB')
+
+				last = buyntb + 150
+
+				constants['trade_list'] = {f'{member.name}': last}
+
+			else:
+				await member.send('У вас недостаточно средств.')
+
+		elif payload.emoji.name == "💷":
+			if rub >= 250:
+				balance[str(member.name)]['RUB'] -= 250
+				balance[str(member.name)]['NTB'] += 250
+				await member.send('Вы купили 250NTB за 250RUB')
+
+				last = buyntb + 250
+
+				constants['trade_list'] = {f'{member.name}': last}
+
+
+			else:
+				await member.send('У вас недостаточно средств.')
+
+		with open('user_balance.json','w') as f:
+			json.dump(balance ,f)
+
+		with open('bot_constants.json','w') as f:
+			json.dump(constants ,f)
+
+
 	for i in range(len(tickets_messages)):
 		if int(message_id) == int(tickets_messages[i]):
 			if payload.emoji.name == "🔒":
@@ -1211,6 +1286,8 @@ async def on_raw_reaction_add(payload):
 
 			else:
 				print("NO Message")
+
+
 
 	# Withdraw the mined
 	with open('user_farms.json','r', encoding='utf-8') as f:
@@ -1338,7 +1415,7 @@ async def on_raw_reaction_add(payload):
 								with open('user_sales.json','w') as f:
 									json.dump(sales,f)
 
-								await member.send(f'Вы приобрели {ntb}NTB у {smember}.')
+								await member.send(f'Вы приобрели {rub}RUB у {smember}.')
 								log_channel = bot.get_channel(898204390412943451)
 								embed1 = discord.Embed(color=0x008000, title="ПОКУПКА ВАЛЮТЫ", description=f'**{member} Купил {rub}RUB у {smember}\n[ПРЕДЛОЖЕНИЕ](https://discord.com/channels/880008097370865706/896752866759409705/{int(i[0])})**')
 								await log_channel.send(embed=embed1)
@@ -1353,7 +1430,7 @@ async def on_raw_reaction_add(payload):
 
 						else:
 							channel1 = bot.get_channel(900380324880597032)
-							smessage = await channel.fetch_message(message_id)
+							smessage = await channel1.fetch_message(message_id)
 							await smessage.delete()
 
 							await member.send("У автора этого предложения недостаточно валюты для ее продажи.")
@@ -2342,14 +2419,17 @@ async def ubal(ctx, member: discord.Member, ctype, op: str, amount: int):
 
 @bot.command()
 async def bal(ctx, member: discord.Member):
-	with open('user_balance.json','r', encoding='utf-8') as f:
-		balance = json.load(f)
+	if ctx.member.id == 663424295854407692:
+		with open('user_balance.json','r', encoding='utf-8') as f:
+			balance = json.load(f)
 
-	rub = balance[str(member.name)]['RUB']
-	ntb = balance[str(member.name)]['NTB']
+		rub = balance[str(member.name)]['RUB']
+		ntb = balance[str(member.name)]['NTB']
 
-	await ctx.send(f'**{member}**: {rub}RUB **|** {ntb}NTB')
+		await ctx.send(f'**{member}**: {rub}RUB **|** {ntb}NTB')
 
+	else:
+		print('bal(): Not member')
 
 # Super money boxes
 @bot.command()
@@ -2981,8 +3061,8 @@ async def buy(ctx, ntb=None, rub=None):
 				await ctx.channel.purge(limit=1)
 				channel = bot.get_channel(900380324880597032)
 				embed = discord.Embed(color=0xff0000, title=f'Предложение {ctx.message.author.name}\nПродать')
-				embed.add_field(name = '**Предмет:**', value = f'{rub}RUB', inline = True)
 				embed.add_field(name = '**Цена:**', value = f'{ntb}NTB', inline = True)
+				embed.add_field(name = '**Предмет:**', value = f'{rub}RUB', inline = True)
 				message = await channel.send(embed=embed)
 				await message.add_reaction('✅')
 				await message.add_reaction('❌')
@@ -3010,6 +3090,27 @@ async def buy(ctx, ntb=None, rub=None):
 	else:
 		await ctx.channel.purge(limit=1)
 		await member.send("Ошибка в аргументах команды.")
+
+
+@bot.command()
+async def message(ctx, member: discord.Member, before, title, footer, *, description):
+	guild = bot.get_guild(880008097370865706)
+	if ctx.message.author.id == 663424295854407692:
+		if before != "None" or before != "none" or before != "0":
+			embed = discord.Embed(color = 0x008000, title=title, description=description)
+			embed.set_footer(text=f'{footer}')
+			await member.send(before)
+			await member.send(embed = embed)
+			await ctx.message.add_reaction('✅')
+
+		elif before == "None" or before == "none" or before == "0":
+			embed = discord.Embed(color = 0x008000, title=title, description=description)
+			embed.set_footer(text=f'{footer}')
+			await member.send(embed = embed)
+			await ctx.message.add_reaction('✅')
+
+	else:
+		print('message(): Not member')
 
 
 @bot.command()
@@ -3052,12 +3153,13 @@ async def upd(ctx):
 
 		guild = bot.get_guild(880008097370865706)
 
+		'''
 		agr = bot.get_channel(880023332639096853)
 		m = await agr.fetch_message(881913060305031189)
 		embed = discord.Embed(color=0x3C55FA, title="**ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ**", description=f'**ИСПОЛЬЗОВАНИЕ, НАХОЖДЕНИЕ И ЛЮБОЕ ВЗАИМОДЕЙСТВИЕ НА НАШЕМ СЕРВЕРЕ DISCORD "💨NEXT Invest💨", ПОДРАЗУМЕВАЕТ ПОЛНОЕ СОГЛАСИЕ С НИЖЕПЕРЕЧИСЛЕННЫМИ ПОЛОЖЕНИЯМИ И УСЛОВИЯМИ ПОЛЬЗОВАТЕЛЬСКОГО СОГЛАШЕНИЯ**\n\nВсе внутренние расчеты производятся исключительно с пересчетом на виртуальную внутрисерверную валюту.\n\n**ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ**\nВзаимодействие участников с сервером Discord "{guild.name}" основываются на публичном соглашении. Действие соглашения становится активным в момент его размещения\n\n**Предмет соглашения**\n\nСоглашением регламентировано взаимодействие пользователей с сервером Discord "{guild.name}" в следующих направлениях:\n• Порядок использования сервера\n• Осуществление денежных транзакций в виде конвертирования на реальную и внутрисерверную валюту\n• Порядок осуществления внутрисерверных покупок\n• Взаимодействие с приобретенными услугами на внутрисерверную валюту\n• Проведение ивентов и бонусных программ')
 		await m.edit(embed = embed)
 
-		'''
+		
 		farms = bot.get_channel(880025073963122718)
 		m = await farms.fetch_message(886528458887401473)
 		embedf = discord.Embed(color=0x3C55FA, title="FARM ЗАТЫЧКА", description=f'На слабой видеокарте\n\n**Для покупки за RUB нажмите :euro:**\n')
@@ -3278,7 +3380,7 @@ async def upd(ctx):
 		channel = bot.get_channel(888500024214966282)
 		#embed = discord.Embed(color=0x2E62FF, title="**Супер копилка**", description=f'**Супер копилка** - это место, где можно заработать огромные проценты за короткое время.\nСуть данного раздела заключается в том, что каждый игрок может внести свой вклад в общее дело и получить +10% чистого профита после полного заполнения следующей копилки.\n\nТ.е. если коротко, вложил 100 рублей в  копилку №1, после заполнения копилки №2 Вы получите 110 руб. на вывод.')
 		#await channel.send(embed = embed)
-		'''
+		
 		
 		channel = bot.get_channel(888500024214966282)
 		m1 = await channel.fetch_message(893397579663044629)
@@ -3296,8 +3398,13 @@ async def upd(ctx):
 		m4 = await channel.fetch_message(894214947473588255)
 		box4 = discord.Embed(color=0x2E62FF, title="Супер копилка №4", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛')
 		await m4.edit(embed = box4)
-
-		
+		'''
+		channel = bot.get_channel(901855374834020402)
+		embed = discord.Embed(color=0x2E62FF, description=f'**Криптовалюта** - это цифровая валюта, которая позволяет проводить безналичные платежи разным пользователям.\n\nПри этом наша криптовалюта защищена от подделки, так как монета представляет собой зашифрованную информацию, скопировать/взломать которую невозможно.\n\n**Главные плюсы:**\n-Надежность. Взломать, подделать или осуществить другие подобные манипуляции с виртуальной валютой не выйдет — она надежно защищена. -Ограниченность криптовалюты. Как правило, криптовалюта выпускается в ограниченном объеме, что привлекает повышенное внимание со стороны инвесторов и исключает риски инфляции из-за чрезмерной активности эмитента. Таким образом, криптовалюта не подвержена инфляции и по своей сути является дефляционной валютой.\n-Криптовалюта является независимой денежной единицей. Ее эмиссию никто не регулирует и не контролирует движение средств на счету. Именно эта особенность привлекает многих участников Сети.\n-Не требует вмешательства 3 лиц, все операции происходят строго от участника участнику\nДаем возможность приобрести первую партию криптовалюты - 1000 NTB. Стоимость покупки 1RUB=1NTB\n\n**Курс покупки 1RUB = 1NTB**\n💴 50 RUB = 50 NTB\n💶 150 RUB = 150 NTB\n💷 250 RUB = 250 NTB')
+		message = await channel.send(embed = embed)		
+		await message.add_reaction('💴')
+		await message.add_reaction('💶')
+		await message.add_reaction('💷')
 
 	else:
 		print("Not man")

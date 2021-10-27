@@ -94,6 +94,16 @@ async def on_ready():
 
 	print("----------Loading done!----------\n\n")
 
+
+# ------------------------ Voice Timer ------------------------|
+@bot.event
+async def on_voice_state_update(member, before, after):
+    if before.channel is None and after.channel is not None:
+        await member.send("Вы вошли в голосовой канал")
+        
+    elif before.channel is not None and after.channel is None:
+        await member.send(f'Вы вышли из голосового канала')
+
  
 # ---------------------- Reaction Events ----------------------|
 @bot.event
@@ -1415,13 +1425,13 @@ async def on_raw_reaction_add(payload):
 								with open('user_sales.json','w') as f:
 									json.dump(sales,f)
 
-								await member.send(f'Вы приобрели {rub}RUB у {smember}.')
+								await member.send(f'Вы продали 4NTB за 5RUB Валерий Крут')
 								log_channel = bot.get_channel(898204390412943451)
 								embed1 = discord.Embed(color=0x008000, title="ПОКУПКА ВАЛЮТЫ", description=f'**{member} Купил {rub}RUB у {smember}\n[ПРЕДЛОЖЕНИЕ](https://discord.com/channels/880008097370865706/896752866759409705/{int(i[0])})**')
 								await log_channel.send(embed=embed1)
 
 								channel1 = bot.get_channel(900380324880597032)
-								smessage = await channel.fetch_message(message_id)
+								smessage = await channel1.fetch_message(message_id)
 								await smessage.delete()
 
 
@@ -3012,7 +3022,7 @@ async def sell(ctx, ntb=None, rub=None):
 			if ntb_bal >= int(ntb):
 				await ctx.channel.purge(limit=1)
 				channel = bot.get_channel(900380294161502229)
-				embed = discord.Embed(color=0x008000, title=f'Предложение {ctx.message.author.name}\nКупить')
+				embed = discord.Embed(color=0x008000, title=f'Купить валюту')
 				embed.add_field(name = '**Предмет:**', value = f'{ntb}NTB', inline = True)
 				embed.add_field(name = '**Цена:**', value = f'{rub}RUB', inline = True)
 				message = await channel.send(embed=embed)
@@ -3060,12 +3070,14 @@ async def buy(ctx, ntb=None, rub=None):
 			if rub_bal >= int(rub):
 				await ctx.channel.purge(limit=1)
 				channel = bot.get_channel(900380324880597032)
-				embed = discord.Embed(color=0xff0000, title=f'Предложение {ctx.message.author.name}\nПродать')
-				embed.add_field(name = '**Цена:**', value = f'{rub}rub', inline = True)
+				embed = discord.Embed(color=0xff0000, title=f'Продать валюту')
 				embed.add_field(name = '**Предмет:**', value = f'{ntb}NTB', inline = True)
+				embed.add_field(name = '**Цена:**', value = f'{rub}RUB', inline = True)
 				message = await channel.send(embed=embed)
 				await message.add_reaction('✅')
 				await message.add_reaction('❌')
+
+				await ctx.message.author.send(f'Ваше предложение находится [здесь](https://discord.com/channels/880008097370865706/900380324880597032{message.id})\nДля его удаления нажмите ❌ под сообщением.')
 
 				with open('user_sales.json','r', encoding='utf-8') as f:
 					sales = json.load(f)

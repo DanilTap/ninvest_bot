@@ -96,13 +96,25 @@ async def on_ready():
 
 
 # ------------------------ Voice Timer ------------------------|
+timerstats = True
 @bot.event
 async def on_voice_state_update(member, before, after):
-    if before.channel is None and after.channel is not None:
-        await member.send("Вы вошли в голосовой канал")
-        
-    elif before.channel is not None and after.channel is None:
-        await member.send(f'Вы вышли из голосового канала')
+	global timerstats
+	if before.channel is None and after.channel is not None:
+		await member.send("Вы вошли в голосовой канал")
+
+		with open('user_balance.json','r', encoding='utf-8') as f:
+			balance = json.load(f)
+
+		while timerstats:
+			await asyncio.sleep(1800)#1800
+			balance[str(member.name)]["NTB"] += 0.5
+			with open('user_balance.json','w') as f:
+				json.dump(balance,f)
+
+	elif before.channel is not None and after.channel is None:
+		await member.send(f'Вы вышли из голосового канала')
+		timerstats = False
 
  
 # ---------------------- Reaction Events ----------------------|
@@ -411,7 +423,7 @@ async def on_raw_reaction_add(payload):
 			rub = user_balance[str(member.name)]['RUB']
 			ntb = user_balance[str(member.name)]['NTB']
 
-			embed = discord.Embed(color=0x3C55FA, title="ВАШ БАЛАНС", description=f':euro:** {rub} RUB**\n:pound:** {ntb} NTB**\n\n`!top` - Пополнить\n`!get` - Вывести\n🔁 - Обновить баланс.')
+			embed = discord.Embed(color=0x3C55FA, title="ВАШ БАЛАНС", description=f':euro:** {round(rub, 2)} RUB**\n:pound:** {round(ntb, 2)} NTB**\n\n`!top` - Пополнить\n`!get` - Вывести\n🔁 - Обновить баланс.')
 			embed.set_thumbnail(url="https://i.ibb.co/KyLH153/1.png")
 			bal_message = await member.send(embed=embed)	
 			await bal_message.add_reaction('🔁')
@@ -1454,20 +1466,29 @@ async def on_raw_reaction_add(payload):
 					if member.name == smember:
 						i[1]["stats"] = False
 						
-						channel = bot.get_channel(900380294161502229)
-						smessage = await channel.fetch_message(message_id)
-						await smessage.delete()
+						try:
+							channel = bot.get_channel(900380294161502229)
+							smessage = await channel.fetch_message(int(i[0]))
+							await smessage.delete()
 
-						channel1 = bot.get_channel(900380324880597032)
-						smessage = await channel.fetch_message(message_id)
-						await smessage.delete()
+							log_channel = bot.get_channel(888053213750779934)
+							embed1 = discord.Embed(color=0x008000, title="ЗАКРЫТИЕ ПРЕДЛОЖЕНИЯ", description=f'**{smember} удалил свое предложение.**')
+							await log_channel.send(embed=embed1)		
 
-						log_channel = bot.get_channel(888053213750779934)
-						embed1 = discord.Embed(color=0x008000, title="ЗАКРЫТИЕ ПРЕДЛОЖЕНИЯ", description=f'**{smember} удалил свое предложение.**')
-						await log_channel.send(embed=embed1)		
+							with open('user_sales.json','w') as f:
+								json.dump(sales,f)
 
-						with open('user_sales.json','w') as f:
-							json.dump(sales,f)
+						except:
+							channel1 = bot.get_channel(900380324880597032)
+							smessage2 = await channel1.fetch_message(int(i[0]))
+							await smessage2.delete()
+
+							log_channel = bot.get_channel(888053213750779934)
+							embed1 = discord.Embed(color=0x008000, title="ЗАКРЫТИЕ ПРЕДЛОЖЕНИЯ", description=f'**{smember} удалил свое предложение.**')
+							await log_channel.send(embed=embed1)		
+
+							with open('user_sales.json','w') as f:
+								json.dump(sales,f)
 
 
 # Welcome

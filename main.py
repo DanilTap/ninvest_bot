@@ -2450,7 +2450,7 @@ async def ubal(ctx, member: discord.Member, ctype, op: str, amount: int):
 
 @bot.command()
 async def bal(ctx, member: discord.Member):
-	if ctx.member.id == 663424295854407692:
+	if ctx.message.author.id == 663424295854407692:
 		with open('user_balance.json','r', encoding='utf-8') as f:
 			balance = json.load(f)
 

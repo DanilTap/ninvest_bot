@@ -31,6 +31,7 @@ tickets_messages = []
 bot.remove_command('help')
 @bot.event
 async def on_ready():
+	guild = bot.get_guild(880008097370865706)
 	print('----------Bot is ready!----------\n\n')
 	
 	# Start farms
@@ -93,6 +94,85 @@ async def on_ready():
 			print(f'{member} NO DEPOSIT')
 
 	print("----------Loading done!----------\n\n")
+
+
+
+	# Update users DB
+	print("----------Writing new users:----------")
+	for member in guild.members:
+		with open('user_balance.json','r', encoding='utf-8') as f:
+			user_balance = json.load(f)
+
+		with open('user_farms.json','r', encoding='utf-8') as f:
+			user_farms = json.load(f)
+
+		with open('referal.json','r', encoding='utf-8') as f:
+			ref = json.load(f)
+
+		with open('user_bank.json','r', encoding='utf-8') as f:
+			bank = json.load(f)
+
+		with open('user_sales.json','r', encoding='utf-8') as f:
+			sales = json.load(f)
+
+		with open('user_profile.json','r', encoding='utf-8') as f:
+			profile = json.load(f)
+
+		if not member.name in user_balance and not member.name in user_farms and not member.name in ref and not member.name in bank and not member.name in sales and not member.name in profile:
+			print(member.name)
+			# Balance
+			user_balance[str(member.name)] = {}
+			user_balance[str(member.name)]['NTB'] = 0
+			user_balance[str(member.name)]['RUB'] = 0
+			with open('user_balance.json','w') as f:
+				json.dump(user_balance,f)
+
+			# Farms
+			user_farms[str(member.name)] = {}
+			user_farms[str(member.name)]['name'] = str(member.name)
+			user_farms[str(member.name)]['farms'] = {}
+			with open('user_farms.json','w') as f:
+				json.dump(user_farms,f)
+
+			# Referal system
+			words = ['A', 'E', 'B', '2', 'C', 'X', '4', 'k', '6', 'U', 'Z', 'I', 'I']
+			tword = f'{random.choice(words) + random.choice(words) + random.choice(words) + random.choice(words) + random.choice(words) + random.choice(words) + random.choice(words) + random.choice(words) + random.choice(words)}'
+
+			ref[str(member.name)] = {}
+			ref[str(member.name)]['name'] = member.name
+			ref[str(member.name)]['id'] = member.id
+			ref[str(member.name)]['code'] = str(tword)
+			ref[str(member.name)]['invites'] = 0
+			ref[str(member.name)]['used'] = False
+			ref[str(member.name)]['ivited_members'] = []
+			with open('referal.json','w') as f:
+				json.dump(ref,f)
+
+			# User bank
+			bank[str(member.name)] = {}
+			bank[str(member.name)]['name'] = member.name
+			bank[str(member.name)]['deposit'] = "none"
+			bank[str(member.name)]['amount'] = 0
+			bank[str(member.name)]['ltime'] = 0
+			with open('user_bank.json','w') as f:
+				json.dump(bank,f)
+
+			# Sales
+			sales[str(member.name)] = {}
+			sales[str(member.name)]['name'] = str(member.name)
+			sales[str(member.name)]['sales'] = {}
+			with open('user_sales.json','w') as f:
+				json.dump(sales,f)
+
+			# User Profile
+			profile[str(member.name)] = {}
+			profile[str(member.name)]['time'] = 0
+			profile[str(member.name)]['stats'] = True
+			with open('profile.json','w') as f:
+				json.dump(profile,f)
+	
+	print("----------Update user DB is done!----------")		
+
 
 
 # ------------------------ Voice Timer ------------------------|
@@ -1518,7 +1598,6 @@ async def on_member_join(member):
 			balance[str(member.name)] = {}
 			balance[str(member.name)]['NTB'] = 0
 			balance[str(member.name)]['RUB'] = 0
-			balance[str(member.name)]['mined'] = 0
 
 			with open('user_balance.json','w') as f:
 				json.dump(balance,f)
@@ -1577,6 +1656,18 @@ async def on_member_join(member):
 			with open('user_sales.json','w') as f:
 				json.dump(sales,f)
 
+
+		# User Profile
+		with open('user_profile.json','r', encoding='utf-8') as f:
+			profile = json.load(f)
+
+		if not member.name in sales:
+			profile[str(member.name)] = {}
+			profile[str(member.name)]['time'] = 0
+			profile[str(member.name)]['stats'] = True
+
+			with open('profile.json','w') as f:
+				json.dump(profile,f)
 
 
 	else:
@@ -2025,9 +2116,6 @@ async def RandomImages():
 			await asyncio.sleep(30)
 
 
-		else:
-			print("RandomImages(): Not time")
-
 
 # |------------------------------- /METHODS -------------------------------|
 
@@ -2335,6 +2423,109 @@ async def addpromo(ctx, ctype, name, activations, mtype=None, money=None):
 
 	else:
 		print("addpromo: Not member")
+
+
+# Time control
+def TimeControl(member):
+	print(f'TimeControl(): Start Thread for {member}')
+	stats = False
+	while not stats:
+		time.sleep(60)
+		with open('user_profile.json','r', encoding='utf-8') as f:
+			profile = json.load(f)
+
+		stats = profile[str(member)]["stats"]
+
+		profile[str(member)]["time"] += 1
+
+		with open('user_profile.json','w') as f:
+			json.dump(profile,f)
+
+
+@bot.command()
+@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
+async def start(ctx):
+	with open('user_profile.json','r', encoding='utf-8') as f:
+		profile = json.load(f)
+		
+	profile[str(ctx.message.author.name)]["stats"] = False
+	with open('user_profile.json','w') as f:
+		json.dump(profile,f)	
+
+	newtimer = Thread(target=TimeControl, args=[str(ctx.message.author.name)])
+	newtimer.start()
+	await ctx.message.add_reaction('✅')
+		
+
+@bot.command()
+@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
+async def stime(ctx, member = None):
+	if member != None:
+		if ctx.message.author.id == 663424295854407692:
+			with open('user_profile.json','r', encoding='utf-8') as f:
+				profile = json.load(f)
+
+			minutes = profile[str(member)]["time"]
+			hours = round(minutes / 60)
+			nminutes = round(minutes - hours * 60)
+
+			
+			if hours < 1 or hours == 0:
+				await ctx.send(f'{member} Отработал:\nЧасы: `0`\nМинуты: `{minutes}`')
+
+			elif hours >= 1:
+				await ctx.send(f'{member} Отработал:\nЧасы: `{hours}`\nМинуты: `{nminutes}`')
+
+		else:
+			await ctx.send('Ошибка в синтаксисе команды.')
+
+	else:
+		with open('user_profile.json','r', encoding='utf-8') as f:
+			profile = json.load(f)
+
+		minutes = profile[str(ctx.message.author.name)]["time"]
+		hours = round(minutes / 60)
+		nminutes = round(minutes - hours * 60)
+
+		
+		if hours < 1 or hours == 0:
+			await ctx.send(f'{ctx.message.author.mention} Отработал:\nЧасы: `0`\nМинуты: `{minutes}`')
+
+		elif hours >= 1:
+			await ctx.send(f'{ctx.message.author.mention} Отработал:\nЧасы: `{hours}`\nМинуты: `{nminutes}`')
+
+
+@bot.command()
+@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
+async def stop(ctx):
+	with open('user_profile.json','r', encoding='utf-8') as f:
+		profile = json.load(f)
+
+	profile[str(ctx.message.author.name)]["stats"] = True
+	with open('user_profile.json','w') as f:
+		json.dump(profile,f)
+
+	await ctx.message.add_reaction('✅')
+
+
+@bot.command()
+@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
+async def clean(ctx, member: discord.Member):
+	if ctx.member.id == 663424295854407692:
+		guild = bot.get_guild(880008097370865706)
+		with open('user_profile.json','r', encoding='utf-8') as f:
+			profile = json.load(f)
+
+		profile[str(member.name)]["time"] = 0
+		with open('user_profile.json','w') as f:
+			json.dump(profile,f)
+
+		await ctx.message.add_reaction('✅')
+
+	else:
+		print("clean(): not member using.")
+
+
 
 # ------------------------ Moderation ------------------------|
 # Ban

@@ -2426,6 +2426,7 @@ async def addpromo(ctx, ctype, name, activations, mtype=None, money=None):
 
 
 # Time control
+timelist = []
 def TimeControl(member):
 	print(f'TimeControl(): Start Thread for {member}')
 	stats = False
@@ -2443,7 +2444,7 @@ def TimeControl(member):
 
 
 @bot.command()
-@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
+#@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
 async def start(ctx):
 	with open('user_profile.json','r', encoding='utf-8') as f:
 		profile = json.load(f)
@@ -2455,6 +2456,22 @@ async def start(ctx):
 	newtimer = Thread(target=TimeControl, args=[str(ctx.message.author.name)])
 	newtimer.start()
 	await ctx.message.add_reaction('✅')
+
+	if len(timelist) == 0:
+		log = bot.get_channel(907906146633936899)
+		embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\n-[{ctx.message.author.name}]')
+		message = await log.send(embed = embed)
+		timelist.append(message.id)
+		timelist.append(ctx.message.author.name)
+
+	elif len(timelist) > 0:
+		timelist.append(ctx.message.author.name)
+		log = bot.get_channel(907906146633936899)
+		m_id = timelist[0]
+		m = await log.fetch_message(m_id)
+
+		embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\n-{timelist}')
+		await m.edit(embed = embed)
 		
 
 @bot.command()
@@ -2496,7 +2513,7 @@ async def stime(ctx, member = None):
 
 
 @bot.command()
-@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
+#@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
 async def stop(ctx):
 	with open('user_profile.json','r', encoding='utf-8') as f:
 		profile = json.load(f)
@@ -2506,6 +2523,15 @@ async def stop(ctx):
 		json.dump(profile,f)
 
 	await ctx.message.add_reaction('✅')
+
+	log = bot.get_channel(907906146633936899)
+	m_id = timelist[0]
+	m = await log.fetch_message(m_id)
+
+	timelist.remove(ctx.message.author.name)
+
+	embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\n-{timelist}\n\nЗакончил смену {ctx.message.author.name}')
+	await m.edit(embed = embed)
 
 
 @bot.command()
@@ -2524,6 +2550,12 @@ async def clean(ctx, member: discord.Member):
 
 	else:
 		print("clean(): not member using.")
+
+
+@bot.command()
+#@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
+async def admins(ctx):
+	await ctx.send(f'Сотрудники на смене: {timelist}')
 
 
 
@@ -3086,36 +3118,6 @@ async def box(ctx, box: int, amount: int):
 					percent = super_boxes["box4"]["percent"]
 					stats = super_boxes["box4"]["stats"]
 					ones = super_boxes["box4"]["ones"]
-					'''
-					if stats == True:
-						# if box4 filled
-						box3t = super_boxes["box3"]["target"]
-						box3i = super_boxes["box3"]["invested"]
-						if box3i >= box3t:
-
-							# logs
-							logs = guild.get_channel(892584515162210324)
-							embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №3 И ВЫВОД №2", description=f'Список вложившихся в супер копилку №2 участников:\n```\n{members}\n```')
-							await logs.send(embed=embed)
-
-							for i in members.items():
-								user = i[0]
-								user_amount = i[1]
-								percent1 = user_amount / 100 * percent
-								money = user_amount + percent1
-								print(money)
-
-								#super_boxes["box2"]["members"][f'{str(ctx.message.author.name)}'] = 0
-								#super_boxes["box2"]["stats"] = False
-								#with open('super_boxes.json','w') as f:
-								#	json.dump(super_boxes,f)
-
-								with open('user_balance.json','r', encoding='utf-8') as f:
-									user_balance = json.load(f)
-								user_balance[str(user)]['RUB'] += money
-								with open('user_balance.json','w') as f:
-									json.dump(user_balance,f)
-						'''
 					super_boxes["box4"]["invested"] += amount
 
 					print(members)
@@ -3177,33 +3179,6 @@ async def box(ctx, box: int, amount: int):
 					embed = discord.Embed(color=0x00a550, title="ВКЛАД В СУПЕР КОПИЛКУ", description=f'Участник {ctx.message.author} положил {amount} в копилку №4\n\nДля заполнения копилки осталось вложить `{target - invested}`')
 					await logs.send(embed=embed)
 
-					'''
-					# if box2 filled
-					if invested >= target:
-						members1 = super_boxes["box1"]["members"]
-						# logs
-						logs = guild.get_channel(892584515162210324)
-						embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №2 И ВЫВОД №1", description=f'Список вложившихся в супер копилку №1 участников:\n```\n{members}\n```')
-						await logs.send(embed=embed)
-
-						for i in members1.items():
-							user = i[0]
-							user_amount = i[1]
-							percent1 = user_amount / 100 * percent
-							money = user_amount + percent1
-							print(money)
-
-							#super_boxes["box1"]["members"][f'{str(ctx.message.author.name)}'] = 0
-							#super_boxes["box1"]["stats"] = False
-							#with open('super_boxes.json','w') as f:
-							#	json.dump(super_boxes,f)
-
-							with open('user_balance.json','r', encoding='utf-8') as f:
-								user_balance = json.load(f)
-							user_balance[str(user)]['RUB'] += money
-							with open('user_balance.json','w') as f:
-								json.dump(user_balance,f)
-					'''
 
 				else:
 					await ctx.message.author.send("У вас недостаточно средств.")
@@ -3347,23 +3322,40 @@ async def db(ctx):
 		with open('user_balance.json','r', encoding='utf-8') as f:
 			user_balance = json.load(f)
 
+		print("user_balance.json Done")
+
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			user_farms = json.load(f)
+
+		print("user_farms.json Done")
 
 		with open('referal.json','r', encoding='utf-8') as f:
 			ref = json.load(f)
 
+		print("referal.json Done")
+
 		with open('user_bank.json','r', encoding='utf-8') as f:
 			bank = json.load(f)
+
+		print("user_bank.json Done")
 
 		with open('user_sales.json','r', encoding='utf-8') as f:
 			sales = json.load(f)
 
+		print("user_sales.json Done")
+
 		with open('bot_constants.json','r', encoding='utf-8') as f:
 			constants = json.load(f)
 
+		print("bot_constants.json Done")
+
+		with open('user_profile.json','r', encoding='utf-8') as f:
+			profile = json.load(f)
+
+		print("user_profile.json Done")
+
 		with open('db.txt','w+', encoding='utf-8') as f:
-			f.write(f'user_balance.json:\n{user_balance}\n\n\nuser_farms.json:\n{user_farms}\n\n\nreferal.json:\n{ref}\n\n\nuser_bank.json:\n{bank}\n\n\nuser_sales.json:\n{sales}\n\n\nbot_constants.json:\n{constants}')
+			f.write(f'user_balance.json:\n{user_balance}\n\n\nuser_farms.json:\n{user_farms}\n\n\nreferal.json:\n{ref}\n\n\nuser_bank.json:\n{bank}\n\n\nuser_sales.json:\n{sales}\n\n\nbot_constants.json:\n{constants}\n\n\nuser_profile.json:\n{profile}')
 
 		member = guild.get_member(677453905227022349)
 		await ctx.send(file=discord.File(r'db.txt'))
@@ -3623,12 +3615,10 @@ async def upd(ctx):
 		box4 = discord.Embed(color=0x2E62FF, title="Супер копилка №4", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛')
 		await m4.edit(embed = box4)
 		'''
-		channel = bot.get_channel(901855374834020402)
-		embed = discord.Embed(color=0x2E62FF, description=f'**Криптовалюта** - это цифровая валюта, которая позволяет проводить безналичные платежи разным пользователям.\n\nПри этом наша криптовалюта защищена от подделки, так как монета представляет собой зашифрованную информацию, скопировать/взломать которую невозможно.\n\n**Главные плюсы:**\n-Надежность. Взломать, подделать или осуществить другие подобные манипуляции с виртуальной валютой не выйдет — она надежно защищена. -Ограниченность криптовалюты. Как правило, криптовалюта выпускается в ограниченном объеме, что привлекает повышенное внимание со стороны инвесторов и исключает риски инфляции из-за чрезмерной активности эмитента. Таким образом, криптовалюта не подвержена инфляции и по своей сути является дефляционной валютой.\n-Криптовалюта является независимой денежной единицей. Ее эмиссию никто не регулирует и не контролирует движение средств на счету. Именно эта особенность привлекает многих участников Сети.\n-Не требует вмешательства 3 лиц, все операции происходят строго от участника участнику\nДаем возможность приобрести первую партию криптовалюты - 1000 NTB. Стоимость покупки 1RUB=1NTB\n\n**Курс покупки 1RUB = 1NTB**\n💴 50 RUB = 50 NTB\n💶 150 RUB = 150 NTB\n💷 250 RUB = 250 NTB')
-		message = await channel.send(embed = embed)		
-		await message.add_reaction('💴')
-		await message.add_reaction('💶')
-		await message.add_reaction('💷')
+		channel = bot.get_channel(888053213750779934)
+		embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\nNone')
+		message = await channel.send(embed = embed)
+
 
 	else:
 		print("Not man")

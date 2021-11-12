@@ -572,7 +572,7 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@бизнесмен`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс BRONZE и выиграл роль бизнесмен.</easter code egg>')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс BRONZE и выиграл роль бизнесмен.</easter code egg>')
 					await log.send(embed=embed)
 
 				elif item == 'role1':
@@ -580,14 +580,14 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@Trainer`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс BRONZE и выиграл роль Trainer.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс BRONZE и выиграл роль Trainer.')
 					await log.send(embed=embed)
 					
 				else:
 					user_balance[str(member.name)]['RUB'] += float(item)
 					await member.send(f'Вы выиграли **`{item}` RUB**!')
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс BRONZE и выиграл {item}RUB.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс BRONZE и выиграл {item}RUB.')
 					await log.send(embed=embed)
 					
 
@@ -611,7 +611,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@бизнесмен`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс BRONZE и выиграл роль бизнесмен.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс BRONZE и выиграл роль бизнесмен.</easter code egg>')
 						await log.send(embed=embed)
 
 					elif item == 'role1':
@@ -619,14 +619,14 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Trainer`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс BRONZE и выиграл роль Trainer.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс BRONZE и выиграл роль Trainer.')
 						await log.send(embed=embed)
 						
 					else:
 						user_balance[str(member.name)]['RUB'] += float(item)
 						await member.send(f'Вы выиграли **`{item}` RUB**!')
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс BRONZE и выиграл {item}RUB.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс BRONZE и выиграл {item}RUB.')
 						await log.send(embed=embed)
 
 					with open('user_balance.json','w') as f:
@@ -649,7 +649,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@бизнесмен`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс BRONZE и выиграл роль бизнесмен.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс BRONZE и выиграл роль бизнесмен.')
 						await log.send(embed=embed)
 
 					elif item == 'role1':
@@ -657,14 +657,14 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Trainer`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс BRONZE и выиграл роль Trainer.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс BRONZE и выиграл роль Trainer.')
 						await log.send(embed=embed)
 						
 					else:
 						user_balance[str(member.name)]['RUB'] += float(item)
 						await member.send(f'Вы выиграли **`{item}` RUB**!')
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс BRONZE и выиграл {item}RUB.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс BRONZE и выиграл {item}RUB.')
 						await log.send(embed=embed)
 
 					with open('user_balance.json','w') as f:
@@ -693,7 +693,7 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@Premium 16 days`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Premium 16 days.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Premium 16 days.')
 					await log.send(embed=embed)
 
 				elif item == 'premium10':
@@ -701,14 +701,14 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@Premium 10 days`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Premium 10 days.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Premium 10 days.')
 					await log.send(embed=embed)
 
 				elif item == 'farm':
 					await CreateFarmChannel(member, 'FARM ПЛАТА')
 					await member.send("Вы выиграли ферму `FARM ПЛАТА`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл ферму FARM ПЛАТА.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл ферму FARM ПЛАТА.')
 					await log.send(embed=embed)
 
 				elif item == 'jet':
@@ -716,7 +716,7 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@:plane:`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль :plane:.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль :plane:.')
 					await log.send(embed=embed)
 
 				elif item == 'zap':
@@ -724,14 +724,14 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@:zap:`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль :zap:.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль :zap:.')
 					await log.send(embed=embed)
 
 				else:
 					user_balance[str(member.name)]['RUB'] += item
 					await member.send(f'Вы выиграли **`{item}` RUB**!')
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и {item}RUB')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и {item}RUB')
 					await log.send(embed=embed)
 
 				with open('user_balance.json','w') as f:
@@ -754,7 +754,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium 16 days`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Premium 16 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Premium 16 days.')
 						await log.send(embed=embed)
 
 					elif item == 'premium10':
@@ -762,14 +762,14 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium 10 days`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Premium 10 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Premium 10 days.')
 						await log.send(embed=embed)
 
 					elif item == 'farm':
 						await CreateFarmChannel(member, 'FARM ПЛАТА')
 						await member.send("Вы выиграли ферму `FARM ПЛАТА`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл ферму FARM ПЛАТА.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл ферму FARM ПЛАТА.')
 						await log.send(embed=embed)
 
 					elif item == 'jet':
@@ -777,7 +777,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@:plane:`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль :plane:.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль :plane:.')
 						await log.send(embed=embed)
 
 					elif item == 'zap':
@@ -785,14 +785,14 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@:zap:`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль :zap:.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль :zap:.')
 						await log.send(embed=embed)
 
 					else:
 						user_balance[str(member.name)]['RUB'] += item
 						await member.send(f'Вы выиграли **`{item}` RUB**!')
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и {item}RUB')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и {item}RUB')
 						await log.send(embed=embed)
 
 					with open('user_balance.json','w') as f:
@@ -816,7 +816,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium 16 days`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Premium 16 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Premium 16 days.')
 						await log.send(embed=embed)
 
 					elif item == 'premium10':
@@ -824,14 +824,14 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium 10 days`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Premium 10 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Premium 10 days.')
 						await log.send(embed=embed)
 
 					elif item == 'farm':
 						await CreateFarmChannel(member, 'FARM ПЛАТА')
 						await member.send("Вы выиграли ферму `FARM ПЛАТА`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл ферму FARM ПЛАТА.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл ферму FARM ПЛАТА.')
 						await log.send(embed=embed)
 
 					elif item == 'jet':
@@ -839,7 +839,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@:plane:`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль :plane:.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль :plane:.')
 						await log.send(embed=embed)
 
 					elif item == 'zap':
@@ -847,14 +847,14 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@:zap:`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль :zap:.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль :zap:.')
 						await log.send(embed=embed)
 
 					else:
 						user_balance[str(member.name)]['RUB'] += item
 						await member.send(f'Вы выиграли **`{item}` RUB**!')
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и {item}RUB')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и {item}RUB')
 						await log.send(embed=embed)
 
 					with open('user_balance.json','w') as f:
@@ -883,7 +883,7 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@Premium 30 day`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Premium 30 days.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Premium 30 days.')
 					await log.send(embed=embed)
 
 				elif item == 'premium21':
@@ -891,14 +891,14 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@Premium 21 day`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Premium 21 days.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Premium 21 days.')
 					await log.send(embed=embed)
 
 				elif item == 'farm':
 					await CreateFarmChannel(member, 'FARM ЗАТЫЧКА')
 					await member.send("Вы выиграли ферму `FARM ЗАТЫЧКА`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл ферму FARM ЗАТЫЧКА.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл ферму FARM ЗАТЫЧКА.')
 					await log.send(embed=embed)
 
 				elif item == 'role2':
@@ -906,7 +906,7 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@Monopolis`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Monopolis.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Monopolis.')
 					await log.send(embed=embed)
 
 				elif item == 'role3':
@@ -914,14 +914,14 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@:zap:`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль :zap:.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль :zap:.')
 					await log.send(embed=embed)
 
 				else:
 					user_balance[str(member.name)]['RUB'] += item
 					await member.send(f'Вы выиграли **`{item}` RUB**!')
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл {item}RUB.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл {item}RUB.')
 					await log.send(embed=embed)
 
 
@@ -945,7 +945,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium 30 day`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Premium 30 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Premium 30 days.')
 						await log.send(embed=embed)
 
 					elif item == 'premium21':
@@ -953,14 +953,14 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium 21 day`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Premium 21 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Premium 21 days.')
 						await log.send(embed=embed)
 
 					elif item == 'farm':
 						await CreateFarmChannel(member, 'FARM ЗАТЫЧКА')
 						await member.send("Вы выиграли ферму `FARM ЗАТЫЧКА`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл ферму FARM ЗАТЫЧКА.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл ферму FARM ЗАТЫЧКА.')
 						await log.send(embed=embed)
 
 					elif item == 'role2':
@@ -968,7 +968,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Monopolis`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Monopolis.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Monopolis.')
 						await log.send(embed=embed)
 
 					elif item == 'role3':
@@ -976,14 +976,14 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@:zap:`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль :zap:.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль :zap:.')
 						await log.send(embed=embed)
 
 					else:
 						user_balance[str(member.name)]['RUB'] += item
 						await member.send(f'Вы выиграли **`{item}` RUB**!')
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл {item}RUB.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл {item}RUB.')
 						await log.send(embed=embed)
 
 
@@ -1008,7 +1008,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium 30 day`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Premium 30 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Premium 30 days.')
 						await log.send(embed=embed)
 
 					elif item == 'premium21':
@@ -1016,14 +1016,14 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium 21 day`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Premium 21 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Premium 21 days.')
 						await log.send(embed=embed)
 
 					elif item == 'farm':
 						await CreateFarmChannel(member, 'FARM ЗАТЫЧКА')
 						await member.send("Вы выиграли ферму `FARM ЗАТЫЧКА`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл ферму FARM ЗАТЫЧКА.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл ферму FARM ЗАТЫЧКА.')
 						await log.send(embed=embed)
 
 					elif item == 'role2':
@@ -1031,7 +1031,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Monopolis`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль Monopolis.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль Monopolis.')
 						await log.send(embed=embed)
 
 					elif item == 'role3':
@@ -1039,14 +1039,14 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@:zap:`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл роль :zap:.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл роль :zap:.')
 						await log.send(embed=embed)
 
 					else:
 						user_balance[str(member.name)]['RUB'] += item
 						await member.send(f'Вы выиграли **`{item}` RUB**!')
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс SILVER и выиграл {item}RUB.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс SILVER и выиграл {item}RUB.')
 						await log.send(embed=embed)
 
 
@@ -1076,7 +1076,7 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@Premium - 45 days`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Premium 45 days.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Premium 45 days.')
 					await log.send(embed=embed)
 
 				elif item == 'premium26':
@@ -1084,7 +1084,7 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@Premium - 26 days`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Premium 26 days.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Premium 26 days.')
 					await log.send(embed=embed)
 
 				elif item == 'premium35':
@@ -1092,7 +1092,7 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@Premium - 35 days`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Premium 35 days.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Premium 35 days.')
 					await log.send(embed=embed)
 
 				elif item == 'zap':
@@ -1100,21 +1100,21 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@🌀`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль 🌀.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль 🌀.')
 					await log.send(embed=embed)
 
 				elif item == 'asic':
 					await CreateFarmChannel(member, 'FARM ASIC')
 					await member.send("Вы выиграли ферму `FARM ASIC`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл FARM ASIC.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл FARM ASIC.')
 					await log.send(embed=embed)
 
 				else:
 					user_balance[str(member.name)]['RUB'] += item
 					await member.send(f'Вы выиграли **`{item}` RUB**!')
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл {item}RUB.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл {item}RUB.')
 					await log.send(embed=embed)
 
 				with open('user_balance.json','w') as f:
@@ -1137,7 +1137,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium - 45 days`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Premium 45 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Premium 45 days.')
 						await log.send(embed=embed)
 
 					elif item == 'premium26':
@@ -1145,7 +1145,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium - 26 days`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Premium 26 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Premium 26 days.')
 						await log.send(embed=embed)
 
 					elif item == 'premium35':
@@ -1153,7 +1153,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium - 35 days`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Premium 35 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Premium 35 days.')
 						await log.send(embed=embed)
 
 					elif item == 'zap':
@@ -1161,21 +1161,21 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@🌀`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль 🌀.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль 🌀.')
 						await log.send(embed=embed)
 
 					elif item == 'asic':
 						await CreateFarmChannel(member, 'FARM ASIC')
 						await member.send("Вы выиграли ферму `FARM ASIC`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл FARM ASIC.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл FARM ASIC.')
 						await log.send(embed=embed)
 
 					else:
 						user_balance[str(member.name)]['RUB'] += item
 						await member.send(f'Вы выиграли **`{item}` RUB**!')
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл {item}RUB.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл {item}RUB.')
 						await log.send(embed=embed)
 
 					with open('user_balance.json','w') as f:
@@ -1199,7 +1199,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium - 45 days`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Premium 45 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Premium 45 days.')
 						await log.send(embed=embed)
 
 					elif item == 'premium26':
@@ -1207,7 +1207,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium - 26 days`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Premium 26 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Premium 26 days.')
 						await log.send(embed=embed)
 
 					elif item == 'premium35':
@@ -1215,7 +1215,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium - 35 days`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Premium 35 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Premium 35 days.')
 						await log.send(embed=embed)
 
 					elif item == 'zap':
@@ -1223,21 +1223,21 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@🌀`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль 🌀.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль 🌀.')
 						await log.send(embed=embed)
 
 					elif item == 'asic':
 						await CreateFarmChannel(member, 'FARM ASIC')
 						await member.send("Вы выиграли ферму `FARM ASIC`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл FARM ASIC.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл FARM ASIC.')
 						await log.send(embed=embed)
 
 					else:
 						user_balance[str(member.name)]['RUB'] += item
 						await member.send(f'Вы выиграли **`{item}` RUB**!')
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл {item}RUB.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл {item}RUB.')
 						await log.send(embed=embed)
 
 
@@ -1268,7 +1268,7 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@Premium 7 days`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Premium 7 days.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Premium 7 days.')
 					await log.send(embed=embed)
 
 				elif item == 'zap':
@@ -1276,7 +1276,7 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@:zap:`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль :zap:.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль :zap:.')
 					await log.send(embed=embed)
 					
 				elif item == 'comet':
@@ -1284,7 +1284,7 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@☄`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль ☄.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль ☄.')
 					await log.send(embed=embed)
 					
 				elif item == 'bussines':
@@ -1292,7 +1292,7 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@Бизнесмен`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Бизнесмен.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Бизнесмен.')
 					await log.send(embed=embed)
 					
 				elif item == 'gold':
@@ -1300,14 +1300,14 @@ async def on_raw_reaction_add(payload):
 					await member.add_roles(getrole)
 					await member.send("Вы выиграли роль `@Gold`!")
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль GOLD.</easter egg>')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль GOLD.</easter egg>')
 					await log.send(embed=embed)
 					
 				else:
 					user_balance[str(member.name)]['RUB'] += item
 					await member.send(f'Вы выиграли **`{item}` RUB**!')
 					log = bot.get_channel(908678594753089547)
-					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл {item}RUB.')
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл {item}RUB.')
 					await log.send(embed=embed)
 					
 				with open('user_balance.json','w') as f:
@@ -1330,7 +1330,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium 7 days`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Premium 7 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Premium 7 days.')
 						await log.send(embed=embed)
 
 					elif item == 'zap':
@@ -1338,7 +1338,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@:zap:`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль :zap:.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль :zap:.')
 						await log.send(embed=embed)
 						
 					elif item == 'comet':
@@ -1346,7 +1346,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@☄`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль ☄.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль ☄.')
 						await log.send(embed=embed)
 						
 					elif item == 'bussines':
@@ -1354,7 +1354,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Бизнесмен`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Бизнесмен.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Бизнесмен.')
 						await log.send(embed=embed)
 						
 					elif item == 'gold':
@@ -1362,14 +1362,14 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Gold`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль GOLD.</easter egg>')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль GOLD.</easter egg>')
 						await log.send(embed=embed)
 						
 					else:
 						user_balance[str(member.name)]['RUB'] += item
 						await member.send(f'Вы выиграли **`{item}` RUB**!')
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл {item}RUB.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл {item}RUB.')
 						await log.send(embed=embed)
 						
 
@@ -1393,7 +1393,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Premium 7 days`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Premium 7 days.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Premium 7 days.')
 						await log.send(embed=embed)
 
 					elif item == 'zap':
@@ -1401,7 +1401,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@:zap:`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль :zap:.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль :zap:.')
 						await log.send(embed=embed)
 						
 					elif item == 'comet':
@@ -1409,7 +1409,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@☄`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль ☄.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль ☄.')
 						await log.send(embed=embed)
 						
 					elif item == 'bussines':
@@ -1417,7 +1417,7 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Бизнесмен`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль Бизнесмен.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль Бизнесмен.')
 						await log.send(embed=embed)
 						
 					elif item == 'gold':
@@ -1425,14 +1425,14 @@ async def on_raw_reaction_add(payload):
 						await member.add_roles(getrole)
 						await member.send("Вы выиграли роль `@Gold`!")
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл роль GOLD.</easter egg>')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл роль GOLD.</easter egg>')
 						await log.send(embed=embed)
 						
 					else:
 						user_balance[str(member.name)]['RUB'] += item
 						await member.send(f'Вы выиграли **`{item}` RUB**!')
 						log = bot.get_channel(908678594753089547)
-						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{ctx.message.author} купил кейс PLATINUM и выиграл {item}RUB.')
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс PLATINUM и выиграл {item}RUB.')
 						await log.send(embed=embed)
 					
 
@@ -2604,6 +2604,8 @@ async def addpromo(ctx, ctype, name, activations, mtype=None, money=None):
 
 # Time control
 timelist = []
+supportlist =[]
+hmalist = []
 def TimeControl(member):
 	print(f'TimeControl(): Start Thread for {member}')
 	stats = False
@@ -2626,32 +2628,55 @@ async def start(ctx):
 	with open('user_profile.json','r', encoding='utf-8') as f:
 		profile = json.load(f)
 		
+	ustats = profile[str(ctx.message.author.name)]["stats"]
 	profile[str(ctx.message.author.name)]["stats"] = False
-	with open('user_profile.json','w') as f:
-		json.dump(profile,f)	
 
-	newtimer = Thread(target=TimeControl, args=[str(ctx.message.author.name)])
-	newtimer.start()
-	await ctx.message.add_reaction('✅')
+	if ustats != False:
+		moderation = guild.get_role(880357242346553374)
+		helper = guild.get_role(880357827699433513)
+		support = guild.get_role(881141342959439882)
+		with open('user_profile.json','w') as f:
+			json.dump(profile,f)	
 
-	if len(timelist) == 0:
-		log = bot.get_channel(907906146633936899)
-		embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\n-[{ctx.message.author.name}]')
-		message = await log.send(embed = embed)
-		timelist.append(ctx.message.author.name)
+		newtimer = Thread(target=TimeControl, args=[str(ctx.message.author.name)])
+		newtimer.start()
+		await ctx.message.add_reaction('✅')
 
-	elif len(timelist) > 0:
-		timelist.append(ctx.message.author.name)
-		log = bot.get_channel(907906146633936899)
-		m_id = timelist[0]	
+		if len(timelist) == 0:
+			if support in member.roles:
+				embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\n\nSupport\n-[{ctx.message.author.name}]')
+				supportlist.append(ctx.message.author.name)
 
-		embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\n-{timelist}')
-		await log.send(embed = embed)
+			elif moderation in member.roles or helper in member.roles:
+				embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\n\nSupport\n{supportlist}\n\nHelper, moderator, administrator\n-[{ctx.message.author.name}]')
+				hmalist.append(ctx.message.author.name)
+
+			log = bot.get_channel(907906146633936899)
+			log1 = bot.get_channel(908698309466685471)
+			await log.send(embed = embed)
+			await log1.send(embed=embed)
+			timelist.append(ctx.message.author.name)
+
+		elif len(timelist) > 0:
+			if support in member.roles:
+				supportlist.append(ctx.message.author.name)
+
+			elif moderation in member.roles or helper in member.roles:
+				hmalist.append(ctx.message.author.name)
+
+			log = bot.get_channel(907906146633936899)
+			log1 = bot.get_channel(908698309466685471)
+			embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\n\nSupport\n{supportlist}\n\nHelper, moderator, administrator\n-{hmalist}')
+			await log.send(embed = embed)
+			await log1.send(embed=embed)
+			timelist.append(ctx.message.author.name)
+	else:
+		print("start(): ustats = True")
 		
 
 @bot.command()
 @commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
-async def stime(ctx, member = None):
+async def stime(ctx, *, member = None):
 	if member != None:
 		if ctx.message.author.id == 663424295854407692:
 			with open('user_profile.json','r', encoding='utf-8') as f:
@@ -2699,13 +2724,16 @@ async def stop(ctx):
 
 	await ctx.message.add_reaction('✅')
 
-	log = bot.get_channel(907906146633936899)
-	m_id = timelist[0]
-
 	timelist.remove(ctx.message.author.name)
+	supportlist.remove(ctx.message.author.name)
+	hmalist.remove(ctx.message.author.name)
 
-	embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\n-{timelist}\n\nЗакончил смену {ctx.message.author.name}')
+	log = bot.get_channel(907906146633936899)
+	log1 = bot.get_channel(908698309466685471)
+	embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\n\nSupport\n{supportlist}\n\nHelper, moderator, administrator\n-{hmalist}')
 	await log.send(embed = embed)
+	await log1.send(embed=embed)
+	timelist.append(ctx.message.author.name)
 
 
 @bot.command()

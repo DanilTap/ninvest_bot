@@ -6,7 +6,6 @@ import json
 import time
 import asyncio
 import random
-import datetime
 
 intents = discord.Intents.default()
 intents.members = True
@@ -28,10 +27,8 @@ tickets_messages = []
 
 
 # |-------------------------------- EVENTS --------------------------------|
-bot.remove_command('help')
 @bot.event
 async def on_ready():
-	guild = bot.get_guild(880008097370865706)
 	print('----------Bot is ready!----------\n\n')
 	
 	# Start farms
@@ -49,19 +46,15 @@ async def on_ready():
 				life = i[1]["life_time"]
 				out = i[1]["out"]
 				mode = i[1]["auto"]
+				channel = i[1]["channel_id"]
 				print(f'{member} HAVE FARM.\n')
-				print(f'{life}  {out}  {mode}')
+				print(f'{life}  {out}  {mode}  {channel}')
 
 				farmth = Thread(target=Farm, args=(member, i[0], life, out, mode))
 				farmth.start()
 
 			else:
 				print(f'{member} NO FARMS\n')
-
-
-	with open('user_farms.json','r', encoding='utf-8') as f:
-		lfarms = json.load(f)
-
 
 	print("----------Loading done!----------\n\n\n")
 
@@ -94,107 +87,6 @@ async def on_ready():
 			print(f'{member} NO DEPOSIT')
 
 	print("----------Loading done!----------\n\n")
-
-
-
-	# Update users DB
-	print("----------Writing new users:----------")
-	for member in guild.members:
-		with open('user_balance.json','r', encoding='utf-8') as f:
-			user_balance = json.load(f)
-
-		with open('user_farms.json','r', encoding='utf-8') as f:
-			user_farms = json.load(f)
-
-		with open('referal.json','r', encoding='utf-8') as f:
-			ref = json.load(f)
-
-		with open('user_bank.json','r', encoding='utf-8') as f:
-			bank = json.load(f)
-
-		with open('user_sales.json','r', encoding='utf-8') as f:
-			sales = json.load(f)
-
-		with open('user_profile.json','r', encoding='utf-8') as f:
-			profile = json.load(f)
-
-		if not member.name in user_balance and not member.name in user_farms and not member.name in ref and not member.name in bank and not member.name in sales and not member.name in profile:
-			print(member.name)
-			# Balance
-			user_balance[str(member.name)] = {}
-			user_balance[str(member.name)]['NTB'] = 0
-			user_balance[str(member.name)]['RUB'] = 0
-			with open('user_balance.json','w') as f:
-				json.dump(user_balance,f)
-
-			# Farms
-			user_farms[str(member.name)] = {}
-			user_farms[str(member.name)]['name'] = str(member.name)
-			user_farms[str(member.name)]['farms'] = {}
-			with open('user_farms.json','w') as f:
-				json.dump(user_farms,f)
-
-			# Referal system
-			words = ['A', 'E', 'B', '2', 'C', 'X', '4', 'k', '6', 'U', 'Z', 'I', 'I']
-			tword = f'{random.choice(words) + random.choice(words) + random.choice(words) + random.choice(words) + random.choice(words) + random.choice(words) + random.choice(words) + random.choice(words) + random.choice(words)}'
-
-			ref[str(member.name)] = {}
-			ref[str(member.name)]['name'] = member.name
-			ref[str(member.name)]['id'] = member.id
-			ref[str(member.name)]['code'] = str(tword)
-			ref[str(member.name)]['invites'] = 0
-			ref[str(member.name)]['used'] = False
-			ref[str(member.name)]['ivited_members'] = []
-			with open('referal.json','w') as f:
-				json.dump(ref,f)
-
-			# User bank
-			bank[str(member.name)] = {}
-			bank[str(member.name)]['name'] = member.name
-			bank[str(member.name)]['deposit'] = "none"
-			bank[str(member.name)]['amount'] = 0
-			bank[str(member.name)]['ltime'] = 0
-			with open('user_bank.json','w') as f:
-				json.dump(bank,f)
-
-			# Sales
-			sales[str(member.name)] = {}
-			sales[str(member.name)]['name'] = str(member.name)
-			sales[str(member.name)]['sales'] = {}
-			with open('user_sales.json','w') as f:
-				json.dump(sales,f)
-
-			# User Profile
-			profile[str(member.name)] = {}
-			profile[str(member.name)]['time'] = 0
-			profile[str(member.name)]['stats'] = True
-			with open('profile.json','w') as f:
-				json.dump(profile,f)
-	
-	print("----------Update user DB is done!----------")		
-
-
-
-# ------------------------ Voice Timer ------------------------|
-timerstats = True
-@bot.event
-async def on_voice_state_update(member, before, after):
-	global timerstats
-	if before.channel is None and after.channel is not None:
-		await member.send("Вы вошли в голосовой канал")
-
-		with open('user_balance.json','r', encoding='utf-8') as f:
-			balance = json.load(f)
-
-		while timerstats:
-			await asyncio.sleep(1800)#1800
-			balance[str(member.name)]["NTB"] += 0.5
-			with open('user_balance.json','w') as f:
-				json.dump(balance,f)
-
-	elif before.channel is not None and after.channel is None:
-		await member.send(f'Вы вышли из голосового канала')
-		timerstats = False
 
  
 # ---------------------- Reaction Events ----------------------|
@@ -503,7 +395,7 @@ async def on_raw_reaction_add(payload):
 			rub = user_balance[str(member.name)]['RUB']
 			ntb = user_balance[str(member.name)]['NTB']
 
-			embed = discord.Embed(color=0x3C55FA, title="ВАШ БАЛАНС", description=f':euro:** {round(rub, 2)} RUB**\n:pound:** {round(ntb, 2)} NTB**\n\n`!top` - Пополнить\n`!get` - Вывести\n🔁 - Обновить баланс.')
+			embed = discord.Embed(color=0x3C55FA, title="ВАШ БАЛАНС", description=f':euro:** {rub} RUB**\n:pound:** {ntb} NTB**\n\n`!top` - Пополнить\n`!get` - Вывести\n🔁 - Обновить баланс.')
 			embed.set_thumbnail(url="https://i.ibb.co/KyLH153/1.png")
 			bal_message = await member.send(embed=embed)	
 			await bal_message.add_reaction('🔁')
@@ -1289,80 +1181,6 @@ async def on_raw_reaction_add(payload):
 			await member.send('Сколько вы хотите положить в банк? Введите сумму `!bank2 СУММА`')
 
 
-	# Trade
-	elif message_id == 902561833037209610:
-		with open('user_balance.json','r', encoding='utf-8') as f:
-			balance = json.load(f)
-
-		ntb = balance[str(member.name)]['NTB']
-		rub = balance[str(member.name)]['RUB']
-
-		with open('bot_constants.json','r', encoding='utf-8') as f:
-			constants = json.load(f)
-
-		clist = constants['trade_list']
-		buyntb = 0
-
-		if not member.name in clist:
-			constants['trade_list'] = {f'{member.name}': 0}
-
-		else:
-			for i in clist.items():
-				if member.name == i[0]:
-					buyntb = i[1]
-					print(buyntb)
-
-			if buyntb >= 1000:
-				await member.send('Вы не можете купить больше 1000NTB')
-
-
-		if payload.emoji.name == "💴":
-			if rub >= 50:
-				balance[str(member.name)]['RUB'] -= 50
-				balance[str(member.name)]['NTB'] += 50
-				await member.send('Вы купили 50NTB за 50RUB')
-
-				last = buyntb + 50
-
-				constants['trade_list'] = {f'{member.name}': last}
-
-			else:
-				await member.send('У вас недостаточно средств.')
-
-		elif payload.emoji.name == "💶":
-			if rub >= 150:
-				balance[str(member.name)]['RUB'] -= 150
-				balance[str(member.name)]['NTB'] += 150
-				await member.send('Вы купили 150NTB за 150RUB')
-
-				last = buyntb + 150
-
-				constants['trade_list'] = {f'{member.name}': last}
-
-			else:
-				await member.send('У вас недостаточно средств.')
-
-		elif payload.emoji.name == "💷":
-			if rub >= 250:
-				balance[str(member.name)]['RUB'] -= 250
-				balance[str(member.name)]['NTB'] += 250
-				await member.send('Вы купили 250NTB за 250RUB')
-
-				last = buyntb + 250
-
-				constants['trade_list'] = {f'{member.name}': last}
-
-
-			else:
-				await member.send('У вас недостаточно средств.')
-
-		with open('user_balance.json','w') as f:
-			json.dump(balance ,f)
-
-		with open('bot_constants.json','w') as f:
-			json.dump(constants ,f)
-
-
 	for i in range(len(tickets_messages)):
 		if int(message_id) == int(tickets_messages[i]):
 			if payload.emoji.name == "🔒":
@@ -1389,187 +1207,22 @@ async def on_raw_reaction_add(payload):
 			else:
 				print("NO Message")
 
-
-
 	# Withdraw the mined
 	with open('user_farms.json','r', encoding='utf-8') as f:
-		lfarms = json.load(f)
+		farms = json.load(f)
+		mlist = farms['bot']['out_messages_id']
 
-	for i in lfarms.items():
-		if member.name == i[0]:
-			farm_list = i[1]["farms"]
-			for i in farm_list.items():
-				message = i[1]["message_id"]
-				for b in message:
-					if message_id == b:
-						print(f'{member.name} out farm money.')
-						mined = int(i[1]["mined"])
-						with open('user_balance.json','r', encoding='utf-8') as f:
-							balance = json.load(f)
+	for i in range(len(mlist)):
+		if message_id == mlist[i]:
+			if payload.emoji.name == "📤":
+				with open('user_balance.json','r', encoding='utf-8') as f:
+					mined = json.load(f)
 
-						mined = i[1]["mined"]
-
-						log_channel = bot.get_channel(888053213750779934)
-						embed1 = discord.Embed(color=0x008000, title="ВЫВОД С ФЕРМЫ", description=f'**Участник {member} вывел {mined} со своей фермы.**')
-						await log_channel.send(embed=embed1)
-						await member.send(f'Вы вывели `{mined}`RUB с своей фермы.')
-
-						balance[str(member.name)]["RUB"] += mined
-						with open('user_balance.json','w') as f:
-							json.dump(balance,f)
-
-						i[1]["mined"] = 0
-						with open('user_farms.json','w') as f:
-							json.dump(lfarms,f)
-
-
-
-	# Buy
-	with open('user_sales.json','r', encoding='utf-8') as f:
-		sales = json.load(f)
-
-	for i in sales:
-		smember = sales[i]['name']
-		slist = sales[i]['sales']
-
-		for i in slist.items():
-			print(i)
-
-			if message_id == int(i[0]):
-				if payload.emoji.name == "✅":
-					vtype = i[1]["vtype"]
-					ntb = i[1]["ntb"]
-					rub = i[1]["rub"]
-					st = i[1]["stats"]
-
-					if vtype == "NTB":
-						with open('user_balance.json','r', encoding='utf-8') as f:
-							balance = json.load(f)
-
-						mntb = balance[str(smember)]["NTB"]
-						mrub = balance[str(smember)]["RUB"]
-						brub = balance[str(member.name)]["RUB"]
-
-						if mntb >= ntb:
-							if brub >= rub:
-								i[1]["stats"] = False
-
-								balance[str(smember)]["NTB"] -= ntb
-								balance[str(smember)]["RUB"] += rub
-
-								balance[str(member.name)]["NTB"] += ntb
-								balance[str(member.name)]["RUB"] -= rub
-
-								with open('user_balance.json','w') as f:
-									json.dump(balance,f)
-
-								i[1]["buy"].append(member.name)
-								with open('user_sales.json','w') as f:
-									json.dump(sales,f)
-
-								await member.send(f'Вы приобрели {ntb}NTB у {smember}.')
-								log_channel = bot.get_channel(898204390412943451)
-								embed1 = discord.Embed(color=0x008000, title="ПОКУПКА ВАЛЮТЫ", description=f'**{member} Купил {ntb}NTB у {smember}\n[ПРЕДЛОЖЕНИЕ](https://discord.com/channels/880008097370865706/896752866759409705/{int(i[0])})**')
-								await log_channel.send(embed=embed1)
-
-								channel = bot.get_channel(900380294161502229)
-								smessage = await channel.fetch_message(message_id)
-								await smessage.delete()
-
-
-							else:
-								await member.send('У вас недостаточно средств для покупки этого количества валюты.')
-
-						else:
-							channel = bot.get_channel(900380294161502229)
-							smessage = await channel.fetch_message(message_id)
-							await smessage.delete()
-
-							await member.send("У автора этого предложения недостаточно валюты для ее продажи.")
-
-							log_channel = bot.get_channel(898204390412943451)
-							embed1 = discord.Embed(color=0x008000, title="ЗАКРЫТИЕ ПРЕДЛОЖЕНИЯ", description=f'**У {smember} нет выставленных на продажу средств, предложение было закрыто.**')
-							await log_channel.send(embed=embed1)
-
-
-					elif vtype == "RUB":
-						with open('user_balance.json','r', encoding='utf-8') as f:
-							balance = json.load(f)
-
-						mntb = balance[str(smember)]["NTB"]
-						mrub = balance[str(smember)]["RUB"]
-						brub = balance[str(member.name)]["RUB"]
-
-						if mrub >= rub:
-							if brub >= rub:
-								i[1]["stats"] = False
-
-								balance[str(smember)]["NTB"] -= ntb
-								balance[str(smember)]["RUB"] += rub
-
-								balance[str(member.name)]["NTB"] += ntb
-								balance[str(member.name)]["RUB"] -= rub
-
-								with open('user_balance.json','w') as f:
-									json.dump(balance,f)
-
-								i[1]["buy"].append(member.name)
-								with open('user_sales.json','w') as f:
-									json.dump(sales,f)
-
-								await member.send(f'Вы продали 4NTB за 5RUB Валерий Крут')
-								log_channel = bot.get_channel(898204390412943451)
-								embed1 = discord.Embed(color=0x008000, title="ПОКУПКА ВАЛЮТЫ", description=f'**{member} Купил {rub}RUB у {smember}\n[ПРЕДЛОЖЕНИЕ](https://discord.com/channels/880008097370865706/896752866759409705/{int(i[0])})**')
-								await log_channel.send(embed=embed1)
-
-								channel1 = bot.get_channel(900380324880597032)
-								smessage = await channel1.fetch_message(message_id)
-								await smessage.delete()
-
-
-							else:
-								await member.send('У вас недостаточно средств для покупки этого количества валюты.')
-
-						else:
-							channel1 = bot.get_channel(900380324880597032)
-							smessage = await channel1.fetch_message(message_id)
-							await smessage.delete()
-
-							await member.send("У автора этого предложения недостаточно валюты для ее продажи.")
-
-							log_channel = bot.get_channel(898204390412943451)
-							embed1 = discord.Embed(color=0x008000, title="ЗАКРЫТИЕ ПРЕДЛОЖЕНИЯ", description=f'**У {smember} нет выставленных на продажу средств, предложение было закрыто.**')
-							await log_channel.send(embed=embed1)
-
-
-				elif payload.emoji.name == "❌":
-					if member.name == smember:
-						i[1]["stats"] = False
-						
-						try:
-							channel = bot.get_channel(900380294161502229)
-							smessage = await channel.fetch_message(int(i[0]))
-							await smessage.delete()
-
-							log_channel = bot.get_channel(888053213750779934)
-							embed1 = discord.Embed(color=0x008000, title="ЗАКРЫТИЕ ПРЕДЛОЖЕНИЯ", description=f'**{smember} удалил свое предложение.**')
-							await log_channel.send(embed=embed1)		
-
-							with open('user_sales.json','w') as f:
-								json.dump(sales,f)
-
-						except:
-							channel1 = bot.get_channel(900380324880597032)
-							smessage2 = await channel1.fetch_message(int(i[0]))
-							await smessage2.delete()
-
-							log_channel = bot.get_channel(888053213750779934)
-							embed1 = discord.Embed(color=0x008000, title="ЗАКРЫТИЕ ПРЕДЛОЖЕНИЯ", description=f'**{smember} удалил свое предложение.**')
-							await log_channel.send(embed=embed1)		
-
-							with open('user_sales.json','w') as f:
-								json.dump(sales,f)
-
+				mined[str(member.name)]['RUB'] += mined[str(member.name)]['mined']
+				mined[str(member.name)]['mined'] = 0
+				with open('user_balance.json','w') as f:
+					json.dump(mined,f)
+	
 
 # Welcome
 @bot.event
@@ -1598,6 +1251,7 @@ async def on_member_join(member):
 			balance[str(member.name)] = {}
 			balance[str(member.name)]['NTB'] = 0
 			balance[str(member.name)]['RUB'] = 0
+			balance[str(member.name)]['mined'] = 0
 
 			with open('user_balance.json','w') as f:
 				json.dump(balance,f)
@@ -1644,32 +1298,6 @@ async def on_member_join(member):
 		with open('user_bank.json','w') as f:
 			json.dump(bank,f)
 
-		# Sales
-		with open('user_sales.json','r', encoding='utf-8') as f:
-			sales = json.load(f)
-
-		if not member.name in sales:
-			sales[str(member.name)] = {}
-			sales[str(member.name)]['name'] = str(member.name)
-			sales[str(member.name)]['sales'] = {}
-
-			with open('user_sales.json','w') as f:
-				json.dump(sales,f)
-
-
-		# User Profile
-		with open('user_profile.json','r', encoding='utf-8') as f:
-			profile = json.load(f)
-
-		if not member.name in sales:
-			profile[str(member.name)] = {}
-			profile[str(member.name)]['time'] = 0
-			profile[str(member.name)]['stats'] = True
-
-			with open('profile.json','w') as f:
-				json.dump(profile,f)
-
-
 	else:
 		print("Another guild")
 
@@ -1711,18 +1339,9 @@ def Farm(member, name, life, amount: float, auto: bool):
 					json.dump(mined,f)
 
 			elif auto == False:
-				with open('user_farms.json','r', encoding='utf-8') as f:
-					lfarms = json.load(f)
-
-				for i in lfarms.items():
-					if member == i[0]:
-						farm_list = i[1]["farms"]
-						for i in farm_list.items():
-							if i[0] == name:
-								i[1]["mined"] += round(amount, 2)
-								with open('user_farms.json','w') as f:
-									json.dump(lfarms,f)
-
+				mined[str(member)]['mined'] += round(amount, 2)
+				with open('user_balance.json','w') as f:
+					json.dump(mined,f)
 
 			# Crash chance
 			chance = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
@@ -1799,7 +1418,9 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3024000, "out": 0.25, "auto": False, "message_id": message.id}
+		farms['bot']['out_messages_id'].append(message.id)
+
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3024000, "out": 0.25, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1818,8 +1439,9 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
+		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 2505600, "out": 0.5, "auto": False, "message_id": message.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 2505600, "out": 0.5, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1838,8 +1460,9 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
+		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 2505600, "out": 1.0, "auto": False, "message_id": message.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 2505600, "out": 1.0, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1858,8 +1481,9 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
+		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3024000, "out": 1.5, "auto": True, "message_id": message.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3024000, "out": 1.5, "auto": True, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1878,8 +1502,9 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
+		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 2851200, "out": 2.0, "auto": True, "message_id": message.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 2851200, "out": 2.0, "auto": True, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1898,8 +1523,9 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
+		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 1728000, "out": 0.3, "auto": False, "message_id": message.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 1728000, "out": 0.3, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1918,8 +1544,9 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
+		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 2592000, "out": 4.0, "auto": False, "message_id": message.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 2592000, "out": 4.0, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1938,8 +1565,9 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
+		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3283200, "out": 7.0, "auto": False, "message_id": message.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3283200, "out": 7.0, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1958,8 +1586,9 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
+		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3196800, "out": 14.0, "auto": True, "message_id": message.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3196800, "out": 14.0, "auto": True, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1978,8 +1607,9 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
+		farms['bot']['out_messages_id'].append(message.id)
 
-		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 3628800, "out": 25.0, "auto": True, "message_id": message.id}
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 3628800, "out": 25.0, "auto": True, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -1998,18 +1628,9 @@ async def CreateFarmChannel(member: discord.Member, farm: str):
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			farms = json.load(f)
 
-		if str(farm) in farms[str(member.name)]["farms"]:
-			print('IN')
+		farms['bot']['out_messages_id'].append(message.id)
 
-
-			farms[str(member.name)]["farms"][f'{str(farm)}']["out"] += 0.3
-			farms[str(member.name)]["farms"][f'{str(farm)}']["message_id"].append(message.id)
-
-		else:
-			print('NO')
-			farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "mined": 0, "life_time": 950400, "out": 0.3, "auto": False, "message_id": [message.id]}
-
-
+		farms[str(member.name)]["farms"][f'{str(farm)}'] = {"stats": True, "life_time": 950400, "out": 0.3, "auto": False, "channel_id": channel.id}
 		with open('user_farms.json','w') as f:
 			json.dump(farms,f)
 
@@ -2039,84 +1660,6 @@ def Deposit(member, amount, percent, ltime):
 	with open('user_bank.json','w') as f:
 		json.dump(bank,f)
 
-
-# Sending a random images
-async def RandomImages():
-	while True:
-		await asyncio.sleep(30)
-		timezone = datetime.timezone(datetime.timedelta(hours=3))
-
-		date = datetime.datetime.now(timezone)
-		if int(date.hour) == 21 and date.minute == 46:
-			channel = bot.get_channel(881634315514019881)
-			with open('bot_constants.json','r', encoding='utf-8') as f:
-				constants = json.load(f)
-
-			images = constants["images"]
-			image = images[2]
-			constants["act_image"] = image
-			print(f'Send image: {image}')
-
-			await channel.send(image)
-
-			with open('bot_constants.json','w') as f:
-				json.dump(constants,f)
-
-			await asyncio.sleep(30)
-
-		elif int(date.hour) == 21 and date.minute == 39:
-			channel = bot.get_channel(896752866759409705)
-			with open('bot_constants.json','r', encoding='utf-8') as f:
-				constants = json.load(f)
-
-			images = constants["images"]
-			image = images[1]
-			constants["act_image"] = image
-			print(f'Send image: {image}')
-
-			await channel.send(image)
-
-			with open('bot_constants.json','w') as f:
-				json.dump(constants,f)
-
-			await asyncio.sleep(30)
-
-		elif int(date.hour) == 21 and date.minute == 35:
-			channel = bot.get_channel(896752866759409705)
-			with open('bot_constants.json','r', encoding='utf-8') as f:
-				constants = json.load(f)
-
-			images = constants["images"]
-			image = images[0]
-			constants["act_image"] = image
-			print(f'Send image: {image}')
-
-			await channel.send(image)
-
-			with open('bot_constants.json','w') as f:
-				json.dump(constants,f)
-
-			await asyncio.sleep(30)
-
-		elif int(date.hour) == 3 and date.minute == 50:
-			channel = bot.get_channel(896752866759409705)
-			with open('bot_constants.json','r', encoding='utf-8') as f:
-				constants = json.load(f)
-
-			images = constants["images"]
-			image = images[3]
-			constants["act_image"] = image
-			print(f'Send image: {image}')
-
-			await channel.send(image)
-
-			with open('bot_constants.json','w') as f:
-				json.dump(constants,f)
-
-			await asyncio.sleep(30)
-
-
-
 # |------------------------------- /METHODS -------------------------------|
 
 
@@ -2127,15 +1670,6 @@ async def RandomImages():
 
 
 # |------------------------------ COMMANDS ------------------------------|
-@bot.command()
-async def act(ctx):
-	with open('bot_constants.json','r', encoding='utf-8') as f:
-		constants = json.load(f)
-
-	image = constants["act_image"]
-	await ctx.send(str(image))
-
-
 @bot.command()
 async def bank1(ctx, amount):
 	guild1 = bot.get_guild(880008097370865706)
@@ -2396,173 +1930,33 @@ async def promo(ctx, code):
 
 # Create promocodes
 @bot.command()
-async def addpromo(ctx, ctype, name, activations, mtype=None, money=None):
-	if ctx.message.author.id == 663424295854407692:
-		with open('promocodes.json','r', encoding='utf-8') as f:
-			codes = json.load(f)
+async def addpromo(ctx, type, name, activations=None, mtype=None, money=None, *, farm=None):
+	#if ctx.message.author.id == 663424295854407692:
+	with open('promocodes.json','r', encoding='utf-8') as f:
+		codes = json.load(f)
 
-		if ctype == "cash":	
-			if  mtype != None and money != None :
-				if mtype == "RUB" or mtype == "NTB":
-					codes[str(name)] = {"mtype": f'{mtype}', "money": int(money), "farm": "none", "activations": int(activations)}
-					await ctx.message.add_reaction('✅')
-
-				else:
-					await ctx.send(f'Валюты {mtype} не существует.')
-
-		elif ctype == "farm":
-			if mtype != None and money == None:
-				codes[str(name)] = {"mtype": "RUB", "money": 0, "farm": f'FARM {mtype}', "activations": int(activations)}
-				await ctx.message.add_reaction('✅')
+	if mtype != None and money != None and farm == None and activations != None:
+		if mtype == "RUB" or mtype == "NTB":
+			codes[str(name)] = {"mtype": f'{mtype}', "money": int(money), "farm": "none", "activations": int(activations)}
+			await ctx.message.add_reaction('✅')
 
 		else:
-			await ctx.send("Ошибка в синтаксисе команды.\nДля валюты: `!addpromo cash Название Активации Валюта Количество`\nДля фермы: `!addpromo farm Название Активации Ферма`")
+			await ctx.send(f'Валюты {mtype} не существует.')
 
-		with open('promocodes.json','w') as f:
-			json.dump(codes,f)
-
-	else:
-		print("addpromo: Not member")
-
-
-# Time control
-timelist = []
-def TimeControl(member):
-	print(f'TimeControl(): Start Thread for {member}')
-	stats = False
-	while not stats:
-		time.sleep(60)
-		with open('user_profile.json','r', encoding='utf-8') as f:
-			profile = json.load(f)
-
-		stats = profile[str(member)]["stats"]
-
-		profile[str(member)]["time"] += 1
-
-		with open('user_profile.json','w') as f:
-			json.dump(profile,f)
-
-
-@bot.command()
-#@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
-async def start(ctx):
-	with open('user_profile.json','r', encoding='utf-8') as f:
-		profile = json.load(f)
-		
-	profile[str(ctx.message.author.name)]["stats"] = False
-	with open('user_profile.json','w') as f:
-		json.dump(profile,f)	
-
-	newtimer = Thread(target=TimeControl, args=[str(ctx.message.author.name)])
-	newtimer.start()
-	await ctx.message.add_reaction('✅')
-
-	if len(timelist) == 0:
-		log = bot.get_channel(907906146633936899)
-		embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\n-[{ctx.message.author.name}]')
-		message = await log.send(embed = embed)
-		timelist.append(message.id)
-		timelist.append(ctx.message.author.name)
-
-	elif len(timelist) > 0:
-		timelist.append(ctx.message.author.name)
-		log = bot.get_channel(907906146633936899)
-		m_id = timelist[0]
-		m = await log.fetch_message(m_id)
-
-		embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\n-{timelist}')
-		await m.edit(embed = embed)
-		
-
-@bot.command()
-@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
-async def stime(ctx, member = None):
-	if member != None:
-		if ctx.message.author.id == 663424295854407692:
-			with open('user_profile.json','r', encoding='utf-8') as f:
-				profile = json.load(f)
-
-			minutes = profile[str(member)]["time"]
-			hours = round(minutes / 60)
-			nminutes = round(minutes - hours * 60)
-
-			
-			if hours < 1 or hours == 0:
-				await ctx.send(f'{member} Отработал:\nЧасы: `0`\nМинуты: `{minutes}`')
-
-			elif hours >= 1:
-				await ctx.send(f'{member} Отработал:\nЧасы: `{hours}`\nМинуты: `{nminutes}`')
-
-		else:
-			await ctx.send('Ошибка в синтаксисе команды.')
-
-	else:
-		with open('user_profile.json','r', encoding='utf-8') as f:
-			profile = json.load(f)
-
-		minutes = profile[str(ctx.message.author.name)]["time"]
-		hours = round(minutes / 60)
-		nminutes = round(minutes - hours * 60)
-
-		
-		if hours < 1 or hours == 0:
-			await ctx.send(f'{ctx.message.author.mention} Отработал:\nЧасы: `0`\nМинуты: `{minutes}`')
-
-		elif hours >= 1:
-			await ctx.send(f'{ctx.message.author.mention} Отработал:\nЧасы: `{hours}`\nМинуты: `{nminutes}`')
-
-
-@bot.command()
-#@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
-async def stop(ctx):
-	with open('user_profile.json','r', encoding='utf-8') as f:
-		profile = json.load(f)
-
-	profile[str(ctx.message.author.name)]["stats"] = True
-	with open('user_profile.json','w') as f:
-		json.dump(profile,f)
-
-	await ctx.message.add_reaction('✅')
-
-	log = bot.get_channel(907906146633936899)
-	m_id = timelist[0]
-	m = await log.fetch_message(m_id)
-
-	timelist.remove(ctx.message.author.name)
-
-	embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\n-{timelist}\n\nЗакончил смену {ctx.message.author.name}')
-	await m.edit(embed = embed)
-
-
-@bot.command()
-@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
-async def clean(ctx, member: discord.Member):
-	if ctx.member.id == 663424295854407692:
-		guild = bot.get_guild(880008097370865706)
-		with open('user_profile.json','r', encoding='utf-8') as f:
-			profile = json.load(f)
-
-		profile[str(member.name)]["time"] = 0
-		with open('user_profile.json','w') as f:
-			json.dump(profile,f)
-
+	elif mtype == None and money == None and farm != None and activations != None:
+		codes[str(name)] = {"mtype": "RUB", "money": 0, "farm": f'{farm}', "activations": activations}
 		await ctx.message.add_reaction('✅')
 
 	else:
-		print("clean(): not member using.")
+		await ctx.send("Ошибка в синтаксисе команды.")
 
-
-@bot.command()
-#@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
-async def admins(ctx):
-	await ctx.send(f'Сотрудники на смене: {timelist}')
-
-
+	with open('promocodes.json','w') as f:
+		json.dump(codes,f)
 
 # ------------------------ Moderation ------------------------|
 # Ban
 @bot.command()
-@commands.has_any_role(881603894449406022, 880357242346553374, 895761325236564008, 881141342959439882, 881141987108085770)
+@commands.has_any_role(881141342959439882,  881603894449406022, 880357242346553374)
 async def ban(ctx, member: discord.Member, time: int, *, about: str):
 	await ctx.message.add_reaction('✅')
 	getrole = discord.utils.get(ctx.guild.roles, id = 888483227080224779)
@@ -2570,7 +1964,7 @@ async def ban(ctx, member: discord.Member, time: int, *, about: str):
 	embed = discord.Embed(color = 0xff0000, description = f'Вам ограничили доступ к серверу NEXT InvesT по причине: {about} на {time} минут.')
 	await member.send(embed = embed)
 
-	log = bot.get_channel(897546962495225949)
+	log = bot.get_channel(888053213750779934)
 	embed1 = discord.Embed(color=0x388E3C, title="БАН", description=f'**`{member}` Был забанен `{ctx.message.author}` на `{time} минут` по причине\n\n```diff\n- {about}\n```**')
 	await log.send(embed=embed1)
 
@@ -2579,19 +1973,19 @@ async def ban(ctx, member: discord.Member, time: int, *, about: str):
 
 # Unban
 @bot.command()
-@commands.has_any_role(881141987108085770, 881141342959439882, 895761325236564008, 881603894449406022)
+@commands.has_any_role(881141342959439882, 881141987108085770)
 async def unban(ctx, member: discord.Member):
 	await ctx.message.add_reaction('✅')
 	getrole = discord.utils.get(ctx.guild.roles, id = 888483227080224779)
 	await member.remove_roles(getrole)
 
-	log = bot.get_channel(897546962495225949)
+	log = bot.get_channel(888053213750779934)
 	embed1 = discord.Embed(color=0x388E3C, title="РАЗБАН", description=f'**`{member.name}` Был разбанен `{ctx.message.author}`**')
 	await log.send(embed=embed1)
 
 # Mute
 @bot.command()
-@commands.has_any_role(881141342959439882, 881141987108085770, 880357827699433513, 880357242346553374, 881603894449406022, 895761325236564008)
+@commands.has_any_role(881141342959439882, 881141987108085770)
 async def mute(ctx, member: discord.Member, time: int, *, about: str):
 	await ctx.message.add_reaction('✅')
 	getrole = discord.utils.get(ctx.guild.roles, id = 888461992824799283)
@@ -2599,7 +1993,7 @@ async def mute(ctx, member: discord.Member, time: int, *, about: str):
 	embed = discord.Embed(color = 0xff0000, description = f'Вам ограничили письменный доступ к серверу NEXT InvesT по причине: {about} на {time} минут.')
 	await member.send(embed = embed)
 
-	log = bot.get_channel(897546962495225949)
+	log = bot.get_channel(888053213750779934)
 	embed1 = discord.Embed(color=0x388E3C, title="МЬЮТ", description=f'**`{member.name}` Был замьючен `{ctx.message.author}` на `{time} минут` по причине\n\n```diff\n- {about}\n```**')
 	await log.send(embed=embed1)
 
@@ -2608,13 +2002,13 @@ async def mute(ctx, member: discord.Member, time: int, *, about: str):
 
 # Unmute
 @bot.command()
-@commands.has_any_role(881141342959439882, 881141987108085770, 880357242346553374, 895761325236564008, 881603894449406022)
+@commands.has_any_role(881141342959439882, 881141987108085770)
 async def unmute(ctx, member: discord.Member):
 	await ctx.message.add_reaction('✅')
 	getrole = discord.utils.get(ctx.guild.roles, id = 888461992824799283)
 	await member.remove_roles(getrole)
 
-	log = bot.get_channel(897546962495225949)
+	log = bot.get_channel(888053213750779934)
 	embed1 = discord.Embed(color=0x388E3C, title="РАЗМЬЮТ", description=f'**`{member.name}` Был размьючен `{ctx.message.author}`**')
 	await log.send(embed=embed1)
 
@@ -2673,17 +2067,14 @@ async def ubal(ctx, member: discord.Member, ctype, op: str, amount: int):
 
 @bot.command()
 async def bal(ctx, member: discord.Member):
-	if ctx.message.author.id == 663424295854407692:
-		with open('user_balance.json','r', encoding='utf-8') as f:
-			balance = json.load(f)
+	with open('user_balance.json','r', encoding='utf-8') as f:
+		balance = json.load(f)
 
-		rub = balance[str(member.name)]['RUB']
-		ntb = balance[str(member.name)]['NTB']
+	rub = balance[str(member.name)]['RUB']
+	ntb = balance[str(member.name)]['NTB']
 
-		await ctx.send(f'**{member}**: {rub}RUB **|** {ntb}NTB')
+	await ctx.send(f'**{member}**: {rub}RUB **|** {ntb}NTB')
 
-	else:
-		print('bal(): Not member')
 
 # Super money boxes
 @bot.command()
@@ -3118,6 +2509,36 @@ async def box(ctx, box: int, amount: int):
 					percent = super_boxes["box4"]["percent"]
 					stats = super_boxes["box4"]["stats"]
 					ones = super_boxes["box4"]["ones"]
+					'''
+					if stats == True:
+						# if box4 filled
+						box3t = super_boxes["box3"]["target"]
+						box3i = super_boxes["box3"]["invested"]
+						if box3i >= box3t:
+
+							# logs
+							logs = guild.get_channel(892584515162210324)
+							embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №3 И ВЫВОД №2", description=f'Список вложившихся в супер копилку №2 участников:\n```\n{members}\n```')
+							await logs.send(embed=embed)
+
+							for i in members.items():
+								user = i[0]
+								user_amount = i[1]
+								percent1 = user_amount / 100 * percent
+								money = user_amount + percent1
+								print(money)
+
+								#super_boxes["box2"]["members"][f'{str(ctx.message.author.name)}'] = 0
+								#super_boxes["box2"]["stats"] = False
+								#with open('super_boxes.json','w') as f:
+								#	json.dump(super_boxes,f)
+
+								with open('user_balance.json','r', encoding='utf-8') as f:
+									user_balance = json.load(f)
+								user_balance[str(user)]['RUB'] += money
+								with open('user_balance.json','w') as f:
+									json.dump(user_balance,f)
+						'''
 					super_boxes["box4"]["invested"] += amount
 
 					print(members)
@@ -3179,6 +2600,33 @@ async def box(ctx, box: int, amount: int):
 					embed = discord.Embed(color=0x00a550, title="ВКЛАД В СУПЕР КОПИЛКУ", description=f'Участник {ctx.message.author} положил {amount} в копилку №4\n\nДля заполнения копилки осталось вложить `{target - invested}`')
 					await logs.send(embed=embed)
 
+					'''
+					# if box2 filled
+					if invested >= target:
+						members1 = super_boxes["box1"]["members"]
+						# logs
+						logs = guild.get_channel(892584515162210324)
+						embed = discord.Embed(color=0x00a550, title="ЗАПОЛНЕНИЕ СУПЕР КОПИЛКИ №2 И ВЫВОД №1", description=f'Список вложившихся в супер копилку №1 участников:\n```\n{members}\n```')
+						await logs.send(embed=embed)
+
+						for i in members1.items():
+							user = i[0]
+							user_amount = i[1]
+							percent1 = user_amount / 100 * percent
+							money = user_amount + percent1
+							print(money)
+
+							#super_boxes["box1"]["members"][f'{str(ctx.message.author.name)}'] = 0
+							#super_boxes["box1"]["stats"] = False
+							#with open('super_boxes.json','w') as f:
+							#	json.dump(super_boxes,f)
+
+							with open('user_balance.json','r', encoding='utf-8') as f:
+								user_balance = json.load(f)
+							user_balance[str(user)]['RUB'] += money
+							with open('user_balance.json','w') as f:
+								json.dump(user_balance,f)
+					'''
 
 				else:
 					await ctx.message.author.send("У вас недостаточно средств.")
@@ -3192,126 +2640,6 @@ async def box(ctx, box: int, amount: int):
 			await ctx.message.author.send(f'Копилка с номером {box} не найдена.')
 
 
-
-@bot.command()
-async def sell(ctx, ntb=None, rub=None):
-	guild = bot.get_guild(880008097370865706)
-
-	# Sell NTB
-	if ntb != None and rub != None:
-		if ctx.channel.id == 900380214029324288:
-			with open('user_balance.json','r', encoding='utf-8') as f:
-				user_balance = json.load(f)
-
-			ntb_bal = user_balance[str(ctx.message.author.name)]['NTB']
-			rub_bal = user_balance[str(ctx.message.author.name)]['RUB']
-
-			if ntb_bal >= int(ntb):
-				await ctx.channel.purge(limit=1)
-				channel = bot.get_channel(900380294161502229)
-				embed = discord.Embed(color=0x008000, title=f'Купить валюту')
-				embed.add_field(name = '**Предмет:**', value = f'{ntb}NTB', inline = True)
-				embed.add_field(name = '**Цена:**', value = f'{rub}RUB', inline = True)
-				message = await channel.send(embed=embed)
-				await message.add_reaction('✅')
-				await message.add_reaction('❌')
-
-				with open('user_sales.json','r', encoding='utf-8') as f:
-					sales = json.load(f)
-
-				sales[str(ctx.message.author.name)]["sales"][message.id] = {"stats": True, "vtype": "NTB", "ntb": int(ntb), "rub": int(rub), "buy": []}
-				with open('user_sales.json','w') as f:
-					json.dump(sales,f)
-
-				# logs
-				logs = guild.get_channel(898204390412943451)
-				embed = discord.Embed(color=0x00a550, title="ВЫСТАВКА НА БИРЖЕ", description=f'Участник {ctx.message.author} выставил {ntb}NTB за {rub}RUB.')
-				await logs.send(embed=embed)
-
-			else:
-				await ctx.channel.purge(limit=1)
-				await ctx.message.author.send('У вас недостаточно NTB для продажи.')
-
-		else:
-			await ctx.channel.purge(limit=1)
-
-	else:
-		await ctx.channel.purge(limit=1)
-		await member.send("Ошибка в аргументах команды.")
-
-
-
-@bot.command()
-async def buy(ctx, ntb=None, rub=None):
-	guild = bot.get_guild(880008097370865706)
-
-	# Sell RUB
-	if ntb != None and rub != None:
-		if ctx.channel.id == 900380214029324288:
-			with open('user_balance.json','r', encoding='utf-8') as f:
-				user_balance = json.load(f)
-
-			ntb_bal = user_balance[str(ctx.message.author.name)]['NTB']
-			rub_bal = user_balance[str(ctx.message.author.name)]['RUB']
-
-			if rub_bal >= int(rub):
-				await ctx.channel.purge(limit=1)
-				channel = bot.get_channel(900380324880597032)
-				embed = discord.Embed(color=0xff0000, title=f'Продать валюту')
-				embed.add_field(name = '**Предмет:**', value = f'{ntb}NTB', inline = True)
-				embed.add_field(name = '**Цена:**', value = f'{rub}RUB', inline = True)
-				message = await channel.send(embed=embed)
-				await message.add_reaction('✅')
-				await message.add_reaction('❌')
-
-				await ctx.message.author.send(f'Ваше предложение находится [здесь](https://discord.com/channels/880008097370865706/900380324880597032{message.id})\nДля его удаления нажмите ❌ под сообщением.')
-
-				with open('user_sales.json','r', encoding='utf-8') as f:
-					sales = json.load(f)
-
-				sales[str(ctx.message.author.name)]["sales"][message.id] = {"stats": True, "vtype": "RUB", "ntb": int(ntb), "rub": int(rub), "buy": []}
-				with open('user_sales.json','w') as f:
-					json.dump(sales,f)
-
-				# logs
-				logs = guild.get_channel(898204390412943451)
-				embed = discord.Embed(color=0x00a550, title="ВЫСТАВКА НА БИРЖЕ", description=f'Участник {ctx.message.author} выставил {rub}RUB за {ntb}NTB.')
-				await logs.send(embed=embed)
-
-
-			else:
-				await ctx.channel.purge(limit=1)
-				await ctx.message.author.send('У вас недостаточно RUB для продажи.')
-
-		else:
-			await ctx.channel.purge(limit=1)
-
-	else:
-		await ctx.channel.purge(limit=1)
-		await member.send("Ошибка в аргументах команды.")
-
-
-@bot.command()
-async def message(ctx, member: discord.Member, before, title, footer, *, description):
-	guild = bot.get_guild(880008097370865706)
-	if ctx.message.author.id == 663424295854407692:
-		if before != "None" or before != "none" or before != "0":
-			embed = discord.Embed(color = 0x008000, title=title, description=description)
-			embed.set_footer(text=f'{footer}')
-			await member.send(before)
-			await member.send(embed = embed)
-			await ctx.message.add_reaction('✅')
-
-		elif before == "None" or before == "none" or before == "0":
-			embed = discord.Embed(color = 0x008000, title=title, description=description)
-			embed.set_footer(text=f'{footer}')
-			await member.send(embed = embed)
-			await ctx.message.add_reaction('✅')
-
-	else:
-		print('message(): Not member')
-
-
 @bot.command()
 async def db(ctx):
 	guild = bot.get_guild(880008097370865706)
@@ -3322,40 +2650,17 @@ async def db(ctx):
 		with open('user_balance.json','r', encoding='utf-8') as f:
 			user_balance = json.load(f)
 
-		print("user_balance.json Done")
-
 		with open('user_farms.json','r', encoding='utf-8') as f:
 			user_farms = json.load(f)
-
-		print("user_farms.json Done")
 
 		with open('referal.json','r', encoding='utf-8') as f:
 			ref = json.load(f)
 
-		print("referal.json Done")
-
 		with open('user_bank.json','r', encoding='utf-8') as f:
 			bank = json.load(f)
 
-		print("user_bank.json Done")
-
-		with open('user_sales.json','r', encoding='utf-8') as f:
-			sales = json.load(f)
-
-		print("user_sales.json Done")
-
-		with open('bot_constants.json','r', encoding='utf-8') as f:
-			constants = json.load(f)
-
-		print("bot_constants.json Done")
-
-		with open('user_profile.json','r', encoding='utf-8') as f:
-			profile = json.load(f)
-
-		print("user_profile.json Done")
-
 		with open('db.txt','w+', encoding='utf-8') as f:
-			f.write(f'user_balance.json:\n{user_balance}\n\n\nuser_farms.json:\n{user_farms}\n\n\nreferal.json:\n{ref}\n\n\nuser_bank.json:\n{bank}\n\n\nuser_sales.json:\n{sales}\n\n\nbot_constants.json:\n{constants}\n\n\nuser_profile.json:\n{profile}')
+			f.write(f'user_balance.json:\n{user_balance}\n\n\nuser_farms.json:\n{user_farms}\n\n\nreferal.json:\n{ref}\n\n\nuser_bank.json:\n{bank}')
 
 		member = guild.get_member(677453905227022349)
 		await ctx.send(file=discord.File(r'db.txt'))
@@ -3368,14 +2673,7 @@ async def upd(ctx):
 	if ctx.message.author.id == 677453905227022349:
 
 		guild = bot.get_guild(880008097370865706)
-
 		'''
-		agr = bot.get_channel(880023332639096853)
-		m = await agr.fetch_message(881913060305031189)
-		embed = discord.Embed(color=0x3C55FA, title="**ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ**", description=f'**ИСПОЛЬЗОВАНИЕ, НАХОЖДЕНИЕ И ЛЮБОЕ ВЗАИМОДЕЙСТВИЕ НА НАШЕМ СЕРВЕРЕ DISCORD "💨NEXT Invest💨", ПОДРАЗУМЕВАЕТ ПОЛНОЕ СОГЛАСИЕ С НИЖЕПЕРЕЧИСЛЕННЫМИ ПОЛОЖЕНИЯМИ И УСЛОВИЯМИ ПОЛЬЗОВАТЕЛЬСКОГО СОГЛАШЕНИЯ**\n\nВсе внутренние расчеты производятся исключительно с пересчетом на виртуальную внутрисерверную валюту.\n\n**ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ**\nВзаимодействие участников с сервером Discord "{guild.name}" основываются на публичном соглашении. Действие соглашения становится активным в момент его размещения\n\n**Предмет соглашения**\n\nСоглашением регламентировано взаимодействие пользователей с сервером Discord "{guild.name}" в следующих направлениях:\n• Порядок использования сервера\n• Осуществление денежных транзакций в виде конвертирования на реальную и внутрисерверную валюту\n• Порядок осуществления внутрисерверных покупок\n• Взаимодействие с приобретенными услугами на внутрисерверную валюту\n• Проведение ивентов и бонусных программ')
-		await m.edit(embed = embed)
-
-		
 		farms = bot.get_channel(880025073963122718)
 		m = await farms.fetch_message(886528458887401473)
 		embedf = discord.Embed(color=0x3C55FA, title="FARM ЗАТЫЧКА", description=f'На слабой видеокарте\n\n**Для покупки за RUB нажмите :euro:**\n')
@@ -3596,7 +2894,7 @@ async def upd(ctx):
 		channel = bot.get_channel(888500024214966282)
 		#embed = discord.Embed(color=0x2E62FF, title="**Супер копилка**", description=f'**Супер копилка** - это место, где можно заработать огромные проценты за короткое время.\nСуть данного раздела заключается в том, что каждый игрок может внести свой вклад в общее дело и получить +10% чистого профита после полного заполнения следующей копилки.\n\nТ.е. если коротко, вложил 100 рублей в  копилку №1, после заполнения копилки №2 Вы получите 110 руб. на вывод.')
 		#await channel.send(embed = embed)
-		
+		'''
 		
 		channel = bot.get_channel(888500024214966282)
 		m1 = await channel.fetch_message(893397579663044629)
@@ -3614,17 +2912,417 @@ async def upd(ctx):
 		m4 = await channel.fetch_message(894214947473588255)
 		box4 = discord.Embed(color=0x2E62FF, title="Супер копилка №4", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛')
 		await m4.edit(embed = box4)
-		'''
-		channel = bot.get_channel(888053213750779934)
-		embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\nNone')
-		message = await channel.send(embed = embed)
 
+		
 
 	else:
 		print("Not man")
 
-
-# Random images sending
-bot.loop.create_task(RandomImages())
-
 bot.run('ODc5NjkzNDk5ODQ1NDU1ODcy.YSTcag.KiNpzAVZ_isc-HIdeeLw6FbJZgM')
+
+	'''
+	guild = bot.get_guild(880008097370865706)
+	navigation = bot.get_channel(880023035262959636)
+	embed = discord.Embed(color=0x3C55FA, title=f'▰▰▰▰ ДОБРО ПОЖАЛОВАТЬ В {guild.name} ▰▰▰▰', description=f'НАШ СЕРВЕР ПОЗВОЛЯЕТ НЕ ТОЛЬКО ПРИЯТНО ПРОВЕСТИ ВРЕМЯ, НО И ПРИ ЭТОМ ЗАРАБОТАТЬ __РЕАЛЬНЫЕ ДЕНЬГИ__\n\n[:arrow_forward: ОЗНАКОМИТЬСЯ С СИСТЕМОЙ ЗАРАБОТКА](https://discord.com/channels/880008097370865706/880024762942889994/881782363191910440)\n[:arrow_forward: НАЖМИТЕ ЕСЛИ ОСТАЛИСЬ ВОПРОСЫ](https://discord.com/channels/880008097370865706/880023125062995969/880023125062995969)\n\n**ДЛЯ УДОБНОГО ПЕРЕМЕЩЕНИЯ МЕЖДУ КАНАЛАМИ СЕРВЕРА, ИСПОЛЬЗУЙТЕ НАВИГАЦИОННЫЕ КНОПКИ:**\n\n```ИНФОРМАЦИОННЫЕ КАНАЛЫ         ```\n\n<#880008098000035872> — ВАШИ ОТЗЫВЫ\n<#880023035262959636> — НАВИГАЦИОННЫЙ КАНАЛ\n<#880023125062995969> — ОТВЕТЫ НА ЧАСТЫЕ ВОПРОСЫ\n<#880023332639096853> — ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ\n<#880023390847635476> — СПИСОК ПРАВИЛ\n<#880023473106337854> — РОЗЫГРЫШИ\n<#880023539758034945> — ПУБЛИКАЦИЯ ОБНОВЛЕНИЙ\n<#880023539758034945> — ПУБЛИКАЦИИ, ОБЪЯВЛЕНИЯ И НОВОСТИ\n\n```КАНАЛЫ ПО МАЙНИНГУ```\n\n<#880024690821853184> — СПИСОК КОМАНД СЕРВЕРА\n<#880024762942889994> — ИНФОРМАЦИЯ О СИСТЕМЕ ЗАРАБОТКА\n<#880024820018999386> — ИНФОРМАЦИЯ О ИВЕНТАХ\n<#880024901744996352> — СУЩЕСТВУЮЩИЕ ДОСТИЖЕНИЯ\n\n```МАГАЗИНЫ```\n\n<#880025073963122718> — МАГАЗИН ФЕРМ\n<#880025182343946260> — МАГАЗИН УЛУЧШЕНИЙ\n#╠🧰кейсы — МАГАЗИН КЕЙСОВ\n#╚🎲игры — МАГАЗИН КЛЮЧЕЙ ИГР\n\n```НЕДВИЖИМОСТЬ```\n\n#╔🌐помощь — ИНФОРМАЦИЯ О СИСТЕМЕ\n<#880026196711178250> — СУЩЕСТВУЮЩИЕ ПОСЕЛЕНИЯ\n<#880026304194441256> — АУКЦИОН УЧАСТКОВ\n<#880026435853647973> — ТОРГОВЫЙ КАНАЛ\n\n```NPC```\n\n#🔧механик — МЕХАНИК\n#📟рынок — РЫНОК ДЕТАЛЕЙ ДЛЯ ФЕРМ\n\n```КАНАЛЫ ДЛЯ ОБЩЕНИЯ```\n\n<#880027455769944074> — КАНАЛ ПРИВЕТСТВИЯ\n<#880027613261864970> — ОСНОВНОЕ ОБЩЕНИЕ\n<#880027728466837574> — ЗАРАБАТЫВАЙТЕ НА S.UP/BUMP\n#├🦀помощь — ЗАДАЙТЕ ВОПРОС\n#├📨предложения — ВАШИ ПРЕДЛОЖЕНИЯ\n#└🤺поединки — ПОЕДИНКИ НА ВАЛЮТУ\n\n#▶💬общение  — НЕМОДЕРИРУЕМЫЙ ЧАТ 18+\n<#880355140098482208>  — ИГРОВОЙ ЧАТ\n\n```ТВОРЧЕСТВО```\n\n<#880349406933692416> ПУБЛИКУЙТЕ МЕМЫ\n#├🎭творчество ПУБЛИКУЙТЕ СВОЁ ТВОРЧЕСТВО\n#├🍏еда ОТПРАВЬТЕ ФОТО ЕДЫ\n#└📷медиа РАНДОМНЫЕ МЕДИА ФАЙЛЫ\n\n```ЗАКАЗАТЬ МУЗЫКУ```\n\n<#880352375288774667> — КОМАНДА ДЛЯ ЗАКАЗА\n<#880352647549435955> — МУЗЫКАЛЬНЫЙ ЧАТ\n\n```ПРОЧИЕ КАНАЛЫ```\n\n<#881234226714910760> — ОТКРЫТЫЕ ВАКАНСИИ\n<#📝заявки> — ОСТАВЬТЕ ЗАЯВКУ НА ДОЛЖНОСТЬ')
+	await navigation.send(embed = embed)
+	'''
+	
+	'''
+	instr = bot.get_channel(880023125062995969)
+	embed = discord.Embed(color=0x3C55FA, title="ОТВЕТЫ НА ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ", description=f'**▽ СО СКОЛЬКИ ЛЕТ МОЖНО БЫТЬ НА СЕРВЕРЕ?**\nРегистрировать и использовать аккаунт Discord можно с 13 лет. На нашем сервере, так же можно сидеть с этого возраста, но мы предупреждаем пользователей, что они сами несут ответственность за свои действия и рекомендуем вступать и находиться на сервере лицам старше 16 лет.\n\n**▽ КАК НАЧАТЬ ЗАРАБАТЫВАТЬ?**\n[:arrow_forward: УЗНАТЬ СПОСОБЫ ЗАРАБОТКА](https://discord.com/channels/880008097370865706/880024762942889994/881782363191910440)\n\n**▽ КАК МНЕ ПОПОЛНИТЬ БАЛАНС?**\n[:arrow_forward: ПЕРЕЙТИ В КОМАНДЫ](https://discord.com/channels/880008097370865706/880024690821853184/881778667997528105) и нажмать эмодзи :ballot_box_with_check:, под командой "ОПЕРАЦИИ С БАЛАНСОМ". Бот отправит вам в личные сообщения ваш личный счет. Далее нажмите реакцию :outbox_tray: - Вывести , далее следуйте инструкции, заполняя данные для заявки на вывод средств.\n\n**▽ КАКОЙ КУРС ВАЛЮТ?**\n[:arrow_forward: УЗНАТЬ АКТУАЛЬНЫЙ КУРС ВАЛЮТ](https://discord.com/channels/880008097370865706/880024762942889994/881782364538294303)\n\n**▽ МОЖНО ЛИ ВЫВОДИТЬ WATT?**\nЭту валюту вы можете использовать для покупки бонусов, открытия кейсов, участия в поединках, покупке ферм и т.п. в наших магазинах. Покупая ферму, она будет вам добывать валюту Volt, которую вы сможете вывести в реальные деньги, используя свой личный счет\n\n**▽ МОЖНО ЛИ КОНВЕРТИРОВАТЬ W В V?**\nНа сервере не будет конвертации W в V. Только V в W\n\n**▽ КАКИЕ ЕСТЬ РОЛИ?**\n\n\n**▽ НА ЧЕМ ЗАРАБАТЫВАЕТ СЕРВЕР?**\n[:arrow_forward: КУПИТЬ МАЙНИНГ ФЕРМУ](https://discord.com/channels/880008097370865706/880025073963122718/881544012723519579)\nКаждая купленная вами майнинг ферма, имеет свою сложность в обслуживании. В процессе работы фермы, могут возникать разные рандомизированные события, включая перегрев, поломку и даже полное сгорание фермы. Вы можете преумножить свои финансы. купив ферму, а если вам не удалось выйти в плюс с фермы, эти деньги уйдут на:\n• Выплаты тем кто выходит в плюс с купленных ферм\n• Выплаты пользователям, зарабатывающие валюту в голосовых каналах\n• Проведение розыгрышей, раздач, ивентов и  прочих мероприятий\n• Вклад в развитие сервера и ускорение выхода обновлений\n• Заработные платы персоналу сервера\n• Покрытие затрат на рекламу сервера\n• Оплата технических расходов, для поддержания работы нашего ПО\n\nТак же мы дополнительно зарабатываем с неудач пользователей, при открытии кейсов, продаж игр в магазине и с помощью перепродажи пользователями недвижимости\n\n**▽ КАК УЧАСТВОВАТЬ В РОЗЫГРЫШАХ?**\nСледите за каналом #╠🆓розыгрыши, там публикуются все актуальные розыгрыши.')
+	embed1 = discord.Embed(color=0x3C55FA, title="ОТВЕТЫ НА ВОПРОСЫ ПРО ФЕРМЫ", description=f'**▽ КАК МНЕ КУПИТЬ ФЕРМУ?**\n[:arrow_forward: ПЕРЕЙТИ В МАГАЗИН ФЕРМ](https://discord.com/channels/880008097370865706/880025073963122718/881544012723519579)\nи  нажать на реакцию :euro:, под фермой, которую вы хотите приобрести. Если на вашем счете достаточно средств, создаётся личный текстовый канал, с вашим ником, тегом фермы и персональным номером в категории "Фермы", в самом низу списка каналов. Далее вам необходимо подтвердить покупку, нажав на соответствующую реакцию, в созданном канале.\n\n**▽ КАК РАБОТАЕТ ФЕРМА?**\nЕсли ваша ферма запущена, она будет добывать вам валюту сервера, исходя из своих характеристик. В дальнейшем вы можете обменять валюту на реальные деньги. через личный счет\n\n**▽ МОЯ ФЕРМА ОСТАНОВИЛА РАБОТУ. ЧТО ДЕЛАТЬ?**\nЕсли ваша ферма перегрелась. перейдите на канал вашей фермы и нажмите кнопку :arrow_forward:Запустить\n\n**▽ ЧТО БУДЕТ ЕСЛИ ФЕРМУ НЕ ЗАПУСТИТЬ?**\nВаша ферма не будет добывать валюту, а срок работы фермы будет истекать. Чтобы этого не допустить. всегда следите за тем, чтобы статус вашей фермы был :green_circle:. В случае если произошло какое то событие с вашей фермой, наш бот дополнительно уведомляет об этом в личные сообщения.\n\n**▽ МНЕ НЕ ЗАЧИСЛЯЕТСЯ БАЛАНС VOLT, С ФЕРМЫ**\nВаш баланс Volt хранится на канале ферме, чтобы вывести баланс, необходимо нажимать кнопку :arrow_heading_down:** - Вывести**\n\n**▽ КАНАЛ МОЕЙ ФЕРМЫ ПРОПАЛ**\nВероятней всего, срок работы вашей фермы истёк. В случае если срок работы фермы закончился, канал с фермой удаляется.\n\n**▽ БУДЕТ ЛИ РАБОТАТЬ ФЕРМА ЕСЛИ Я НЕ В СЕТИ?**\nДа, фермы работают независимо от вашего статуса сети, они находятся на нашем хостинге.')
+	embed2 = discord.Embed(color=0x3C55FA, title="ОТВЕТЫ НА ВОПРОСЫ ПРО РЕФЕРАЛЬНУЮ СИСТЕМУ", description=f'**▽ КАК ЭТО РАБОТАЕТ?**\n[:arrow_forward: ОЗНАКОМИТЬСЯ С РЕФЕРАЛЬНОЙ СИСТЕМОЙ](https://discord.com/channels/880008097370865706/880024762942889994/881782366526386206)\nПользователи которые ввели ваш реферальный код, закрепляются за вами и вы получаете Watt за ввод вашего кода и доход от их пополнений купонами Volt.\n\n*▽ ГДЕ ВЗЯТЬ РЕФЕРАЛЬНЫЙ КОД?**\n[▽ ГДЕ ВЗЯТЬ РЕФЕРАЛЬНЫЙ КОД?](https://discord.com/channels/880008097370865706/880024690821853184/881778673496231966)\n\n**▽ СКОЛЬКО РЕФЕРАЛЬНЫХ КОДОВ МОЖНО ВВЕСТИ?**\nРеферальный код можно ввести только один раз и закрепиться за пользователям навсегда\n\n**▽ СКОЛЬКО РЕФЕРАЛОВ МОЖНО ЗАКРЕПИТЬ ЗА СОБОЙ?**\nКоличество приглашенных и закрепленных за вами рефералов не ограничено\n\n**▽ СУММИРУЮТСЯ ЛИ VOLT ОТ ПОПОЛНЕНИЙ РЕФЕРАЛОВ?**\nЕсли за вами закреплено несколько рефералов, вы будете получать доход от каждых пополнений каждого реферала\n\n**▽ МОЖНО ЛИ ВЫВОДИТЬ ДОХОД ОТ РЕФЕРАЛОВ, НЕ ПОКУПАЯ ФЕРМ?**\nДа. Любой доход полученный не активацией кодами пополнения, зачисляется на ваш счет и может быть выведен в реальные деньги\n\n**▽ МОЖНО ЛИ ОБМЕНИВАТЬСЯ РЕФЕРАЛЬНЫМИ КОДАМИ?**\nЗакрепленный за вами пользователь, не сможет ввести ваш реферальный код\n\n**▽ МОЖНО ЛИ ОТПРАВЛЯТЬ СВОЙ КОД В ЧАТЫ?**\nДа, вы можете делиться своим кодом с другими пользователями')
+	embed3 = discord.Embed(color=0x3C55FA, title="ОТВЕТЫ НА ВОПРОСЫ ПРО НЕДВИЖИМОСТЬ", description=f'**▽ КАК ЭТО РАБОТАЕТ?**\n[:arrow_forward: ОЗНАКОМИТЬСЯ С СИСТЕМОЙ НЕДВИЖИМОСТИ](https://discord.com/channels/880008097370865706/880024762942889994)\nПользователи, приобретая недвижимость на #╚🔨аукцион становятся гражданами поселения и получают доход от торговли недвижимостью другими пользователями\n\n**▽ КАК ПОСМОТРЕТЬ ПРОФИЛЬ НЕДВИЖИМОСТИ?**\n[:arrow_forward: ПЕРЕЙТИ В ПРОФИЛЬ](https://discord.com/channels/880008097370865706/880024690821853184/881778670778335253)\nи нажать реакцию :house:\n\n**▽ КАК КУПИТЬ НЕДВИЖИМОСТЬ?**\nПерейти на #╚🔨аукцион и приобрести недвижимость выкупив его за х2 от текущей ставки.\n\n**▽ КАК ПРОДАТЬ НЕДВИЖИМОСТЬ?**\n[:arrow_forward: ПЕРЕЙТИ В ПРОФИЛЬ](https://discord.com/channels/880008097370865706/880024690821853184/881778670778335253)\nи нажать реакцию :house:\n\n**▽ КАК КУПИТЬ НЕДВИЖИМОСТЬ?**\nПерейти на ╚🔨аукцион и приобрести недвижимость выкупив его за х2 от текущей ставки или повышать ставку, играя на аукци\n\n**▽ КАК ПРОДАТЬ НЕДВИЖИМОСТЬ?**\n[:arrow_forward: ПЕРЕЙТИ В ПОМОЩЬ](https://discord.com/channels/880008097370865706/880024690821853184/881778670778335253)\nи нажать реакцию :hotel: под сообщением. Затем отправить номер участка и подобрав необходимые параметры, выставить участок на продажу в аукционе\n\n**▽ КАК ПОСМОТРЕТЬ ДОХОД?**\n[:arrow_forward: ПЕРЕЙТИ В ПРОФИЛЬ](И еще что касаемо недвижимости, как я понял она продается на аукционе) и нажать реакцию :house:, затем в сообщении нажать на реакцию :page_facing_up:\n\n**▽ КАК ОПЛАТИТЬ НАЛОГ?**\n[:arrow_forward: ПЕРЕЙТИ В ПРОФИЛЬ](https://discord.com/channels/880008097370865706/880024690821853184/881778670778335253)\nи нажать реакцию :house:, затем в сообщении нажать на реакцию :red_envelope:\n\n**▽ СКОЛЬКО МОЖНО ИМЕТЬ НЕДВИЖИМОСТИ?**\nЛимитов нет\n\n**▽ КАК УВЕЛИЧИТЬ ДОХОД?**\nПроценты участка статичны и не могут быть изменены. Имея больше участков, ваши проценты будут суммироваться и доход от перепродаж другими пользователями, будет выше\n\n**ОСТАЛИСЬ ВОПРОСЫ? НАПИШИТЕ ЕГО В ├📨предложения С ПОМЕТКОЙ "ДОБАВИТЬ В ИНСТРУКЦИЮ". ЕСЛИ ВОПРОС ДЕЙСТВИТЕЛЬНО ВАЖНЫЙ, МЫ ОТВЕТИМ НА НЕГО В ЭТОМ КАНАЛЕ, А ВЫ ПОЛУЧИТЕ НАГРАДУ**')
+	await instr.send(embed = embed)
+	await instr.send(embed = embed1)
+	await instr.send(embed = embed2)
+	await instr.send(embed = embed3)
+	'''
+	'''
+	agr = bot.get_channel(880023332639096853)
+	embed = discord.Embed(color=0x3C55FA, title="**ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ**", description=f'**ИСПОЛЬЗОВАНИЕ, НАХОЖДЕНИЕ И ЛЮБОЕ ВЗАИМОДЕЙСТВИЕ НА НАШЕМ СЕРВЕРЕ DISCORD "PROJECT V", ПОДРАЗУМЕВАЕТ ПОЛНОЕ СОГЛАСИЕ С НИЖЕПЕРЕЧИСЛЕННЫМИ ПОЛОЖЕНИЯМИ И УСЛОВИЯМИ ПОЛЬЗОВАТЕЛЬСКОГО СОГЛАШЕНИЯ**\n\nВсе внутренние расчеты производятся исключительно с пересчетом на виртуальную внутрисерверную валюту.\n\n**ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ**\nВзаимодействие участников с сервером Discord "{guild.name}" основываются на публичном соглашении. Действие соглашения становится активным в момент его размещения\n\n**Предмет соглашения**\n\nСоглашением регламентировано взаимодействие пользователей с сервером Discord "{guild.name}" в следующих направлениях:\n• Порядок использования сервера\n• Осуществление денежных транзакций в виде конвертирования на реальную и внутрисерверную валюту\n• Порядок осуществления внутрисерверных покупок\n• Взаимодействие с приобретенными услугами на внутрисерверную валюту\n• Проведение ивентов и бонусных программ')
+	embed1 = discord.Embed(color=0x3C55FA, title="**ОСОБЕННОСТИ ВХОДА И ИСПОЛЬЗОВАНИЯ СЕРВЕРА**", description=f'**1.1**. Вступление на сервер Discord, рекомендовано от 16 лет.\n**1.2**. При входе на сервер, пользователь подтверждает, что он знаком с правилами и условиями пользовательского соглашения.\n**1.3**. Пользователь должен понимать. что он несёт полную ответственность за свой Discord аккаунт и необходимость защищать свои данные от его получения другими лицами, включая сотрудников нашего сервера.\n**1.4**. Строго запрещается использовать сервер Discord с целью получить денежный выигрыш сотрудникам сервера, их родственникам, друзьям и другим близким людям, а также участникам партнерских программ. Факт совершения подобного действия приравнивается в мошенничеству. В случае обнаружения подобной активности доступ к серверу будет ограничен.\n**1.5**. Один человек имеет право на вступление на сервер Discord, только с одной учетной записи.\n**1.6**. Если у администрации возникают подозрения, что пользователь, совершает мошеннические действия или другие действия запрещенные на нашем сервере, администрация оставляет за собой право верифицировать личные данные такого пользователя. Если подозрения будут подтверждены, существует вероятность блокировки на нашем сервере, введение ограничений и приостановки денежных выплат в пользу владельца учетной записи.\n**1.7**. Пользователь обязуется следить за новостями, публикуемыми в соответствующем канале сервера\n**1.8**. ТАК КАК ВЗАИМОДЕЙСТВИЕ С НАШИМ СЕРВЕРОМ, ОСУЩЕСТВЛЯЕТСЯ ЧЕРЕЗ ЛИЧНЫЕ СООБЩЕНИЯ ОТ НАШЕГО БОТА, ТО ЧТОБЫ ИСПОЛЬЗОВАТЬ НАШ СЕРВЕР **ПОЛЬЗОВАТЕЛЬ ДОЛЖЕН ВКЛЮЧИТЬ ФУНКЦИЮ В СВОЁМ ПРОФИЛЕ - РАЗРЕШИТЬ ЛИЧНЫЕ СООБЩЕНИЯ ОТ УЧАСТНИКОВ СЕРВЕРА** В ИНОМ СЛУЧАЕ, ДОСТУП К БОЛЬШИНСТВУ ФУНКЦИЙ БУДЕТ НЕ ДОСТУПЕН. ДЛЯ ЭТОГО НЕОБХОДИМО:\n1.ПЕРЕЙТИ В НАСТРОЙКИ ПРОФИЛЯ\n2.ПЕРЕЙТИ В РАЗДЕЛ "КОНФИДЕЦИАЛЬНОСТЬ"\n3.ВКЛЮЧИТЬ ФУНКЦИЮ "РАЗРЕШИТЬ ЛИЧНЫЕ СООБЩЕНИЯ ОТ УЧАСТНИКОВ СЕРВЕРА"')
+	embed2 = discord.Embed(color=0x3C55FA, title="**ФИНАНСОВЫЕ ВОПРОСЫ**", description=f'**2.1**. Вступивший на сервер пользователь, принимает на себя полную ответственность за использование программного обеспечения сервера и берет на себя ответственность за возможные финансовые риски при использовании, игре, осуществления покупок и других финансовых взаимодействий с сервером и сторонних сервисов относящихся к серверу.\n**2.2**. Пользователь берет на себя ответственность за то, чтобы использование и нахождение на сервере Discord "{guild.name}"  оставалось в пределах правомерных действий в контексте законов региона в котором проживает пользователь.\n**2.3.**. При пополнении баланса внутрисерверной валюты пользователь обязуется придерживаться инструкции указанной в магазине покупки купонов. Несоблюдение инструкций может привести к тому, что деньги не будут зачислены на баланс. Ответственность за этот факт в таком случае несет пользователь, в одностороннем порядке.\n**2.4.**. В процессе проведения платежа пользователя участвует программное обеспечение сервера и его финансовых партнеров. В случае технической заминки или ошибки, сервер "{guild.name}" обязуется компенсировать или, наоборот, стянуть разницу некорректного перевода на протяжении 7 календарных дней от момента инцидента.\n**2.5.**. При создании заявки на вывод средств, пользователь обязуется указывать корректные данные и готов понести ответственность за совершение ошибки в указанных данных, которые могут повлечь частичный или полный отказ в возмещении средств, из за технических сложностей, которые могут возникнуть в процессе взаимодействия с вашей заявкой на вывод средств\n**2.6.**. Выводы денег с внутрисерверных счетов осуществляются без выходных. Выплата по правильно оформленной заявке осуществляется в срок до 24 часов с момента ее подачи.\nВ зависимости от способа перевода и особенностей работы платежной системы, зачисление денег на реквизиты пользователя может занимать до 4-7 рабочих дней.')
+	embed3 = discord.Embed(color=0x3C55FA, title="**ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ**", description=f'**2.7.**. Для вывода средств могут быть использованы платежные методы, указанные в момент осуществления вывода, при использовании функций нашего программного обеспечения.\n**2.8.**. Сервер {guild.name} не берёт с пользователя скрытые комиссии за ввод или вывод средств. Возможны только комиссии банков или платежных систем.\n**2.9.**. При пополнении баланса личного счета, кодом пополнения, чтобы пользовательские интернет счета и, в частности, их счета на нашем сервере не использовались для отмывания денег, для возможности вывести средства с внутри-серверного счета, пользователь обязан совершить покупку на сумму, которая будет близка к сумме самого пополнения.\n2.10. Если метод покупки купона пополнения отличается от метода вывода денежных средств, пользователь может быть подвергнут идентификации, при котором операторы, могут запросить селфи с паспортом, для подтверждения личности, совершающая вывод средств\n**2.11. Сервер {guild.name}, не несёт ответственность за финансовые потери возникшие из за технических проблем, при использовании пользователями сервера {guild.name}**')
+	embed4 = discord.Embed(color=0x3C55FA, title="**ИВЕНТЫ И БОНУСНЫЕ ПРЕДЛОЖЕНИЯ**", description=f'**3.1.** Участие в ивентах - полностью добровольное мероприятие. Вы имеете полное право отказаться от участия в ивентах, осуществляемых на сервере\n**3.2.** Администрация оставляет за собой право менять отдельные детали проходящей акции или ивента в одностороннем порядке.\n**3.3.** Отдельным пользователям может быть отказано в участии в акции / ивенте в одностороннем порядке.\n**3.4.** Условия и правила акции или ивента указаны при публикации объявления на соответствующем канале. Факт участия в том или ином подразумевает, что вы подтверждаете свою осведомленность в правилах и условиях события.')
+	embed5 = discord.Embed(color=0x3C55FA, title="**ОТВЕТСТВЕННОСТЬ**", description=f'**Гарантии и ответственность.**\n\n**4.1.** Организатор не гарантирует постоянный и непрерывный доступ к игровой площадке и его услугам в случае возникновения технических неполадок и/или непредвиденных обстоятельств, в числе которых: неполноценная работа или не функционирование интернет–провайдеров, серверов информации, банковских и платёжных систем, а также неправомерных действий третьих лиц. Организатор приложит все усилия по недопущению сбоев, но не несет ответственности за временные технические сбои и перерывы в работе Игры, вне зависимости от причин таких сбоев.\n**4.2.** Участник полностью согласен, что организатор не может нести ответственность за убытки участника, которые возникли в связи с противоправными действиями третьих лиц, направленными на нарушение системы безопасности электронного оборудования и баз данных игры, либо вследствие независящих от организатора перебоев, приостановления или прекращения работы каналов и сетей связи, используемых для взаимодействия с участником, а также неправомерных или необоснованных действий платежных систем, а так же третьих лиц.\n**4.3.** Организатор не несет ответственности за убытки, понесенные в результате использования или не использования участником информации об Игре, игровых правил и самой Игры и не несет ответственности за убытки или иной вред, возникший у участника в связи с его неквалифицированными действиями и незнанием игровых правил или его ошибках в расчетах;\n**4.4.** Участник согласен с тем, что использует игровую площадку по своей доброй воле и на свой собственный риск. Организатор не дает участнику никакой гарантии того, что он извлечет выгоду или пользу от участия в игре. Степень участия в Игре определяется сами участником.\n**4.5.** Организатор не несет ответственности перед участником за действия других участников.\n**4.6.** В случае возникновения споров и разногласий на игровой площадке, решение организатора является окончательным, и участник с ним полностью согласен. Все споры и разногласия, возникающие из настоящего Соглашения или в связи с ним, подлежат разрешению путем переговоров. В случае невозможности достижения согласия путем переговоров, споры, разногласия и требования, возникающие из настоящего Соглашения, подлежат разрешению в соответствии с действующим законодательством Белиза.\n**4.7.**  Организатор может вносить изменения в настоящее Соглашение, правила игровой площадки и другие документы в одностороннем порядке. В случае внесения изменений в документы Организатор размещает последние версии документов на сайте игровой площадки. Все изменения вступают в силу с момента размещения. Участник имеет право расторгнуть настоящее Соглашение в течение 3 дней, если он не согласен с внесенными изменениями. В таком случае расторжение . На Участника возлагается обязанность регулярно посещать официальный Дискорд Проекта с целью ознакомления с официальными документами и новостями.\n**4.8.** Организатор и Участник освобождаются от ответственности в случае возникновения обстоятельств непреодолимой силы (форс-мажорных обстоятельств), к числу которых относятся, но перечнем не ограничиваются: стихийные бедствия, войны, огонь (пожары), наводнения, взрывы, терроризм, бунты, гражданские волнения, акты правительственной или регулирующей власти, хакерские атаки, отсутствия, не функционирование или сбои работы энергоснабжения, поставщиков Интернет услуг, сетей связи или других систем, сетей и услуг. Сторона, у которой возникли такие обстоятельства, должна в разумные сроки и доступным способом оповестить о таких обстоятельствах другую сторону.\n**4.9.** Участник имеет право расторгнуть настоящее Соглашение в одностороннем порядке без сохранения игрового аккаунта. При этом все расходы, связанные с участием в игре, участнику не компенсируются и не возвращаются. Игровой инвентарь (монеты), находящиеся на игровом счете участника, подлежат возврату.\nПосле него вот это сообщение вставьте в соглашение')
+	embed6 = discord.Embed(color=0x3C55FA, description=f'**Конфиденциальность.**\n**6.1.** Условие конфиденциальности распространяется на информацию, которую Организатор может получить об Участнике во время его пребывания на сайте Игры и которая может быть соотнесена с данным конкретным пользователем. Организатор автоматически получает и записывает в серверные логи техническую информацию о ваших действиях и т.п. Организатор гарантирует, что данные, сообщенные участником при регистрации в Игре, будут использоваться Организатором только внутри Игры.\n**6.2.** Организатор вправе передать персональную информацию об Участнике третьим лицам только в случаях, если:\n**6.2.1.** Участник изъявил желание раскрыть эту информацию;\n**6.2.2.** Без этого Участник не может воспользоваться желаемым продуктом или услугой, в частности - информация об именах (никах), игровых атрибутах - может быть доступна другим участникам;\n**6.2.3.** Участник нарушает настоящее Соглашение и правила игровой площадки.\n**6.3.** Во всех остальных случаях Сервер :dash:NEXT Invest:dash: гарантирует неразглашение личных данных пользователей третьим лицам, как и проведение таковыми финансовых операций, связанных со счетами пользователей.\n**6.4.** При передаче пользователем его данных доступа к аккаунту Discord третьему лицу какая-либо ответственность с сервера :dash:NEXT Invest:dash: снимается. Сюда относятся и случаи получения доступа к аккаунту путем взлома ящика электронной почты или при использовании стороннего софта.\n**6.5.** Программное обеспечение сервера не может быть использовано пользователями в целях коммерции. Публикация в сети интернет текстового и графического содержания ресурса и / или отдельных его частей без нашего согласия, не допускается. Последний пункт\nИные положения.\n**7.1.** Недействительность части или пункта (подпункта) настоящего соглашения не влечет недействительности всех остальных частей и пунктов (подпунктов).\n**7.2.** Срок действия настоящего Соглашения устанавливается на весь период действия игровой площадки, то есть на неопределенный срок, и не предполагает срока окончания данного соглашения.\n**7.3.** Регистрируясь и находясь на игровой площадке, участник признает, что он прочитал, понял и полностью принимает условия настоящего Соглашения, а также правила игры и иных официальных документов.')
+	embed7 = discord.Embed(color=0x3C55FA, description=f'**7.4.** Для получения услуги проекта, Участник полностью принимает все условия настоящего Соглашения. В случае не согласия с каким-либо из условий Соглашения, Участнику предлагается отказаться от использования услуг проекта. С целью исключить введение Участника в заблуждение (обман), Организатор предупреждает до начала принятия согласия Участником использования услуг проекта о том, что предложенные Участнику услуги в виде игры основаны на риске, возникающем между несколькими участниками игры по установленным организатором данной игры правилам. Денежные средства Участника, необходимые для обеспечения игры (приобретение средств для игры, улучшение игроком условий для выигрыша и т.д.), принявшего условия Соглашения, направляются в общий игровой фонд Участников (игроков), из которого складываются, в том числе выигрыши. Соответственно организатор предупреждает вас, что игра частично основана на принципах коммерции  Кроме того, принимая Соглашение, Участник подтверждает свое согласие на пользование игровым фондом Организатором для организации и обслуживания игры среди Участников. Конечным результатом игрового риска является выигрыш. В то же время Организатор обязуется свести к минимально возможному отрицательному последствию риска Участника в игре, с целью привлечения физических лиц к проекту. Одновременно представленная услуга в виде игры направлена на удовлетворение потребностей Участника, которые он путем своего согласия на участие определяет и оценивает самостоятельно. Настоящие условия игры и остальные сведения проекта не имеют цели Организатора побудить в Участнике эмоции, связанные с предвосхищением успеха (азарта).\n**7.5.** Соглашение вступает в силу с момента регистрации участника в проекте.\n**ИСПОЛЬЗОВАНИЕ, НАХОЖДЕНИЕ И ЛЮБОЕ ВЗАИМОДЕЙСТВИЕ НА НАШЕМ СЕРВЕРЕ DISCORD ":dash:NEXT Invest:dash:", ПОДРАЗУМЕВАЕТ ПОЛНОЕ СОГЛАСИЕ С ВЫШЕПЕРЕЧИСЛЕННЫМИ ПОЛОЖЕНИЯМИ И УСЛОВИЯМИ ПОЛЬЗОВАТЕЛЬСКОГО СОГЛАШЕНИЯ**')
+	await agr.send(embed = embed)
+	await agr.send(embed = embed1)
+	await agr.send(embed = embed2)
+	await agr.send(embed = embed3)
+	await agr.send(embed = embed4)
+	await agr.send(embed = embed5)
+	
+	
+
+	rules = bot.get_channel(880023390847635476)
+	embed = discord.Embed(color=0x3C55FA, title=f'ИСПОЛЬЗОВАНИЕ, НАХОЖДЕНИЕ И ЛЮБОЕ ВЗАИМОДЕЙСТВИЕ НА НАШЕМ СЕРВЕРЕ DISCORD "{guild.name}", ПОДРАЗУМЕВАЕТ ПОЛНОЕ СОГЛАСИЕ С ПРАВИЛАМИ')
+	embed1 = discord.Embed(color=0x3C55FA, title="ТЕРМИНЫ И ОПРЕДЕЛЕНИЯ", description=f'```\nОСНОВНЫЕ\n```\n**[1] Администрация —** пользователи, наделенные различными полномочиями по управлению и соблюдению порядка на сервере\n**[2] Модерация —** сотрудники администрации, ответственные за порядок и соблюдение правил сервера\n**[3] Операторы  —** сотрудники сервера, занимающиеся финансовыми вопросами, возникших у пользователей сервера\n**[4] Техническая поддержка —** обобщающий термин, касающийся поддержки со стороны сотрудников сервера\n**[5] Пользовательское соглашение -** свод информации включающий в себя условия использования нашего сервера')
+	embed2 = discord.Embed(color=0x3C55FA, description=f'```\nТЕРМИНЫ ТЕХНИЧЕСКОГО ХАРАКТЕРА\n```\n\n**[6] ПО или Бот —** программное обеспечение\n**[7] Ферма —** текстовый канал, созданный на определенный срок, осуществляющий добычу внутрисерверной валюты\n**[8] Буст —** приобретаемое внутрисерверное улучшение\n**[9] Майнинг —** способ добычи внутрисерверной валюты, путем приобретения фермы\n**[10] Команды —** список текстовых сообщений или кнопок эмодзи, осуществляемых взаимодействие с ботом и системой сервера\n**[11] Стороннее ПО** - стороннее программное обеспечение, способное влиять на взаимодействие с сервером и пользователями\n**[12] Мультиаккаунты -** дополнительные учётные записи Discord для заработка внутри серверной валюты, обхода наказаний и вредительства серверу\n**[13] Платежная система -** система или ряд сайтов, обеспечивающих финансовые взаимодействия пользователей')
+	embed3 = discord.Embed(color=0x3C55FA, description=f'```\nБАЗОВЫЕ ТЕРМИНЫ\n```\n\n**[14] Бан/Мут** — блокировка за нарушение правил или условий пользования сервером\n**[14] Бан/Мут**— однотипные сообщения, включающие в себя: смайлы, символы, ссылки, картинки и т.п. повторяющиеся несколько раз подряд и использование эмодзи вызывающих реакцию ботов\n**[16] Спам** – сообщения включающие в себя сторонние интернет ресурсы, сайты, сервера\n**[17] Афк/офф**  - обобщенный термин, обозначающий отход пользователя от персонального компьютера. Включает молчание, игнорирование, отключение, выход пользователя\n**[17] Оскорбления** — намеренное унижение и затрагивание чувств человека, выраженное в ругательной, матерной форме\n**[18] Неадекватное поведение** — агрессивное или некомфортное для других пользователей поведение, препятствующее общению\n**[19] Провокация** — намеренное негативное действие по отношению к другому человеку, способное у него вызвать ответную реакцию\n**[20] Коммерческая деятельность** – использование ресурсов сервера для ведения коммерческой деятельности\n**[21 ]Посторонние звуки** – любые шумы, мешающие общению\n**[22] Багоюз** – умышленный поиск и использование установленного программного обеспечения, уязвимостей сервера и информации указанных на нём\n**[23] Сторонние ресурсы **— любые ресурсы, прямо не связанные с {guild.name}\n**[24] Непотребный контент** - контент откровенного содержания или вызывающий негативные эмоции, пропагандирующий насилие, жестокое обращение с животными и т.п.')
+	embed4 = discord.Embed(color=0x3C55FA, description=f'```\nПРАВИЛА СЕРВЕРА\n```\n\n**Срок наказаний за нарушение правил, устанавливается в индивидуальном порядке, по усмотрению администрации и модерации сервера. В зависимости от тяжести нарушения, может быть выдан в разных форматах, включая: временный или перманентный мут, кик, бан, штрафы, списываемые с пользовательского счета или ограничения доступа к определенным каналам, включая личные каналы, созданные при взаимодействии с нашим сервером**\n\n**МИНИМАЛЬНЫЕ СРОКИ НАКАЗАНИЙ:**\n@BAN VOICECHAT** - 1 час**\n@MUTE** - 15 мин**\n@BAN** - 24 часа**\n\n**МАКСИМАЛЬНЫЕ СРОКИ НАКАЗАНИЙ В СЛУЧАЕ МНОГОКРАТНЫХ НАРУШЕНИЙ:**\n@BAN VOICECHAT** - 7 дней**\n@MUTE** - 24 часа**\n@BAN** - ∞**')
+	embed5 = discord.Embed(color=0x3C55FA, description=f'```\nОСНОВНЫЕ\n```\n\n1.1. Запрещено использовать любое программное обеспечение способное вызывать сбой в работе discord сервера и ПО использующегося на нём\n\n1.2. Запрещено намеренное использование и поиск уязвимостей сервера для извлечения прибыли и других корыстных целей\n\n1.3. Быть ознакомленным с правилами сервера и пользовательским соглашением, не знание не освобождает от ответственности\n\n1.4. На сервер запрещено вступать более чем, с 1 аккаунта\n\n1.5. Попрошайничество у персонала сервера\n\n1.6. Запрещен поиск уязвимостей в правилах\n\n1.7. Запрещено представляться под видом персонала сервера\n- Использование никнеймов, аватаров, как у персонала\n- Намеренный ввод в заблуждение пользователей и т.п.\n\n1.8. Покидая сервер, вы можете потерять текущие достижения в виде ролей. В таких ситуациях, персонал сервера не будет вам выдавать достижения и вам придется получать их снова')
+	embed6 = discord.Embed(color=0x3C55FA, description=f'```\nПРАВИЛА ПОВЕДЕНИЯ\n```\n\n2.1. Запрещены любые оскорбления в чью-либо сторону, в любой форме, включая:\n- Прямые оскорбления\n- Оскорбления вопросом\n- Завуалированные оскорбления. Пример: «пнх», «муд*к», на другом языке\n- Оскорбление групп пользователей\n- Оскорбление родственников и близких\n- На Сервере также не допустимы оскорбления в виде изображений\n- Оскорбление национальности, расы, цвета кожи, политических и религиозных взглядов и т.д.\n\n2.2. Запрещены оскорбления, негативные и неконструктивные осуждения действий Администрации сервера и самого сервера в общем(Исключением является критика, которая выражена в адекватной манере)\n\n2.3. Запрещен флуд на всех каналах, за исключением не модерируемых и канал ├📢флуд\n\n2.4. Запрещена реклама и спам, в любой форме, без согласования с администрацией, включая:\n- Ссылки или упоминания серверов-конкурентов\n- Призывы идти на другой сервер\n- Призывы перейти, подписаться, проголосовать в социальных сетях\n- Реклама услуг и сторонних ресурсов\n\n2.5. Запрещены провокации и намеренное создание конфликтных ситуаций, включая:\n- Пинг пользователей без причин\n- Преследование\n\n2.6. Мы не запрещаем использовать ненормативную лексику, но когда текст состоит только или в основном из мата, сообщение может быть удалено\n\n2.7. Запрещен непотребный контент, включая:\n- Способы самоубийства, побуждение к самоубийству, обсуждение суицида\n- Разжигание вражды: призыв к насилию или травле человека либо группы лиц\n- Расчленёнка, насилие и жестокость в любом их проявлении\n- Сексуальный контент (ссылки и детальное описание полового акта)\n- Запрещены любые виды пропаганды и т.п.\n\n2.8. Запрещено распространять личную информацию пользователя(ей), без его(их) личного согласия\n\n2.9. Запрещена коммерческая деятельность, в любых её проявлениях\n\n2.10. Запрещены деструктивные действия по отношению к серверу, включающие в себя:\n- неконструктивную критику\n- призывы покинуть сервер\n- попытки и любые действия способствующие ухудшению процесса развития сервера')
+	embed7 = discord.Embed(color=0x3C55FA, description=f'```\nПРАВИЛА ПОВЕДЕНИЯ В ГОЛОСОВЫХ КАНАЛАХ\n```\n\n3.1. Любые правила, и условия прописанные так же в пользовательском соглашении, распространяются и на голосовые каналы, за исключением не модерируемых и личных каналов\n\n3.2. Пользователь обязуется осуществлять регулярное общение в оплачиваемых голосовом канале, путём поддержания диалога\n\n3.3. Пользователю запрещено уходить в афк, в оплачиваемых голосовых каналах, более чем на 5 минут. При афк, на срок более 5ти минут, пользователь обязан отключиться от голосового канала или перейти в канал афк\n\n3.4. При осуществлении проверки, со стороны модерации, пользователь обязан отвечать на поставленные вопросы\n\n3.5. Запрещено  использование постороннего ПО, включая стереомишкер вашей операционной системы\n\n3.6. Запрещено использовать микрофон с неправильными настройками, создающий помехи общению пользователей и оказывающие негативное воздействие на пользователей\n\n3.7. Запрещено транслирование звуков, создающих помехи и оказывающие негативное воздействие на пользователей:\n- Посторонние шумы и громкие звуки\n- Громкая музыка, радио, звуки из видео и все их составляющие\n\n3.8. Запрещено препятствовать работе модерации и администрации сервера\n\n3.9. При проверке пользователя на афк, другие пользователи обязаны соблюдать тишину. Запрещено препятствовать деятельности модерации, при осуществлении проверок пользователей\n\n3.10. В купленных приватных каналах, запрещено ограничивать доступ персоналу сервера')
+	embed8 = discord.Embed(color=0x3C55FA, description=f'3.10. Так как сервер осуществляет оплату за общение в голосовых каналах, то осуществляется контроль по отношению к общению пользователей сервера, в голосовых каналах (Исключение: не оплачиваемые голосовые каналы и каналы афк) Пояснение: Модераторы обязаны контролировать и осуществлять регулярные проверки голосовых каналов на наличие афк пользователей. При подключении модераторов к голосовым каналам, при наличии подозрения на афк БОЛЕЕ 5 МИНУТ, модератор обязан осуществить проверку пользователя, голосовым вопросом в формате:\n- Пользователь с ником [Имя пользователя], Вы тут? Если пользователь проигнорировал вопрос и не дал ответ в течении 60 секунд, модератор обязан осуществить проверку через текстовое личное сообщение в формате:\n- Проверка на афк, ожидаю ответа на это сообщение Если пользователь ответил на сообщение, модератор обязан уточнить через какое время пользователь выйдет из афк, если это время составляет менее 5 минут и пользователь уложился в срок, проверка прошла успешно.\nЕсли пользователь закрыл возможность обращения через личные сообщения, не ответил на текстовое сообщение или превысил время ожидания 5 минут, то осуществляется исключение из голосового канала.\nЕсли замечено регулярное нарушение, то пользователю может быть ограничен доступ к голосовым каналам на определенный срок.\n\n**ПРОВЕРКА НА АФК, ОСУЩЕСТВЛЯЕТСЯ ВСЕХ ГОЛОСОВЫХ КАНАЛОВ, КРОМЕ НЕ ОПЛАЧИВАЕМЫХ И КАНАЛОВ АФК.\nПРИ ОСУЩЕСТВЛЕНИИ МОДЕРАЦИИ ЛИЧНЫХ ГОЛОСОВЫХ КАНАЛОВ И ОТСУТСТВИЕ ПОДОЗРЕНИЙ НА АФК, МОДЕРАТОР ОБЯЗАН ОСУЩЕСТВЛЯТЬ ПОЛНУЮ ТИШИНУ И ПОКИНУТЬ ЛИЧНЫЙ КАНАЛ В ТЕЧЕНИИ 30 СЕКУНД, С МОМЕНТА ВХОДА**')
+	embed9 = discord.Embed(color=0x3C55FA, description=f'**ИСПОЛЬЗОВАНИЕ, НАХОЖДЕНИЕ И ЛЮБОЕ ВЗАИМОДЕЙСТВИЕ НА НАШЕМ СЕРВЕРЕ DISCORD "{guild.name}", ПОДРАЗУМЕВАЕТ ПОЛНОЕ СОГЛАСИЕ С  ПРАВИЛАМИ**')
+	await rules.send(embed = embed)
+	await rules.send(embed = embed1)
+	await rules.send(embed = embed2)
+	await rules.send(embed = embed3)
+	await rules.send(embed = embed4)
+	await rules.send(embed = embed5)
+	await rules.send(embed = embed6)
+	await rules.send(embed = embed7)
+	await rules.send(embed = embed8)
+	await rules.send(embed = embed9)
+	
+
+	
+	
+	
+	system = bot.get_channel(880024762942889994)
+	embeds = discord.Embed(color=0x3C55FA, title="НАША СИСТЕМА", description=f'**НАША КОНЦЕПЦИЯ**\n{guild.name} - проект основная цель которого дать мотивацию людям общаться на сервере, получая за это деньги. Специально для Вас была разработана система, позволяющая получать внутрисерверную валюту, всем без исключений, которую в дальнейшем можно обменять на **реальные** деньги. При входе на сервер, для Вас создаётся личный счёт с нашей валютой. С помощью данного счета, вы можете осуществлять вывод, конвертацию и пополнение средств. Все покупки внутри сервера, включая покупку ферм, не является обязательным условием для нахождения на нашем сервере и носит лишь развлекательный характер.\n\n**ВАРИАНТЫ ПОЛУЧЕНИЯ ВАЛЮТЫ:**\n[▽ ОБЩЕНИЕ В ГОЛОСОВЫХ КАНАЛАХ]()\n[▽ ПРИОБРЕТЕНИЕ МАЙНИНГ ФЕРМ]()\n[▽ ПРИОБРЕТЕНИЕ НЕДВИЖИМОСТИ]()\n[▽ ТОРГОВЛЯ]()\n[▽ ЕЖЕДНЕВНЫЕ ЗАДАНИЯ]()\n[▽ РЕФЕРАЛЬНАЯ СИСТЕМА]()\n[▽ ОТКРЫТИЕ КЕЙСОВ]()\n[▽ УЧАСТИЕ И ИВЕНТАХ]()\n[▽ УЧАСТИЕ В РОЗЫГРЫШАХ]()\n[▽ УЧАСТИЕ В ПОЕДИНКАХ]()\n[▽ S.UP И BUMP СЕРВЕРА]()\n')
+	embeds1 = discord.Embed(color=0x3C55FA, title="ИНФОРМАЦИЯ О ВАЛЮТЕ", description=f'**На данный момент на сервере имеются две валюты с следующими курсами:\n1 VOLT (V) = 1 RUB\n10 WATT (W) = 1 VOLT**\n\n**КОМАНДЫ ДЛЯ ПЕРЕДАЧИ ВАЛЮТЫ. ВВОДИТЬ НА КАНАЛЕ** #├💬общение :\n├💬общение:\n-sendw @Nickname 10000 - Передать :euro:WATT (минимум 10) Комиссия 5%\n-sendv @Nickname 10000 - Передать :pound:VOLT (минимум 10) Комиссия 10%')
+	embeds2 = discord.Embed(color=0x3C55FA, title="СИСТЕМА ЗАРАБОТКА В ГОЛОСОВЫХ ЧАТАХ", description=f'Для того, чтобы начать получать валюту, с помощью голосового общения. Вам необходимо просто начать общаться с голосовых чатах.\n\nСуществует определенный список правил, который необходимо соблюдать, чтобы гарантированно получать валюту на свой счет\n[:arrow_forward: ОЗНАКОМИТЬСЯ С ПРАВИЛАМИ]()\n\nОплата за общение в голосовых чатах осуществляется по следующим параметрам:\n1 ЧАС ОБЩЕНИЯ В ГОЛОСОВОМ КАНАЛЕ = 4 WATT\n\nПополнение баланса происходит автоматически, каждые 60 минут на Ваш персональный счет.\n\n__Если вы не хотите получать оплату за общение в голосовых каналах, вы можете перейти на каналы из категории КАНАЛЫ БЕЗ ОПЛАТЫ. Данная категория  модерируется, но проверка на афк, со стороны модерации, не осуществляется.__')
+	embeds3 = discord.Embed(color=0x3C55FA, title="СИСТЕМА ЗАРАБОТКА НА МАЙНИНГЕ", description=f'На нашем сервере была разработана уникальная система, позволяющая пользователям приобрести фермы за внутрисерверную валюту,  включая валюту, которую Вы получаете общаясь в голосовых чатах.\n\n[:arrow_forward: ПЕРЕЙТИ В МАГАЗИН ФЕРМ](https://discord.com/channels/880008097370865706/880025073963122718/881544012723519579)\n\nПри покупке фермы, создаётся Ваш личный канал фермы на сервере, в категории "ФЕРМЫ" Каждая ферма имеет свой максимальный срок работы и производимое количество валюты в час. Фермы делятся на два типа, с автоматической сборкой валюты и ручной. При ручной, вам необходимо выводить заработанную валюту, нажимая на соответствующую кнопку, на созданном канале фермы.')
+	embeds4 = discord.Embed(color=0x3C55FA, title="СИСТЕМА ЗАРАБОТКА НА НЕДВИЖИМОСТИ", description=f'На нашем сервере была разработана уникальная система недвижимости, позволяющая пользователям приобретать участки и получать пассивный доход от торговли недвижимостью между участниками\n\n[:arrow_forward: ПЕРЕЙТИ В  ПОМОЩЬ ПО НЕДВИЖИМОСТИ]()')
+	embeds5 = discord.Embed(color=0x3C55FA, title="РЕФЕРАЛЬНАЯ СИСТЕМА", description=f'Данная система позволяет пользователям приглашать рефералов и осуществлять с помощью этого заработок.\n\n*нажмите, чтобы*\n[:arrow_forward: ПЕРЕЙТИ В РЕФЕРАЛЬНЫЙ ПРОФИЛЬ]()\n\nУ каждого пользователя, в реферальном профиле, создаётся код, который вы можете давать другим пользователям, для закрепления их за собой.\n\nПриглашенному вами пользователю, необходимо перейти в свой реферальный профиль и нажать реакцию :arrows_counterclockwise:- Подтвердить приглашение и отправить ваш код боту')
+	embeds6 = discord.Embed(color=0x3C55FA, title="ПРОЧЕЕ", description=f'**СИСТЕМА ПОЕДИНКОВ**\nКаждый пользователь может вызывать на поединок пользователя, отправив команду, в чате #└🤺поединки\n\n`-duel @nickname 100`\nгде:\n@nickname - упоминание пользователя ником\n100 - сумма ставки\n\nМинимальный взнос: 10W\n\n**БУДЬТЕ ОСТОРОЖНЫ, ПЕРЕД ОТПРАВКОЙ ВЫЗОВА, ВЫ МОЖЕТЕ ПРОИГРАТЬ ДЕНЬГИ!**\n\n**ВАШ ШАНС ВЫГРАТЬ 50/50**')
+	await system.send(embed = embeds)
+	await system.send(embed = embeds1)
+	await system.send(embed = embeds2)
+	await system.send(embed = embeds3)
+	await system.send(embed = embeds4)
+	await system.send(embed = embeds5)
+	await system.send(embed = embeds6)
+	
+	
+	
+	# Dinamic
+	# Commands
+	
+	commandsc = bot.get_channel(880024690821853184)
+	embed = discord.Embed(color=0x3C55FA, title="**СПИСОК КОМАНД**", description=f'НА ЭТОМ КАНАЛЕ, ВЫ МОЖЕТЕ ВЗАИМОДЕЙСТВОВАТЬ С БОТОМ СЕРВЕРА\n\nТАК КАК ВЗАИМОДЕЙСТВИЕ С НАШИМ СЕРВЕРОМ, ОСУЩЕСТВЛЯЕТСЯ ЧЕРЕЗ ЛИЧНЫЕ СООБЩЕНИЯ ОТ НАШЕГО БОТА, ТО ЧТОБЫ ИСПОЛЬЗОВАТЬ ВСЕ ВОЗМОЖНОСТИ __НЕОБХОДИМО ВКЛЮЧИТЬ ФУНКЦИЮ В СВОЁМ ПРОФИЛЕ - РАЗРЕШИТЬ ЛИЧНЫЕ СООБЩЕНИЯ ОТ УЧАСТНИКОВ СЕРВЕРА__ ДЛЯ ЭТОГО НЕОБХОДИМО:\n1.ПЕРЕЙТИ В НАСТРОЙКИ ПРОФИЛЯ\n2.ПЕРЕЙТИ В РАЗДЕЛ "КОНФИДЕЦИАЛЬНОСТЬ"\n3.ВКЛЮЧИТЬ ФУНКЦИЮ "РАЗРЕШИТЬ ЛИЧНЫЕ СООБЩЕНИЯ ОТ УЧАСТНИКОВ СЕРВЕРА"\n\nВ ИНОМ СЛУЧАЕ, ДОСТУП К БОЛЬШИНСТВУ ФУНКЦИЙ БУДЕТ НЕ ДОСТУПЕН\n\n**ДЛЯ СОВЕРШЕНИЯ ДЕЙСТВИЯ НАЖМИТЕ :ballot_box_with_check:**')
+	await commandsc.send(embed = embed)
+
+	embed1 = discord.Embed(color=0x3C55FA, title="**ОПЕРАЦИИ С БАЛАНСОМ**", description=f'Вам будет отправлено сообщение, для взаимодействия с вашим личным счетом, для проверки, пополнения, конвертации и вывода средств')
+	mess = await commandsc.send(embed = embed1)
+
+	embed2 = discord.Embed(color=0x3C55FA, title="**ПОСМОТРЕТЬ ПРОФИЛЬ**", description=f'Вам будет отправлено сообщение с информацией о вашем профиле и статистике')
+	mess1 = await commandsc.send(embed = embed2)
+
+	embed3 = discord.Embed(color=0x3C55FA, title="**СПИСОК ЛИДЕРОВ**", description=f'Вам будет отправлено сообщение с списком лидеров и их статистикой на сервере')
+	mess2 = await commandsc.send(embed = embed3)
+
+	embed4 = discord.Embed(color=0x3C55FA, title="**РЕФЕРАЛЬНЫЙ ПРОФИЛЬ**", description=f'Вам будет отправлено сообщение с вашим профилем в реферальной системе. Используйте эту команду, для получения реферального кода и извлечения из этого прибыли')
+	mess3 = await commandsc.send(embed = embed4)
+
+	embed5 = discord.Embed(color=0xff0000, title="**ПОДАТЬ ЖАЛОБУ**", description=f'Вам будет отправлено сообщение с формой заявки, с помощью которой вы можете подать жалобу')
+	mess0 = await commandsc.send(embed = embed5)
+	await mess0.add_reaction('⛔')
+	
+	for i in range(4):
+		if i == 0:
+			await mess.add_reaction('☑️')
+
+		else:
+			message = f'{"mess" + str(i)}'
+			mmessage = locals().get(message)
+			await mmessage.add_reaction('☑️')
+
+
+	
+
+
+	farms = bot.get_channel(880025073963122718)
+	embedf = discord.Embed(color=0x3C55FA, title="FARM ЗАТЫЧКА", description=f'На слабой видеокарте\n\n**Для покупки за VOLT нажмите :euro:**\n**Для покупки за WATT нажмите на :pound:**\n')
+	embedf.set_thumbnail(url="https://i.ibb.co/92f8Cw8/Z.png")
+	embedf.add_field(name = '**Макс срок работы:**', value = "35дней", inline = True)
+	embedf.add_field(name = '**Производительность:**', value = "0.25v/ч", inline = True)
+	embedf.add_field(name = '**Срок окупаемости:**', value = "25 дней", inline = True)
+
+	embedf.add_field(name = '**Сложность:**', value = "EASY", inline = True)
+	embedf.add_field(name = '**Вывод V на баланс:**', value = "Ручной", inline = True)
+	embedf.add_field(name = '**ЦЕНА:**', value = "149V / 1999W", inline = True)
+	embedfm1 = await farms.send(embed = embedf)
+	await embedfm1.add_reaction('💶')
+	await embedfm1.add_reaction('💷')
+
+	embedf1 = discord.Embed(color=0x3C55FA, title="FARM GTX", description=f'На игровой видеокарте\n\n**Для покупки за VOLT нажмите :euro:**\n**Для покупки за WATT нажмите на :pound:**\n')
+	embedf1.set_thumbnail(url="https://i.ibb.co/RCt8s0K/G.png")
+	embedf1.add_field(name = '**Макс срок работы:**', value = "30дней", inline = True)
+	embedf1.add_field(name = '**Производительность:**', value = "0.5v/ч", inline = True)
+	embedf1.add_field(name = '**Срок окупаемости:**', value = "21 днm", inline = True)
+
+	embedf1.add_field(name = '**Сложность:**', value = "EASY", inline = True)
+	embedf1.add_field(name = '**Вывод V на баланс:**', value = "Ручной", inline = True)
+	embedf1.add_field(name = '**ЦЕНА:**', value = "249V / 2999W", inline = True)
+	embedfm2 = await farms.send(embed = embedf1)
+	await embedfm2.add_reaction('💶')
+	await embedfm2.add_reaction('💷')
+
+	embedf2 = discord.Embed(color=0x3C55FA, title="FARM RTX", description=f'На мощной видеокарте\n\n**Для покупки за VOLT нажмите :euro:****\n')
+	embedf2.set_thumbnail(url="https://i.ibb.co/z72pGRR/R.png")
+	embedf2.add_field(name = '**Макс срок работы:**', value = "32дней", inline = True)
+	embedf2.add_field(name = '**Производительность:**', value = "1v/ч", inline = True)
+	embedf2.add_field(name = '**Срок окупаемости:**', value = "21 день", inline = True)
+
+	embedf2.add_field(name = '**Сложность:**', value = "NORM", inline = True)
+	embedf2.add_field(name = '**Вывод V на баланс:**', value = "Ручной", inline = True)
+	embedf2.add_field(name = '**ЦЕНА:**', value = "**499V**", inline = True)
+	embedfm3 = await farms.send(embed = embedf2)
+	await embedfm3.add_reaction('💶')
+
+	embedf3 = discord.Embed(color=0x3C55FA, title="FARM ASIC", description=f'На автоматическом оборудовании для майнинга\n\n**Для покупки за VOLT нажмите :euro:**\n')
+	embedf3.set_thumbnail(url="https://i.ibb.co/RHfBJvm/A.png")
+	embedf3.add_field(name = '**Макс срок работы:**', value = "45дней", inline = True)
+	embedf3.add_field(name = '**Производительность:**', value = "1.5v/ч", inline = True)
+	embedf3.add_field(name = '**Срок окупаемости:**', value = "21 дней", inline = True)
+
+	embedf3.add_field(name = '**Сложность:**', value = "NORM", inline = True)
+	embedf3.add_field(name = '**Вывод V на баланс:**', value = "Автоматический", inline = True)
+	embedf3.add_field(name = '**ЦЕНА:**', value = "**749V**", inline = True)
+	embedfm4 = await farms.send(embed = embedf3)
+	await embedfm4.add_reaction('💶')
+
+
+	embedf4 = discord.Embed(color=0x3C55FA, title="FARM MULTI", description=f'На мощном оборудовании для майнинга\n\n**Для покупки за VOLT нажмите :euro:**\n')
+	embedf4.set_thumbnail(url="https://i.ibb.co/SmQ7bNk/M.png")
+	embedf4.add_field(name = '**Макс срок работы:**', value = "40дней", inline = True)
+	embedf4.add_field(name = '**Производительность:**', value = "2v/ч", inline = True)
+	embedf4.add_field(name = '**Срок окупаемости:**', value = "21 день", inline = True)
+
+	embedf4.add_field(name = '**Сложность:**', value = "NORM", inline = True)
+	embedf4.add_field(name = '**Вывод V на баланс:**', value = "Автоматический", inline = True)
+	embedf4.add_field(name = '**ЦЕНА:**', value = "**999V**", inline = True)
+	embedfm5 = await farms.send(embed = embedf4)
+	await embedfm5.add_reaction('💶')
+
+
+	embedf5 = discord.Embed(color=0x3C55FA, title="FARM BOOST", description=f'На улучшенном оборудовании для майнинга\n\n**Для покупки за VOLT нажмите :euro:**\n')
+	embedf5.set_thumbnail(url="https://i.ibb.co/rf67N6Y/B.png")
+	embedf5.add_field(name = '**Макс срок работы:**', value = "20дней", inline = True)
+	embedf5.add_field(name = '**Производительность:**', value = "3v/ч", inline = True)
+	embedf5.add_field(name = '**Срок окупаемости:**', value = "14 дней", inline = True)
+
+	embedf5.add_field(name = '**Сложность:**', value = "HARD", inline = True)
+	embedf5.add_field(name = '**Вывод V на баланс:**', value = "Ручной", inline = True)
+	embedf5.add_field(name = '**ЦЕНА:**', value = "**999V**", inline = True)
+	embedfm6 = await farms.send(embed = embedf5)
+	await embedfm6.add_reaction('💶')
+
+
+	embedf6 = discord.Embed(color=0x3C55FA, title="FARM TITAN", description=f'На мощных видеокартах\n\n**Для покупки за VOLT нажмите :euro:**\n')
+	embedf6.set_thumbnail(url="https://i.ibb.co/87WYdBB/T.png")
+	embedf6.add_field(name = '**Макс срок работы:**', value = "3дней", inline = True)
+	embedf6.add_field(name = '**Производительность:**', value = "4v/ч", inline = True)
+	embedf6.add_field(name = '**Срок окупаемости:**', value = "16 дней", inline = True)
+
+	embedf6.add_field(name = '**Сложность:**', value = "HARD", inline = True)
+	embedf6.add_field(name = '**Вывод V на баланс:**', value = "Ручной", inline = True)
+	embedf6.add_field(name = '**ЦЕНА:**', value = "**1499V**", inline = True)
+	embedfm7 = await farms.send(embed = embedf6)
+	await embedfm7.add_reaction('💶')
+
+
+	embedf7 = discord.Embed(color=0x3C55FA, title="FARM SERVER", description=f'На серверном оборудовании\n\n**Для покупки за VOLT нажмите :euro:**\n')
+	embedf7.set_thumbnail(url="https://i.ibb.co/0KDHq9W/S.png")
+	embedf7.add_field(name = '**Макс срок работы:**', value = "50дней", inline = True)
+	embedf7.add_field(name = '**Производительность:**', value = "8v/ч", inline = True)
+	embedf7.add_field(name = '**Срок окупаемости:**', value = "13 дней", inline = True)
+
+	embedf7.add_field(name = '**Сложность:**', value = "MASTER", inline = True)
+	embedf7.add_field(name = '**Вывод V на баланс:**', value = "Ручной", inline = True)
+	embedf7.add_field(name = '**ЦЕНА:**', value = "**2499V**", inline = True)
+	embedfm8 = await farms.send(embed = embedf7)
+	await embedfm8.add_reaction('💶')
+
+
+	embedf8 = discord.Embed(color=0x3C55FA, title="FARM FACTORY", description=f'На автоматическом заводском оборудовании\n\n**Для покупки за VOLT нажмите :euro:**\n')
+	embedf8.set_thumbnail(url="https://i.ibb.co/NL6qq9w/F.png")
+	embedf8.add_field(name = '**Макс срок работы:**', value = "45дней", inline = True)
+	embedf8.add_field(name = '**Производительность:**', value = "16v/ч", inline = True)
+	embedf8.add_field(name = '**Срок окупаемости:**', value = "13 дней", inline = True)
+
+	embedf8.add_field(name = '**Сложность:**', value = "EXPERT", inline = True)
+	embedf8.add_field(name = '**Вывод V на баланс:**', value = "Автоматический", inline = True)
+	embedf8.add_field(name = '**ЦЕНА:**', value = "**4999V**", inline = True)
+	embedfm9 = await farms.send(embed = embedf8)
+	await embedfm9.add_reaction('💶')
+
+
+	embedf9 = discord.Embed(color=0x3C55FA, title="FARM QUANTUM", description=f'Мощный квантовый компьютер\n\n**Для покупки за VOLT нажмите :euro:**\n')
+	embedf9.set_thumbnail(url="https://i.ibb.co/JBnsbKS/Q.png")
+	embedf9.add_field(name = '**Макс срок работы:**', value = "50дней", inline = True)
+	embedf9.add_field(name = '**Производительность:**', value = "40v/ч", inline = True)
+	embedf9.add_field(name = '**Срок окупаемости:**', value = "10 дней", inline = True)
+
+	embedf9.add_field(name = '**Сложность:**', value = "INSANE", inline = True)
+	embedf9.add_field(name = '**Вывод V на баланс:**', value = "Автоматический", inline = True)
+	embedf9.add_field(name = '**ЦЕНА:**', value = "**9999V**", inline = True)
+	embedfm10 = await farms.send(embed = embedf9)
+	await embedfm10.add_reaction('💶')
+
+
+	embedf10 = discord.Embed(color=0x3C55FA, title="FARM ПЛАТА", description=f'Самая простая видеокарта\n\n**Для покупки за RUB нажмите :euro:**\n')
+	embedf10.set_thumbnail(url="https://i.ibb.co/pd6w8dt/plata.png")
+	embedf10.add_field(name = '**Макс срок работы:**', value = "11дней", inline = True)
+	embedf10.add_field(name = '**Производительность:**', value = "0.3v/ч", inline = True)
+	embedf10.add_field(name = '**Срок окупаемости:**', value = "10 дней", inline = True)
+
+	embedf10.add_field(name = '**Сложность:**', value = "EASY", inline = True)
+	embedf10.add_field(name = '**Вывод RUB на баланс:**', value = "Ручной", inline = True)
+	embedf10.add_field(name = '**ЦЕНА:**', value = "79RUB", inline = True)
+	await embedfm11.add_reaction('💶')
+	await embedfm11.add_reaction('💷')
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////// FARMS EDIT
+	channel = bot.get_channel(880025073963122718)
+
+	m = await channel.fetch_message(886528458887401473)
+	embedf = discord.Embed(color=0x3C55FA, title="FARM ЗАТЫЧКА", description=f'На слабой видеокарте\n\n**Для покупки за RUB нажмите :euro:**')
+	embedf.set_thumbnail(url="https://i.ibb.co/92f8Cw8/Z.png")
+	embedf.add_field(name = '**Макс срок работы:**', value = "35дней", inline = True)
+	embedf.add_field(name = '**Производительность:**', value = "0.25RUB/ч", inline = True)
+	embedf.add_field(name = '**Срок окупаемости:**', value = "25 дней", inline = True)
+
+	embedf.add_field(name = '**Сложность:**', value = "EASY", inline = True)
+	embedf.add_field(name = '**Вывод V на баланс:**', value = "Ручной", inline = True)
+	embedf.add_field(name = '**ЦЕНА:**', value = "149RUB", inline = True)
+	await m.edit(embed = embedf)
+
+
+	m1 = await channel.fetch_message(886528465631862905)
+	embedf1 = discord.Embed(color=0x3C55FA, title="FARM GTX", description=f'На игровой видеокарте\n\n**Для покупки за RUB нажмите :euro:**')
+	embedf1.set_thumbnail(url="https://i.ibb.co/RCt8s0K/G.png")
+	embedf1.add_field(name = '**Макс срок работы:**', value = "29дней", inline = True)
+	embedf1.add_field(name = '**Производительность:**', value = "0.5RUB/ч", inline = True)
+	embedf1.add_field(name = '**Срок окупаемости:**', value = "21 день", inline = True)
+
+	embedf1.add_field(name = '**Сложность:**', value = "EASY", inline = True)
+	embedf1.add_field(name = '**Вывод V на баланс:**', value = "Ручной", inline = True)
+	embedf1.add_field(name = '**ЦЕНА:**', value = "249RUB", inline = True)
+	await m1.edit(embed = embedf1)
+
+
+	m2 = await channel.fetch_message(886528471159930961)
+	embedf2 = discord.Embed(color=0x3C55FA, title="FARM RTX", description=f'На мощной видеокарте\n\n**Для покупки за RUB нажмите :euro:**\n')
+	embedf2.set_thumbnail(url="https://i.ibb.co/z72pGRR/R.png")
+	embedf2.add_field(name = '**Макс срок работы:**', value = "29дней", inline = True)
+	embedf2.add_field(name = '**Производительность:**', value = "1RUB/ч", inline = True)
+	embedf2.add_field(name = '**Срок окупаемости:**', value = "21 день", inline = True)
+
+	embedf2.add_field(name = '**Сложность:**', value = "NORM", inline = True)
+	embedf2.add_field(name = '**Вывод V на баланс:**', value = "Ручной", inline = True)
+	embedf2.add_field(name = '**ЦЕНА:**', value = "**499RUB**", inline = True)
+	await m2.edit(embed = embedf2)
+
+
+	m3 = await channel.fetch_message(886528474192437278)
+	embedf3 = discord.Embed(color=0x3C55FA, title="FARM ASIC", description=f'На автоматическом оборудовании для майнинга\n\n**Для покупки за RUB нажмите :euro:**\n')
+	embedf3.set_thumbnail(url="https://i.ibb.co/RHfBJvm/A.png")
+	embedf3.add_field(name = '**Макс срок работы:**', value = "35дней", inline = True)
+	embedf3.add_field(name = '**Производительность:**', value = "1.5RUB/ч", inline = True)
+	embedf3.add_field(name = '**Срок окупаемости:**', value = "21 дней", inline = True)
+
+	embedf3.add_field(name = '**Сложность:**', value = "NORM", inline = True)
+	embedf3.add_field(name = '**Вывод V на баланс:**', value = "Автоматический", inline = True)
+	embedf3.add_field(name = '**ЦЕНА:**', value = "**749RUB**", inline = True)
+	await m3.edit(embed = embedf3)
+
+
+	m4 = await channel.fetch_message(886528476797083668)
+	embedf4 = discord.Embed(color=0x3C55FA, title="FARM MULTI", description=f'На мощном оборудовании для майнинга\n\n**Для покупки за RUB нажмите :euro:**\n')
+	embedf4.set_thumbnail(url="https://i.ibb.co/SmQ7bNk/M.png")
+	embedf4.add_field(name = '**Макс срок работы:**', value = "40дней", inline = True)
+	embedf4.add_field(name = '**Производительность:**', value = "2RUB/ч", inline = True)
+	embedf4.add_field(name = '**Срок окупаемости:**', value = "21 день", inline = True)
+
+	embedf4.add_field(name = '**Сложность:**', value = "NORM", inline = True)
+	embedf4.add_field(name = '**Вывод V на баланс:**', value = "Автоматический", inline = True)
+	embedf4.add_field(name = '**ЦЕНА:**', value = "**999RUB**", inline = True)
+	await m4.edit(embed = embedf4)
+
+
+	m5 = await channel.fetch_message(886528481381462076)
+	embedf5 = discord.Embed(color=0x3C55FA, title="FARM BOOST", description=f'На улучшенном оборудовании для майнинга\n\n**Для покупки за RUB нажмите :euro:**\n')
+	embedf5.set_thumbnail(url="https://i.ibb.co/rf67N6Y/B.png")
+	embedf5.add_field(name = '**Макс срок работы:**', value = "20дней", inline = True)
+	embedf5.add_field(name = '**Производительность:**', value = "3RUB/ч", inline = True)
+	embedf5.add_field(name = '**Срок окупаемости:**', value = "14 дней", inline = True)
+
+	embedf5.add_field(name = '**Сложность:**', value = "HARD", inline = True)
+	embedf5.add_field(name = '**Вывод V на баланс:**', value = "Ручной", inline = True)
+	embedf5.add_field(name = '**ЦЕНА:**', value = "**999RUB**", inline = True)
+	await m5.edit(embed = embedf5)
+
+
+	m6 = await channel.fetch_message(886528484460097546)
+	embedf6 = discord.Embed(color=0x3C55FA, title="FARM TITAN", description=f'На мощных видеокартах\n\n**Для покупки за RUB нажмите :euro:**\n')
+	embedf6.set_thumbnail(url="https://i.ibb.co/87WYdBB/T.png")
+	embedf6.add_field(name = '**Макс срок работы:**', value = "30дней", inline = True)
+	embedf6.add_field(name = '**Производительность:**', value = "4RUB/ч", inline = True)
+	embedf6.add_field(name = '**Срок окупаемости:**', value = "16 дней", inline = True)
+
+	embedf6.add_field(name = '**Сложность:**', value = "HARD", inline = True)
+	embedf6.add_field(name = '**Вывод V на баланс:**', value = "Ручной", inline = True)
+	embedf6.add_field(name = '**ЦЕНА:**', value = "**1499RUB**", inline = True)
+	await m6.edit(embed = embedf6)
+
+
+	m7 = await channel.fetch_message(886528488234971207)
+	embedf8 = discord.Embed(color=0x3C55FA, title="FARM FACTORY", description=f'На автоматическом заводском оборудовании\n\n**Для покупки за RUB нажмите :euro:**\n')
+	embedf8.set_thumbnail(url="https://i.ibb.co/NL6qq9w/F.png")
+	embedf8.add_field(name = '**Макс срок работы:**', value = "37дней", inline = True)
+	embedf8.add_field(name = '**Производительность:**', value = "14RUB/ч", inline = True)
+	embedf8.add_field(name = '**Срок окупаемости:**', value = "13 дней", inline = True)
+
+	embedf8.add_field(name = '**Сложность:**', value = "EXPERT", inline = True)
+	embedf8.add_field(name = '**Вывод V на баланс:**', value = "Автоматический", inline = True)
+	embedf8.add_field(name = '**ЦЕНА:**', value = "**4999RUB**", inline = True)
+	await m7.edit(embed = embedf8)
+
+
+	m8 = await channel.fetch_message(886528493339422774)
+	embedf9 = discord.Embed(color=0x3C55FA, title="FARM QUANTUM", description=f'Мощный квантовый компьютер\n\n**Для покупки за RUB нажмите :euro:**\n')
+	embedf9.set_thumbnail(url="https://i.ibb.co/JBnsbKS/Q.png")
+	embedf9.add_field(name = '**Макс срок работы:**', value = "42дня", inline = True)
+	embedf9.add_field(name = '**Производительность:**', value = "25RUB/ч", inline = True)
+	embedf9.add_field(name = '**Срок окупаемости:**', value = "10 дней", inline = True)
+
+	embedf9.add_field(name = '**Сложность:**', value = "INSANE", inline = True)
+	embedf9.add_field(name = '**Вывод V на баланс:**', value = "Автоматический", inline = True)
+	embedf9.add_field(name = '**ЦЕНА:**', value = "**9999RUB**", inline = True)
+	await m8.edit(embed = embedf9)
+
+
+	m9 = await channel.fetch_message(886528504068464640)
+	embedf10 = discord.Embed(color=0x3C55FA, title="FARM ПЛАТА", description=f'Самая простая видеокарта\n\n**Для покупки за RUB нажмите :euro:**')
+	embedf10.set_thumbnail(url="https://i.ibb.co/pd6w8dt/plata.png")
+	embedf10.add_field(name = '**Макс срок работы:**', value = "14дней", inline = True)
+	embedf10.add_field(name = '**Производительность:**', value = "0.3RUB/ч", inline = True)
+	embedf10.add_field(name = '**Срок окупаемости:**', value = "10 дней", inline = True)
+
+	embedf10.add_field(name = '**Сложность:**', value = "EASY", inline = True)
+	embedf10.add_field(name = '**Вывод V на баланс:**', value = "Ручной", inline = True)
+	embedf10.add_field(name = '**ЦЕНА:**', value = "79RUB", inline = True)
+	await m9.edit(embed = embedf10)
+
+
+
+	'''

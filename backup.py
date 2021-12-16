@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-import discord 
+import discord #fdghfhj
 from discord.ext import commands
 from threading import Thread
 import json

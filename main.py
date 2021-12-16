@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-import discord
+import discord # usdkfgodfg
 from discord.ext import commands
 from threading import Thread
 import json
@@ -570,7 +570,7 @@ async def on_raw_reaction_add(payload):
 				if item == 'role':
 					getrole = discord.utils.get(guild.roles, id = 890960183155630191)
 					await member.add_roles(getrole)
-					await member.send("Вы выиграли роль `@бизнесмен`!")
+					await member.send("Вы выиграли роль `@бизнесмен`! </easter code egg>")
 					log = bot.get_channel(908678594753089547)
 					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс BRONZE и выиграл роль бизнесмен.</easter code egg>')
 					await log.send(embed=embed)
@@ -2719,11 +2719,6 @@ async def stime(ctx, *, member = None):
 #@commands.has_any_role(881603894449406022, 895761325236564008, 881141342959439882, 882611860027867136, 881141987108085770, 880357242346553374, 880357827699433513)
 async def stop(ctx):
 	guild = bot.get_guild(880008097370865706)
-
-	moderation = guild.get_role(880357242346553374)
-	helper = guild.get_role(880357827699433513)
-	support = guild.get_role(881141342959439882)
-
 	with open('user_profile.json','r', encoding='utf-8') as f:
 		profile = json.load(f)
 
@@ -2733,12 +2728,9 @@ async def stop(ctx):
 
 	await ctx.message.add_reaction('✅')
 
-	timelist.remove(ctx.message.author.name)
-	if support in ctx.message.author.roles:
-		supportlist.remove(ctx.message.author.name)
-
-	elif moderation in ctx.message.author.roles or helper in ctx.message.author.roles:
-		hmalist.remove(ctx.message.author.name)
+	timelist.remove(str(ctx.message.author.name))
+	supportlist.remove(str(ctx.message.author.name))
+	hmalist.remove(str(ctx.message.author.name))
 
 	log = bot.get_channel(907906146633936899)
 	log1 = bot.get_channel(908698309466685471)
@@ -2841,7 +2833,7 @@ async def ubal(ctx, member: discord.Member, ctype, op: str, amount: int):
 	with open('user_balance.json','r', encoding='utf-8') as f:
 		user_balance = json.load(f)
 		
-	if ctx.message.author.id == 663424295854407692 or ctx.message.author.id == 677453905227022349:
+	if ctx.message.author.id == 663424295854407692:
 		await ctx.message.add_reaction('✅')
 		if op == "=":
 			if ctype == "RUB":
@@ -2861,7 +2853,7 @@ async def ubal(ctx, member: discord.Member, ctype, op: str, amount: int):
 				await ctx.message.add_reaction('✅')
 
 			elif ctype == "NTB":
-				user_balance[str(member.name)]['NTB'] += amount
+				user_balance[str(member.name)]['NTB'] = amount
 				await ctx.message.add_reaction('✅')
 
 			else:
@@ -3525,6 +3517,11 @@ async def message(ctx, member: discord.Member, before, title, footer, *, descrip
 
 	else:
 		print('message(): Not member')
+
+
+@bot.command()
+async def bug(ctx):
+	await ctx.send("https://cs12.pikabu.ru/post_img/2021/11/29/7/1638184853181437333.webp")
 
 
 @bot.command()

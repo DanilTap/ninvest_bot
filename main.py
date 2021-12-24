@@ -181,7 +181,6 @@ timerstats = True
 async def on_voice_state_update(member, before, after):
 	global timerstats
 	if before.channel is None and after.channel is not None:
-		await member.send("Вы вошли в голосовой канал")
 
 		with open('user_balance.json','r', encoding='utf-8') as f:
 			balance = json.load(f)
@@ -193,7 +192,6 @@ async def on_voice_state_update(member, before, after):
 				json.dump(balance,f)
 
 	elif before.channel is not None and after.channel is None:
-		await member.send(f'Вы вышли из голосового канала')
 		timerstats = False
 
  
@@ -2569,7 +2567,7 @@ async def promo(ctx, code):
 					await log.send(embed=embed1)
 
 				elif activations <= 0:
-					await ctx.message.author.send('Этот прокод больше нельзя активировать.')
+					await ctx.message.author.send('Этот промокод больше нельзя активировать.')
 
 # Create promocodes
 @bot.command()

@@ -1437,6 +1437,199 @@ async def on_raw_reaction_add(payload):
 					with open('user_balance.json','w') as f:
 						json.dump(user_balance,f)
 
+	# New Year
+	elif message_id == 926887879786000464:
+		with open('user_balance.json','r', encoding='utf-8') as f:
+			user_balance = json.load(f)
+
+		balance = user_balance[str(member.name)]['RUB']
+
+		if payload.emoji.name == "💷":
+			if balance < 10:
+				await member.send("У вас недостаточно средств для покупки кейса.")
+
+			elif balance >= 10:
+				user_balance[str(member.name)]['RUB'] -= 10
+				items = [125, 75, 35, 15, 5, 0, 'premium7', 'premium10', 'ded', 'sneg', 'inf']
+
+				item = random.choice(items)
+				print(item)
+
+				if item == 'premium7':
+					getrole = discord.utils.get(guild.roles, id = 888115759933431909)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@Premium 7 days`!")
+					log = bot.get_channel(908678594753089547)
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль Premium 7 days.')
+					await log.send(embed=embed)
+
+				elif item == 'premium10':
+					getrole = discord.utils.get(guild.roles, id = 888115759933431909)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@Premium 7 days`!")
+					log = bot.get_channel(908678594753089547)
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль Premium 10 days.')
+					await log.send(embed=embed)
+					
+				elif item == 'ded':
+					getrole = discord.utils.get(guild.roles, id = 924792031669280828)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@🎅`!")
+					log = bot.get_channel(908678594753089547)
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль 🎅.')
+					await log.send(embed=embed)
+					
+				elif item == 'sneg':
+					getrole = discord.utils.get(guild.roles, id = 924792230026281030)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@☃️`!")
+					log = bot.get_channel(908678594753089547)
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль ☃️.')
+					await log.send(embed=embed)
+					
+				elif item == 'inf':
+					getrole = discord.utils.get(guild.roles, id = 890119660488491049)
+					await member.add_roles(getrole)
+					await member.send("Вы выиграли роль `@❄️`!</easter egg>")
+					log = bot.get_channel(908678594753089547)
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль ❄️.')
+					await log.send(embed=embed)
+					
+				else:
+					user_balance[str(member.name)]['RUB'] += item
+					await member.send(f'Вы выиграли **`{item}` RUB**!')
+					log = bot.get_channel(908678594753089547)
+					embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл {item}RUB.')
+					await log.send(embed=embed)
+					
+				with open('user_balance.json','w') as f:
+					json.dump(user_balance,f)
+
+		elif payload.emoji.name == "💳":
+			if balance < 50:
+				await member.send("У вас недостаточно средств для покупки 5 кейсов.")
+
+			elif balance >= 50:
+				user_balance[str(member.name)]['RUB'] -= 50
+				for i in range(5):
+					items = [125, 75, 35, 15, 5, 0, 'premium7', 'premium10', 'ded', 'sneg', 'inf']
+
+					item = random.choice(items)
+					print(item)
+
+					if item == 'premium7':
+						getrole = discord.utils.get(guild.roles, id = 888115759933431909)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@Premium 7 days`!")
+						log = bot.get_channel(908678594753089547)
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль Premium 7 days.')
+						await log.send(embed=embed)
+
+					elif item == 'premium10':
+						getrole = discord.utils.get(guild.roles, id = 888115759933431909)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@Premium 7 days`!")
+						log = bot.get_channel(908678594753089547)
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль Premium 10 days.')
+						await log.send(embed=embed)
+						
+					elif item == 'ded':
+						getrole = discord.utils.get(guild.roles, id = 924792031669280828)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@🎅`!")
+						log = bot.get_channel(908678594753089547)
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль 🎅.')
+						await log.send(embed=embed)
+						
+					elif item == 'sneg':
+						getrole = discord.utils.get(guild.roles, id = 924792230026281030)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@☃️`!")
+						log = bot.get_channel(908678594753089547)
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль ☃️.')
+						await log.send(embed=embed)
+						
+					elif item == 'inf':
+						getrole = discord.utils.get(guild.roles, id = 890119660488491049)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@❄️`!</easter egg>")
+						log = bot.get_channel(908678594753089547)
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль ❄️.')
+						await log.send(embed=embed)
+						
+					else:
+						user_balance[str(member.name)]['RUB'] += item
+						await member.send(f'Вы выиграли **`{item}` RUB**!')
+						log = bot.get_channel(908678594753089547)
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл {item}RUB.')
+						await log.send(embed=embed)
+						
+					with open('user_balance.json','w') as f:
+						json.dump(user_balance,f)
+
+		elif payload.emoji.name == "💰":
+			if balance < 100:
+				await member.send("У вас недостаточно средств для покупки 5 кейсов.")
+
+			elif balance >= 100:
+				user_balance[str(member.name)]['RUB'] -= 100
+				for i in range(10):
+					items = [125, 75, 35, 15, 5, 0, 'premium7', 'premium10', 'ded', 'sneg', 'inf']
+
+					item = random.choice(items)
+					print(item)
+
+					if item == 'premium7':
+						getrole = discord.utils.get(guild.roles, id = 888115759933431909)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@Premium 7 days`!")
+						log = bot.get_channel(908678594753089547)
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль Premium 7 days.')
+						await log.send(embed=embed)
+
+					elif item == 'premium10':
+						getrole = discord.utils.get(guild.roles, id = 888115759933431909)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@Premium 7 days`!")
+						log = bot.get_channel(908678594753089547)
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль Premium 10 days.')
+						await log.send(embed=embed)
+						
+					elif item == 'ded':
+						getrole = discord.utils.get(guild.roles, id = 924792031669280828)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@🎅`!")
+						log = bot.get_channel(908678594753089547)
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль 🎅.')
+						await log.send(embed=embed)
+						
+					elif item == 'sneg':
+						getrole = discord.utils.get(guild.roles, id = 924792230026281030)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@☃️`!")
+						log = bot.get_channel(908678594753089547)
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль ☃️.')
+						await log.send(embed=embed)
+						
+					elif item == 'inf':
+						getrole = discord.utils.get(guild.roles, id = 890119660488491049)
+						await member.add_roles(getrole)
+						await member.send("Вы выиграли роль `@❄️`!</easter egg>")
+						log = bot.get_channel(908678594753089547)
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл роль ❄️.')
+						await log.send(embed=embed)
+						
+					else:
+						user_balance[str(member.name)]['RUB'] += item
+						await member.send(f'Вы выиграли **`{item}` RUB**!')
+						log = bot.get_channel(908678594753089547)
+						embed = discord.Embed(color=0x00a550, title="Покупка кейса", description=f'{member.name} купил кейс NEW YEARs CASE и выиграл {item}RUB.')
+						await log.send(embed=embed)
+						
+					with open('user_balance.json','w') as f:
+						json.dump(user_balance,f)
+
+
 	# Super money boxes
 	elif message_id == 893397579663044629:
 		embed = discord.Embed(description="Укажите количество валюты для вложения в копилку **№1** от 1 до 250RUB.\nКомандой: `!box 1 СУММА`")
@@ -2562,7 +2755,7 @@ async def promo(ctx, code):
 						json.dump(codes,f)
 
 					await ctx.message.author.send(f'Вы активировали промокод `{code}`')
-					log = bot.get_channel(888053213750779934)
+					log = bot.get_channel(923934134177497178)
 					embed1 = discord.Embed(color=0x388E3C, title="АКТИВАЦИЯ ПРОМОКОДА", description=f'**`{ctx.message.author}` Активировал промокод `{code}`**')
 					await log.send(embed=embed1)
 
@@ -2851,7 +3044,7 @@ async def ubal(ctx, member: discord.Member, ctype, op: str, amount: int):
 				await ctx.message.add_reaction('✅')
 
 			elif ctype == "NTB":
-				user_balance[str(member.name)]['NTB'] = amount
+				user_balance[str(member.name)]['NTB'] += amount
 				await ctx.message.add_reaction('✅')
 
 			else:
@@ -3755,52 +3948,45 @@ async def upd(ctx):
 		
 
 		
-
+		'''
 		channel = bot.get_channel(889843449300398111)
-
 		m1 = await channel.fetch_message(890117683478147092)
-		embed1 = discord.Embed(color=0xFBFF29, title=f'GOLD CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**450RUB | 330RUB | 250RUB | 210RUB | 200RUB |** 150RUB | 125RUB | 100RUB | 85 RUB | 65RUB | 50RUB |\nPremium 30 day\n Premium 21 day\n-FARM ЗАТЫЧКА\n-FARM GTX\n-FARM RTX\nУНИКАЛЬНАЯ РОЛЬ :zap: Gold Monopolis**\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n:pound: 1шт - 199RUB\n:credit_card: 5шт - 995RUB\n:moneybag: 10шт - 1990RUB')
+		embed1 = discord.Embed(color=0x2f3136, title=f'GOLD CASE', description=f'> Возможные призы:\n**450RUB | 330RUB | 250RUB | 210RUB | 200RUB | 150RUB | 125RUB | 100RUB | 85 RUB | 65RUB | 50RUB |**\n・ Premium 30 day\n・ Premium 21 day\n・ -FARM ЗАТЫЧКА\n・ -FARM GTX\n・ -FARM RTX\n・ УНИКАЛЬНАЯ РОЛЬ :zap: Gold Monopolis**\n\n\n> Для открытия нажмите:\n\n**:pound: | 1шт - 199RUB\n:credit_card: | 5шт - 995RUB\n:moneybag: | 10шт - 1990RUB**')
 		embed1.set_thumbnail(url="https://i.ibb.co/Kq8j5qT/GOLD.png")
 		await m1.edit(embed = embed1)
 		await m1.add_reaction('💰')
 
-				
 		m = await channel.fetch_message(890117691388600320)
-		embed = discord.Embed(color=0x80F7FF, title=f'PLATINUM CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**850RUB | 650RUB | 500RUB | 535RUB | 420RUB | 400RUB|** 350 RUB| 200RUB | 100RUB | 65 RUB|\nPremium 45 day\nPremium 35 day\nPremium 26 day\n-FARM MULTI\n-FARM GTX\n-FARM RTX\n-FARM ASIC\nУНИКАЛЬНАЯ РОЛЬ 🌀\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 500RUB\n:credit_card: 5шт - 2500RUB\n:moneybag: 10шт - 5000RUB')
+		embed = discord.Embed(color=0x2f3136, title=f'PLATINUM CASE', description=f'> Возможные призы:\n\n**850RUB | 650RUB | 500RUB | 535RUB | 420RUB | 400RUB| 350 RUB| 200RUB | 100RUB | 65 RUB|**\n・ Premium 45 day\n・ Premium 35 day\n・ Premium 26 day\n・ -FARM MULTI\n・ -FARM GTX\n・ -FARM RTX\n・ -FARM ASIC\n・ УНИКАЛЬНАЯ РОЛЬ - 🌀\n\n\n> Для открытия нажмите:\n\n**:pound: | 1шт - 500RUB\n:credit_card: | 5шт - 2500RUB\n:moneybag: | 10шт - 5000RUB**')
 		embed.set_thumbnail(url="https://i.ibb.co/1MDfBNc/PLATINUM.png")
 		await m.edit(embed = embed)
 		await m.add_reaction('💰')
 
+		
 		m2 = await channel.fetch_message(893551335511830649)
-		embed2 = discord.Embed(color=0x80F7FF, title=f'LITE CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**625RUB| 500RUB | 350RUB | 120RUB | 45RUB** | 35RUB | 25RUB | 15 RUB| 10RUB | 5RUB |\nPremium 7 days\nФерма - FARM ПЛАТА\nУНИКАЛЬНАЯ РОЛЬ  ⚡; Gold; ☄️; Бизнесмен;\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - ~~125~~RUB **35**RUB\n:credit_card: 5шт - ~~625~~RUB **175**RUB\n:moneybag: 10шт - 350RUB')
+		embed2 = discord.Embed(color=0x2f3136, title=f'LITE CASE', description=f'> Возможные призы:\n\n**625RUB| 500RUB | 350RUB | 120RUB |** 45RUB | 35RUB | 25RUB | 15 RUB| 10RUB | 5RUB |\n・ Premium 7 days\n・ Ферма - **FARM ПЛАТА**\n・ УНИКАЛЬНАЯ РОЛЬ  ⚡; Gold; ☄️; Бизнесмен;\n\n\n> Для открытия нажмите:\n\n**:pound: | 1шт - ~~125~~RUB 35RUB\n:credit_card: | 5шт - ~~625~~RUB 175RUB\n:moneybag: | 10шт - 350RUB**')
 		embed2.set_thumbnail(url="https://cdn.discordapp.com/attachments/828213712736354305/893521241724563527/PREMIUM.png")
 		await m2.edit(embed = embed2)
 		await m2.add_reaction('💰')
 		
+		
 		m3 = await channel.fetch_message(890117675408322580)
-		embed3 = discord.Embed(color=0x949494, title=f'SILVER CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**450RUB | 320RUB | 160RUB | 80RUB | 65RUB |** 55RUB | 40RUB | 20RUB |\nPremium 16 days\nPremium 10 days\n-FARM ПЛАТА\n-FARM ЗАТЫЧКА\n-FARM ASIC\nУникальная роль :airplane:\nУникальная роль :zap:\nУникальная роль ☄️\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:\n**:pound: 1шт - 99RUB\n:credit_card: 5шт - 496RUB\n:moneybag: 10шт - 990RUB')
+		embed3 = discord.Embed(color=0x2f3136, title=f'SILVER CASE', description=f'> Возможные призы:\n\n・ Денежный приз:\n**450RUB | 320RUB | 160RUB | 80RUB | 65RUB | 55RUB |** 40RUB | 20RUB |\n・ Premium 16 days\n・ Premium 10 days・ \n-FARM ПЛАТА\n・ -FARM ЗАТЫЧКА\n・ -FARM ASIC\n・ Уникальная роль - :airplane:\n・ Уникальная роль - :zap:\n・ Уникальная роль - ☄️\n\n\n> Для открытия нажмите:\n\n**:pound: | 1шт - 99RUB\n:credit_card: | 5шт - 495RUB\n:moneybag: | 10шт - 990RUB**')
 		embed3.set_thumbnail(url="https://i.ibb.co/xXnJTXq/SILVER.png")
 		await m3.edit(embed = embed3)
 		await m3.add_reaction('💰')
 		
 		m4 = await channel.fetch_message(890117667908878347)
-		embed4 = discord.Embed(color=0xB88947, title=f'BRONZE CASE', description=f'ВОЗМОЖНЫЕ ПРИЗЫ:\n**300RUB| 220RUB | 140RUB | 100RUB | 65RUB | 50RUB |** 35RUB | 25RUB | 20RUB | 15RUB | 10RUB |\nУникальная роль бизнесмен\nУникальная роль Trainer\n\n**НАЖМИТЕ. ЧТОБЫ ОТКРЫТЬ:**\n:pound: 1шт - 49RUB\n:credit_card: 5шт - 245RUB\n:moneybag: 10шт - 490RUB')
+		embed4 = discord.Embed(color=0x2f3136, title=f'BRONZE CASE', description=f'> Возможные призы:\n\n・ Денежный приз:\n**300RUB| 220RUB | 140RUB | 100RUB | 65RUB | 50RUB |** 35RUB | 25RUB | 20RUB | 15RUB | 10RUB |\n・ Ферма - **FARM CLASSIC**.\n・ Уникальная роль бизнесмен\n・ Уникальная роль Trainer\n\n\n> Для открытия нажмите:\n\n**:pound: | 1шт - 49RUB\n:credit_card: | 5шт - 245RUB\n:moneybag: | 10шт - 490RUB**')
 		embed4.set_thumbnail(url="https://i.imgur.com/MRvrOW2.png")
 		await m4.edit(embed = embed4)
-		await m4.add_reaction('💰')
 		
-		
-		channel1 = bot.get_channel(890982389881384991)
-		embed165 = discord.Embed(color=0x2E62FF, description=f'<:dfgf:> :dfgf: :a_::a_::b_::b_::b_::b_::b_::b_::b_: `3/10`')
-		await channel1.send(embed = embed165)
-
-		embed168 = discord.Embed(color=0x2E62FF, description=f':l_::a_::a_::a_::a_::b_::b_::b_::b_::b_: `5/10`')
-		await channel1.send(embed = embed168)
-
-		embed168 = discord.Embed(color=0x2E62FF, description=f':l_::b_::b_::b_::b_::b_::b_::b_::b_::b_: `1/10`')
-		await channel1.send(embed = embed168)
-		await channel1.send('<:dfgf:> :dfgf: :a_::a_::b_::b_::b_::b_::b_::b_::b_: `3/10`')
-		
+		channel = bot.get_channel(889843449300398111)
+		m3 = await channel.fetch_message(926887879786000464)
+		embed5 = discord.Embed(color=0x2f3136, title=f"NEW YEAR's CASE", description=f'> Возможные призы:\n\n・ Денежный приз:\n**125RUB | 75RUB | 35RUB | 15RUB |** 10RUB | 5RUB | 0RUB |\n・ @Premium на 10 дней.\n・ @Premium на 7 дней.\n・ Уникальная роль - @🎅.\n・ Уникальная роль - @☃️.\n・ Уникальная роль - @❄️.\n\n\n> Для открытия нажмите:\n\n**:pound: | 1шт - ~~45RUB~~- 10 RUB\n:credit_card: | 5шт - ~~225RUB~~- 50 RUB\n:moneybag: | 10шт - ~~450RUB~~- 100 RUB**')
+		embed5.set_thumbnail(url="https://media.discordapp.net/attachments/828213712736354305/893521241724563527/PREMIUM.png")
+		await m3.edit(embed = embed5)
+		'''
 	
 		# SUPER MONEY BOXES
 		channel = bot.get_channel(888500024214966282)
@@ -3824,10 +4010,25 @@ async def upd(ctx):
 		m4 = await channel.fetch_message(894214947473588255)
 		box4 = discord.Embed(color=0x2E62FF, title="Супер копилка №4", description=f'Для вложений нажмите на 📤\n\n**Заполнено**: ⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛')
 		await m4.edit(embed = box4)
-		'''
+		
 		channel = bot.get_channel(888053213750779934)
 		embed = discord.Embed(color=0x2E62FF, title="Рабочая смена", description=f'Сотрудники на смене:\nNone')
 		message = await channel.send(embed = embed)
+		
+		
+		channel = bot.get_channel(889843449300398111)
+		embed = discord.Embed(title=f"NEW YEAR's CASE", description=f'> Возможные призы:\n\n・ Денежный приз:\n**125RUB | 75RUB | 35RUB | 15RUB |** 10RUB | 5RUB | 0RUB |\n・ @Premium на 10 дней.\n・ @Premium на 7 дней.\n・ Уникальная роль - @🎅.\n・ Уникальная роль - @☃️.\n・ Уникальная роль - @❄️.\n\n\n> Для открытия нажмите:\n\n**:pound: | 1шт - ~~45RUB~~- 10 RUB\n:credit_card: | 5шт - ~~225RUB~~- 50 RUB\n:moneybag: | 10шт - ~~450RUB~~- 100 RUB**')
+		embed.set_thumbnail(url="https://media.discordapp.net/attachments/828213712736354305/893521241724563527/PREMIUM.png")
+		await channel.send(embed = embed)
+		
+
+	
+		channel = bot.get_channel(889843449300398111)
+		m = await channel.fetch_message(926887879786000464)
+		await m.add_reaction('💷')
+		await m.add_reaction('💳')
+		await m.add_reaction('💰')
+		'''
 
 
 	else:

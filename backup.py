@@ -2918,7 +2918,7 @@ async def upd(ctx):
 	else:
 		print("Not man")
 
-bot.run('ODc5NjkzNDk5ODQ1NDU1ODcy.YSTcag.KiNpzAVZ_isc-HIdeeLw6FbJZgM')
+bot.run('token')
 
 	'''
 	guild = bot.get_guild(880008097370865706)

@@ -4038,4 +4038,4 @@ async def upd(ctx):
 # Random images sending
 bot.loop.create_task(RandomImages())
 
-bot.run('ODc5NjkzNDk5ODQ1NDU1ODcy.YSTcag.KiNpzAVZ_isc-HIdeeLw6FbJZgM')
+bot.run('token')

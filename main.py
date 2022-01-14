@@ -118,7 +118,7 @@ async def on_ready():
 		with open('user_profile.json','r', encoding='utf-8') as f:
 			profile = json.load(f)
 
-		if not member.name in user_balance and not member.name in user_farms and not member.name in ref and not member.name in bank and not member.name in sales and not member.name in profile:
+		if not member.name in user_balance and not member.name in user_farms and member.name in ref and not member.name in bank and not member.name in sales and not member.name in profile:
 			print(member.name)
 			# Balance
 			user_balance[str(member.name)] = {}
@@ -4038,4 +4038,4 @@ async def upd(ctx):
 # Random images sending
 bot.loop.create_task(RandomImages())
 
-bot.run('token')
+bot.run('ODc5NjkzNDk5ODQ1NDU1ODcy.YSTcag.DlO0DMz9IK-buo-A01uS-Y78vhQ')

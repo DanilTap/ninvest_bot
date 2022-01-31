@@ -14,7 +14,6 @@ bot = discord.ext.commands.Bot(command_prefix = "!", intents = intents)
 
 
 
-
 # |------------------------------ VARIABLES ------------------------------|
 # Reactions lists
 tickets_messages = []
@@ -22,10 +21,7 @@ tickets_messages = []
 
 
 
-
-
-
-
+# Welcome to the world of crutches and crooked OOP!
 
 # |-------------------------------- EVENTS --------------------------------|
 bot.remove_command('help')
@@ -4038,4 +4034,4 @@ async def upd(ctx):
 # Random images sending
 bot.loop.create_task(RandomImages())
 
-bot.run('ODc5NjkzNDk5ODQ1NDU1ODcy.YSTcag.DlO0DMz9IK-buo-A01uS-Y78vhQ')
+bot.run('token')
